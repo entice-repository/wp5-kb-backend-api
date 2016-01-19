@@ -1,0 +1,88 @@
+-- agent_table:
+ agentid                          | agentip       | agentname     | status | tags | tstart                               | tstop
+----------------------------------+---------------+---------------+--------+------+--------------------------------------+-------
+ 016a787e745f41aeaafcb492478d3111 | 194.249.0.142 | 194.249.0.142 |     UP | null | d93e8c10-8d3b-11e5-9b6e-71a4905f2168 |  null
+
+
+-- metric_value_table (curr. size 7234):
+ metricid                                  | event_date | event_timestamp                      | mgroup    | name     | type   | units | value
+-------------------------------------------+------------+--------------------------------------+-----------+----------+--------+-------+-------
+ 016a787e745f41aeaafcb492478d3111:readkbps | 2015-11-17 | dc8a874f-8d7e-11e5-7f7f-7f7f7f7f7f7f | DiskStats | readkbps | DOUBLE |  KB/s |   0.0
+ 016a787e745f41aeaafcb492478d3111:readkbps | 2015-11-17 | c4b2dc3f-8d7e-11e5-7f7f-7f7f7f7f7f7f | DiskStats | readkbps | DOUBLE |  KB/s |   0.0
+ 016a787e745f41aeaafcb492478d3111:readkbps | 2015-11-17 | acdb312f-8d7e-11e5-7f7f-7f7f7f7f7f7f | DiskStats | readkbps | DOUBLE |  KB/s |   0.0
+ 016a787e745f41aeaafcb492478d3111:readkbps | 2015-11-17 | 9503861f-8d7e-11e5-7f7f-7f7f7f7f7f7f | DiskStats | readkbps | DOUBLE |  KB/s |   0.0
+ 016a787e745f41aeaafcb492478d3111:readkbps | 2015-11-17 | 7d2bdb0f-8d7e-11e5-7f7f-7f7f7f7f7f7f | DiskStats | readkbps | DOUBLE |  KB/s |   0.0
+ 016a787e745f41aeaafcb492478d3111:readkbps | 2015-11-17 | 6554570f-8d7e-11e5-7f7f-7f7f7f7f7f7f | DiskStats | readkbps | DOUBLE |  KB/s |   0.0
+ 016a787e745f41aeaafcb492478d3111:readkbps | 2015-11-17 | 4d7cabff-8d7e-11e5-7f7f-7f7f7f7f7f7f | DiskStats | readkbps | DOUBLE |  KB/s |   0.0
+ 016a787e745f41aeaafcb492478d3111:readkbps | 2015-11-17 | 35a500ef-8d7e-11e5-7f7f-7f7f7f7f7f7f | DiskStats | readkbps | DOUBLE |  KB/s |   0.0
+ 016a787e745f41aeaafcb492478d3111:readkbps | 2015-11-17 | 1dcd55df-8d7e-11e5-7f7f-7f7f7f7f7f7f | DiskStats | readkbps | DOUBLE |  KB/s |   0.0
+ 016a787e745f41aeaafcb492478d3111:readkbps | 2015-11-17 | 05f5aacf-8d7e-11e5-7f7f-7f7f7f7f7f7f | DiskStats | readkbps | DOUBLE |  KB/s |   0.0
+
+ 016a787e745f41aeaafcb492478d3111:memSwapTotal | 2015-11-18 | e2a420af-8df1-11e5-7f7f-7f7f7f7f7f7f | Memory | memSwapTotal | INTEGER |    KB | 2093052
+ 016a787e745f41aeaafcb492478d3111:memSwapTotal | 2015-11-18 | d6b8379f-8df1-11e5-7f7f-7f7f7f7f7f7f | Memory | memSwapTotal | INTEGER |    KB | 2093052
+ 016a787e745f41aeaafcb492478d3111:memSwapTotal | 2015-11-18 | cacc4e8f-8df1-11e5-7f7f-7f7f7f7f7f7f | Memory | memSwapTotal | INTEGER |    KB | 2093052
+ 016a787e745f41aeaafcb492478d3111:memSwapTotal | 2015-11-18 | bee0657f-8df1-11e5-7f7f-7f7f7f7f7f7f | Memory | memSwapTotal | INTEGER |    KB | 2093052
+ 016a787e745f41aeaafcb492478d3111:memSwapTotal | 2015-11-18 | b2f4555f-8df1-11e5-7f7f-7f7f7f7f7f7f | Memory | memSwapTotal | INTEGER |    KB | 2093052
+ 016a787e745f41aeaafcb492478d3111:memSwapTotal | 2015-11-18 | a7086c4f-8df1-11e5-7f7f-7f7f7f7f7f7f | Memory | memSwapTotal | INTEGER |    KB | 2093052
+ 016a787e745f41aeaafcb492478d3111:memSwapTotal | 2015-11-18 | 9b1c833f-8df1-11e5-7f7f-7f7f7f7f7f7f | Memory | memSwapTotal | INTEGER |    KB | 2093052
+ 016a787e745f41aeaafcb492478d3111:memSwapTotal | 2015-11-18 | 8344b11f-8df1-11e5-7f7f-7f7f7f7f7f7f | Memory | memSwapTotal | INTEGER |    KB | 2093052
+ 016a787e745f41aeaafcb492478d3111:memSwapTotal | 2015-11-18 | 7758c80f-8df1-11e5-7f7f-7f7f7f7f7f7f | Memory | memSwapTotal | INTEGER |    KB | 2093052
+ 016a787e745f41aeaafcb492478d3111:memSwapTotal | 2015-11-18 | 6b6cb7ef-8df1-11e5-7f7f-7f7f7f7f7f7f | Memory | memSwapTotal | INTEGER |    KB | 2093052
+
+
+CREATE INDEX value_m on metric_value_table(value);
+
+CREATE INDEX name_m on metric_value_table(name);
+select * from metric_value_table where name = 'memSwapTotal' limit 20;
+
+CREATE INDEX mgroup_m on metric_value_table(mgroup);
+select * from metric_value_table where mgroup = 'Memory';
+
+select * from metric_value_table where event_timestamp > maxTimeuuid('2015-12-7 10:00+0000') limit 10 allow filtering;
+
+# connect directly to JCatascopia:
+http://194.249.0.72:8080/JCatascopia-Web/restAPI/metrics/016a787e745f41aeaafcb492478d3111:iotime
+
+-- subscription_table:
+<EMPTY>
+
+
+-- metric_table:
+ agentid                          | metricid                                         | is_sub | mgroup     | name            | type    | units
+----------------------------------+--------------------------------------------------+--------+------------+-----------------+---------+--------------
+ 016a787e745f41aeaafcb492478d3111 |            016a787e745f41aeaafcb492478d3111:arch |   null | StaticInfo |            arch |  STRING |
+ 016a787e745f41aeaafcb492478d3111 |           016a787e745f41aeaafcb492478d3111:btime |   null | StaticInfo |           btime |  STRING |
+ 016a787e745f41aeaafcb492478d3111 |       016a787e745f41aeaafcb492478d3111:cpuIOwait |   null |        CPU |       cpuIOwait |  DOUBLE |            %
+ 016a787e745f41aeaafcb492478d3111 |         016a787e745f41aeaafcb492478d3111:cpuIdle |   null |        CPU |         cpuIdle |  DOUBLE |            %
+ 016a787e745f41aeaafcb492478d3111 |          016a787e745f41aeaafcb492478d3111:cpuNum |   null | StaticInfo |          cpuNum |  STRING |
+ 016a787e745f41aeaafcb492478d3111 |       016a787e745f41aeaafcb492478d3111:cpuSystem |   null |        CPU |       cpuSystem |  DOUBLE |            %
+ 016a787e745f41aeaafcb492478d3111 |        016a787e745f41aeaafcb492478d3111:cpuTotal |   null |        CPU |        cpuTotal |  DOUBLE |            %
+ 016a787e745f41aeaafcb492478d3111 |         016a787e745f41aeaafcb492478d3111:cpuUser |   null |        CPU |         cpuUser |  DOUBLE |            %
+ 016a787e745f41aeaafcb492478d3111 |        016a787e745f41aeaafcb492478d3111:diskFree |   null |       Disk |        diskFree |    LONG |           MB
+ 016a787e745f41aeaafcb492478d3111 |       016a787e745f41aeaafcb492478d3111:diskTotal |   null |       Disk |       diskTotal |    LONG |           MB
+ 016a787e745f41aeaafcb492478d3111 |        016a787e745f41aeaafcb492478d3111:diskUsed |   null |       Disk |        diskUsed |  DOUBLE |            %
+ 016a787e745f41aeaafcb492478d3111 |          016a787e745f41aeaafcb492478d3111:iotime |   null |  DiskStats |          iotime |  DOUBLE |            %
+ 016a787e745f41aeaafcb492478d3111 |        016a787e745f41aeaafcb492478d3111:memCache |   null |     Memory |        memCache | INTEGER |           KB
+ 016a787e745f41aeaafcb492478d3111 |         016a787e745f41aeaafcb492478d3111:memFree |   null |     Memory |         memFree | INTEGER |           KB
+ 016a787e745f41aeaafcb492478d3111 |     016a787e745f41aeaafcb492478d3111:memSwapFree |   null |     Memory |     memSwapFree | INTEGER |           KB
+ 016a787e745f41aeaafcb492478d3111 |    016a787e745f41aeaafcb492478d3111:memSwapTotal |   null |     Memory |    memSwapTotal | INTEGER |           KB
+ 016a787e745f41aeaafcb492478d3111 |        016a787e745f41aeaafcb492478d3111:memTotal |   null |     Memory |        memTotal | INTEGER |           KB
+ 016a787e745f41aeaafcb492478d3111 |         016a787e745f41aeaafcb492478d3111:memUsed |   null |     Memory |         memUsed | INTEGER |           KB
+ 016a787e745f41aeaafcb492478d3111 |  016a787e745f41aeaafcb492478d3111:memUsedPercent |   null |     Memory |  memUsedPercent |  DOUBLE |            %
+ 016a787e745f41aeaafcb492478d3111 |      016a787e745f41aeaafcb492478d3111:netBytesIN |   null |    Network |      netBytesIN |  DOUBLE |      bytes/s
+ 016a787e745f41aeaafcb492478d3111 |     016a787e745f41aeaafcb492478d3111:netBytesOUT |   null |    Network |     netBytesOUT |  DOUBLE |      bytes/s
+ 016a787e745f41aeaafcb492478d3111 |    016a787e745f41aeaafcb492478d3111:netPacketsIN |   null |    Network |    netPacketsIN |  DOUBLE |    packets/s
+ 016a787e745f41aeaafcb492478d3111 |   016a787e745f41aeaafcb492478d3111:netPacketsOut |   null |    Network |   netPacketsOut |  DOUBLE |    packets/s
+ 016a787e745f41aeaafcb492478d3111 |              016a787e745f41aeaafcb492478d3111:os |   null | StaticInfo |              os |  STRING |
+ 016a787e745f41aeaafcb492478d3111 | 016a787e745f41aeaafcb492478d3111:processingCount |   null |     Fuseki | processingCount |  DOUBLE |        req/s
+ 016a787e745f41aeaafcb492478d3111 |  016a787e745f41aeaafcb492478d3111:processingTime |   null |     Fuseki |  processingTime |  DOUBLE | milliseconds
+ 016a787e745f41aeaafcb492478d3111 |       016a787e745f41aeaafcb492478d3111:readCount |   null |     Fuseki |       readCount |  DOUBLE |        req/s
+ 016a787e745f41aeaafcb492478d3111 |        016a787e745f41aeaafcb492478d3111:readTime |   null |     Fuseki |        readTime |  DOUBLE | milliseconds
+ 016a787e745f41aeaafcb492478d3111 |        016a787e745f41aeaafcb492478d3111:readkbps |   null |  DiskStats |        readkbps |  DOUBLE |         KB/s
+ 016a787e745f41aeaafcb492478d3111 |      016a787e745f41aeaafcb492478d3111:writeCount |   null |     Fuseki |      writeCount |  DOUBLE |        req/s
+ 016a787e745f41aeaafcb492478d3111 |       016a787e745f41aeaafcb492478d3111:writeTime |   null |     Fuseki |       writeTime |  DOUBLE | milliseconds
+ 016a787e745f41aeaafcb492478d3111 |       016a787e745f41aeaafcb492478d3111:writekbps |   null |  DiskStats |       writekbps |  DOUBLE |         KB/s
+
+
+-- subscription_agents_table:
+<EMPTY>

@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>Form Page</title>
+</head>
+<body>
+<h1>Upload a VM configuration script file</h1>
+
+<form style="background-color: lightgray" action="rest/service/upload_vm_script" method="post" enctype="multipart/form-data">
+
+    <p>
+        Select a configuration script: <input type="file" name="file" size="50" accept=".sh"/>
+    </p>
+
+    Optimize: <br>
+    <input type="radio" name="optimization" value="true">Yes<br>
+    <input type="radio" name="optimization" value="false" checked>No<br>
+    <br>
+    <input type="submit" value="Upload Script"/>
+</form>
+
+<br>
+<h1>Upload an image file</h1>
+
+<!--http://docs.openstack.org/image-guide/content/image-formats.html-->
+<form action="rest/service/upload_image" method="post" enctype="multipart/form-data">
+
+    <p>
+        Select a file : <input type="file" name="file" size="50" accept=".raw,.vhd,.vmdk,.vdi,.iso,.qcow2,.aki,.ari,.ami,.bare,.ovf,.aki,.ari,.ami"/>
+    </p>
+
+    Optimize: <br>
+    <input type="radio" name="optimization" value="true">Yes<br>
+    <input type="radio" name="optimization" value="false" checked>No<br>
+    <br>
+    <input type="submit" value="Upload It"/>
+</form>
+
+</body>
+</html>
