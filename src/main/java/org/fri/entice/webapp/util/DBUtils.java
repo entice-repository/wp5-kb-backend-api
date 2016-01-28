@@ -1,4 +1,4 @@
-package org.fri.entice.webapp.utils;
+package org.fri.entice.webapp.util;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;

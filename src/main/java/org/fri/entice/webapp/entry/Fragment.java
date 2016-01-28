@@ -7,17 +7,17 @@ import java.util.List;
 @XmlRootElement
 public class Fragment {
     private String id;
-    private String referenceImageId;
-    private String repositoryId;
+    private String refDiskImageId;
+    private String refRepositoryId;
     private String anyURI;
-    private int fragmentSize;
+    private int fragmentSize;   // probably in bytes
     private List<String> hashValue = new ArrayList<String>(10);
 
-    public Fragment(String id, String referenceImageId, String repositoryId, String anyURI, int fragmentSize,
+    public Fragment(String id, String refDiskImageId, String refRepositoryId, String anyURI, int fragmentSize,
                     List<String> hashValue) {
         this.id = id;
-        this.referenceImageId = referenceImageId;
-        this.repositoryId = repositoryId;
+        this.refDiskImageId = refDiskImageId;
+        this.refRepositoryId = refRepositoryId;
         this.anyURI = anyURI;
         this.fragmentSize = fragmentSize;
         this.hashValue = hashValue;
@@ -31,20 +31,20 @@ public class Fragment {
         this.id = id;
     }
 
-    public String getReferenceImageId() {
-        return referenceImageId;
+    public String getRefDiskImageId() {
+        return refDiskImageId;
     }
 
-    public void setReferenceImageId(String referenceImageId) {
-        this.referenceImageId = referenceImageId;
+    public void setRefDiskImageId(String refDiskImageId) {
+        this.refDiskImageId = refDiskImageId;
     }
 
-    public String getRepositoryId() {
-        return repositoryId;
+    public String getRefRepositoryId() {
+        return refRepositoryId;
     }
 
-    public void setRepositoryId(String repositoryId) {
-        this.repositoryId = repositoryId;
+    public void setRefRepositoryId(String refRepositoryId) {
+        this.refRepositoryId = refRepositoryId;
     }
 
     public String getAnyURI() {

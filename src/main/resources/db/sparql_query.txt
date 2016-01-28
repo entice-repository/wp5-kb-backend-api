@@ -1,0 +1,16 @@
+prefix knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>
+
+SELECT DISTINCT ?o
+WHERE { knowledgebase:ff433450-df10-4e62-abec-b63c76d27ed5  a knowledgebase:CI ; knowledgebase:DiskImage_Description ?o .}
+LIMIT 25
+
+-----------------
+
+prefix knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>
+
+SELECT DISTINCT ?s ?o
+WHERE { ?s a knowledgebase:Fragment ; knowledgebase:Fragment_hasReferenceImage  ?o }
+LIMIT 25
+
+-----------------
+

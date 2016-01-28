@@ -18,8 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.fri.entice.webapp.cassandra.CassandraService;
 import org.fri.entice.webapp.entry.*;
-import org.fri.entice.webapp.jena.Fuseki;
-import org.fri.entice.webapp.utils.DBUtils;
+import org.fri.entice.webapp.util.DBUtils;
+import org.fri.entice.webapp.util.FusekiUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.joda.time.DateTime;
@@ -253,7 +253,7 @@ public class JSONService implements IMonitoringRequests {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<DiskImageResource> getImages() {
-        return Fuseki.getAllImages();
+        return FusekiUtils.getAllImages();
     }
 
     /**
@@ -274,7 +274,7 @@ public class JSONService implements IMonitoringRequests {
             // not know...
             //we pass an ID but maybe there are more images with the same ID in the cassandra (this should not happen
             // by the way) - so this is why a list is returned
-            List<DiskImage> ldi = Fuseki.getImagesWithGivenId(curId);
+            List<DiskImage> ldi = FusekiUtils.getImagesWithGivenId(curId);
             for (int j = 0; j < ldi.size(); j++) {
                 DiskImageResource dir = new DiskImageResource(curId, ldi.get(j));
                 specimgs.add(dir);
@@ -299,7 +299,7 @@ public class JSONService implements IMonitoringRequests {
         //here we need to compute the Image ID
         String uniqueID = UUID.randomUUID().toString();
         //we execute the SPARQL query for image insertion
-        Fuseki.insertDiskImage(uniqueID, im);
+        FusekiUtils.insertDiskImage(uniqueID, im);
         //and we return the JSON data (=image id and location)
         UploadResponse ur = new UploadResponse(uniqueID, im.getIri());
         return ur;
@@ -340,7 +340,7 @@ public class JSONService implements IMonitoringRequests {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public List<DiskImageResource> returnImagesWithGivenType(ImageType it) {
-        return Fuseki.getDiskImagesWithGivenType(it);
+        return FusekiUtils.getDiskImagesWithGivenType(it);
     }
 
     /**
@@ -359,7 +359,7 @@ public class JSONService implements IMonitoringRequests {
         int numberOfDeletedImages = 0;
         for (int i = 0; i < list.size(); i++) {
             String curId = list.get(i);
-            Fuseki.deleteDiskImage(curId);
+            FusekiUtils.deleteDiskImage(curId);
             numberOfDeletedImages++;
         }
         return numberOfDeletedImages;
@@ -405,7 +405,7 @@ public class JSONService implements IMonitoringRequests {
         else {
             System.out.println("Uploading image script... !");
 
-            String insertStatementStr = Fuseki.generateInsertVMStatement(contentDispositionHeader.getFileName(),
+            String insertStatementStr = FusekiUtils.generateInsertVMStatement(contentDispositionHeader.getFileName(),
                     true, "guest", doOptimize);
             UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr), "http://localhost:3030/ds/update");
             upp.execute();
@@ -427,14 +427,14 @@ public class JSONService implements IMonitoringRequests {
     @Produces(MediaType.APPLICATION_JSON)
     public List<ImageObj> getImageList(@QueryParam("optimized") Boolean optimized) {
         //Query the collection, dump output
-        String query = Fuseki.getAllUploadedImages(optimized);
+        String query = FusekiUtils.getAllUploadedImages(optimized);
         QueryExecution qe = QueryExecutionFactory.sparqlService("http://localhost:3030/ds/query", query);
         com.hp.hpl.jena.query.ResultSet results = qe.execSelect();
 
         List<String> idsList =  DBUtils.parseSubjectResult(results);
         List<ImageObj> imageObjs = new ArrayList<ImageObj>();
         for(String id : idsList){
-            String query2 = Fuseki.getAllAttributesMatchingSubjectID(id);
+            String query2 = FusekiUtils.getAllAttributesMatchingSubjectID(id);
             qe = QueryExecutionFactory.sparqlService("http://localhost:3030/ds/query", query2);
             results = qe.execSelect();
             List<ResultObj>  resultObjs =  DBUtils.parsePredicateObjectResult(id,results);
@@ -465,7 +465,7 @@ public class JSONService implements IMonitoringRequests {
 
         try {
             OutputStream outpuStream = new FileOutputStream(new File(serverLocation));
-            ;
+
             int read;
             byte[] bytes = new byte[1024];
 

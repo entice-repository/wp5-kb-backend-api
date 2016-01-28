@@ -27,13 +27,13 @@ public class Functionality {
 
     // This is a description of the programming language, algorithm, libraries used to implement the functionality,
     // and may be used as part of the search criteria.
-    private String implementationId;
+    private String refImplementationId;
 
     // This is the application domain for the given functionality, e.g. used in civil engineering, medicine etc.
     private String domain;
 
     public Functionality(String id, int classification, String tag, String name, String description, String
-            inputDescription, String outputDescription, String implementationId, String domain) {
+            inputDescription, String outputDescription, String refImplementationId, String domain) {
         this.id = id;
         this.classification = classification;
         this.tag = tag;
@@ -41,7 +41,7 @@ public class Functionality {
         this.description = description;
         this.inputDescription = inputDescription;
         this.outputDescription = outputDescription;
-        this.implementationId = implementationId;
+        this.refImplementationId = refImplementationId;
         this.domain = domain;
     }
 
@@ -101,12 +101,12 @@ public class Functionality {
         this.outputDescription = outputDescription;
     }
 
-    public String getImplementationId() {
-        return implementationId;
+    public String getRefImplementationId() {
+        return refImplementationId;
     }
 
-    public void setImplementationId(String implementationId) {
-        this.implementationId = implementationId;
+    public void setRefImplementationId(String refImplementationId) {
+        this.refImplementationId = refImplementationId;
     }
 
     public String getDomain() {

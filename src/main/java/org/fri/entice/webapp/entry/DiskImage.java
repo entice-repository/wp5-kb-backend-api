@@ -29,8 +29,8 @@ public class DiskImage {
     public DiskImage() {
     }
 
-    public DiskImage(ImageType imageTypeC, String descriptionC, String titleC, String predecessorC, FileFormat
-            fileFormatC, String pictureUrlC, boolean encriptionC, String iriC, int slaIdC, int priceC, int ownerIdC,
+    public DiskImage(String id, ImageType imageTypeC, String descriptionC, String titleC, String predecessorC, FileFormat
+            fileFormatC, String pictureUrlC, boolean encriptionC, String iriC, int slaIdC, double priceC, int ownerIdC,
                      int functionallityIdC, int qualityIdC, int operatingSystemIdC, boolean needsDataC, int
                              generationTimeC, boolean obfuscationC) {
         this.imageType = imageTypeC;
@@ -187,5 +187,13 @@ public class DiskImage {
     public void setObfuscation(boolean obfuscation) {
         this.obfuscation = obfuscation;
     }
-} 
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+}
 

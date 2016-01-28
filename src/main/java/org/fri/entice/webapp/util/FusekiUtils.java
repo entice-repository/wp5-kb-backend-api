@@ -1,6 +1,6 @@
-package org.fri.entice.webapp.jena;
+package org.fri.entice.webapp.util;
 
-//web interface to Fuseki - http://localhost:3030/fuseki.html 
+//web interface to FusekiUtils - http://localhost:3030/fuseki.html
 
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -11,19 +11,18 @@ import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateProcessor;
 import com.hp.hpl.jena.update.UpdateRequest;
 import com.hp.hpl.jena.vocabulary.VCARD;
-import org.fri.entice.webapp.entry.DiskImage;
-import org.fri.entice.webapp.entry.DiskImageResource;
-import org.fri.entice.webapp.entry.FileFormat;
-import org.fri.entice.webapp.entry.ImageType;
+import org.fri.entice.webapp.entry.*;
 
+import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-// default:
-//localhost
+public class FusekiUtils {
 
-public class Fuseki {
+    private static String KB_PREFIX = "knowledgebase:<http://www.semanticweb" + "" +
+            ".org/project-entice/ontologies/2015/7/knowledgebase#>";
+    private static String OWL_PREFIX = "owl:<http://www.w3.org/2002/07/owl#>";
 
     public static String generateInsertVMStatement(String vmFilename, boolean isScript, String owner, boolean
             optimize) {
@@ -33,14 +32,120 @@ public class Fuseki {
                 "dc:optimize \"%s\" .}   ", id, vmFilename, isScript, owner, optimize);
     }
 
+    public static String generateInsertObjectStatement(Object obj) {
+        try {
+            String id = UUID.randomUUID().toString();
+
+            // CREATE USER
+            if (obj instanceof User) {
+                User user = (User) obj;
+                user.setId(id);
+                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                        "knowledgebase:%s  a knowledgebase:User , owl:NamedIndividual ;" +
+                        "     knowledgebase:User_Email        \"%s\" ;\n" +
+                        "        knowledgebase:User_FullName     \"%s\" ;\n" +
+                        "        knowledgebase:User_PhoneNumber  \"%s\" ;\n" +
+                        "        knowledgebase:User_UserName     \"%s\" ;" +
+                        "}", user.getId(), user.getFullName(), user.getEmail(), user.getPhoneNumber(), user
+                        .getUsername(), user.getPassword());
+                // OLD:
+                //return String.format("PREFIX user:<http://www.semanticweb.org/project-entice/ontologies/User/>
+                // INSERT " +
+                // "DATA {" +
+                // "user:%s user:User_FullName \"%s\" ;" +
+                // "user:User_Email \"%s\" ; user:User_PhoneNumber \"%s\" ; user:User_UserName \"%s\" ; " +
+                // "user:User_Password \"%s\" . }", user.getId(), user.getFullName(), user.getEmail(), user
+                // .getPhoneNumber(), user.getUsername(), user.getPassword());
+            }
+            // CREATE DISK IMAGE
+            else if (obj instanceof DiskImage) {
+                DiskImage diskImage = (DiskImage) obj;
+                diskImage.setId(id);
+                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                        "knowledgebase:%s a knowledgebase:DiskImage, owl:NamedIndividual, knowledgebase:" +
+                        (diskImage.getImageType().equals(ImageType.CI) ? "CI" : "VMI") + " ; " +
+                        "knowledgebase:DiskImage_Description \"%s\" ;\n" +
+                        "knowledgebase:DiskImage_Description \"%s\" ;\n" +
+                        "knowledgebase:DiskImage_Encryption  \"%s\" ;\n" +
+                        "knowledgebase:DiskImage_FileFormat  \"%s\" ;\n" +
+                        "knowledgebase:DiskImage_Owner  \"%s\" ;\n" +
+                        "}", diskImage.getId(), diskImage.getDescription(), "description2", diskImage.getEncryption()
+                        , diskImage.getFileFormat(), diskImage.getOwnerId());
+            }
+            // CREATE FRAGMENT
+            else if (obj instanceof Fragment) {
+                Fragment fragment = (Fragment) obj;
+                fragment.setId(id);
+                String hashValues = new String();
+                for (String val : fragment.getHashValue()) {
+                    hashValues += "\"" + val + "\",";
+                }
+
+                if (hashValues.length() > 0) hashValues = hashValues.substring(0, hashValues.length() - 1);
+
+                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                        "knowledgebase:%s a knowledgebase:Fragment, owl:NamedIndividual ;" +
+                        "knowledgebase:Fragment_hasReferenceImage \"%s\" ;\n" +
+                        "knowledgebase:Fragment_hasRepository \"%s\" ;\n" +
+                        "knowledgebase:Fragment_IRI \"%s\" ;\n" +
+//                        "knowledgebase:Fragment_ReferenceImage \"%s\" ;\n" +
+                        "knowledgebase:Fragment_Size \"%s\" ;\n" +
+                        "knowledgebase:Fragment_HashValues " + hashValues + " ;\n" +
+                        "}", fragment.getId(), fragment.getRefDiskImageId(), fragment.getRefRepositoryId(), fragment
+                        .getAnyURI(), fragment.getFragmentSize());
+            }
+            // CREATE DELIVERY
+            else if (obj instanceof Delivery) {
+                Delivery delivery = (Delivery) obj;
+                delivery.setId(id);
+                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                                "knowledgebase:%s a knowledgebase:Delivery, owl:NamedIndividual ;" +
+                                "knowledgebase:Delivery_hasDeliveredDiskImage \"%s\" ;\n" +
+                                "knowledgebase:Delivery_hasFunctionality \"%s\" ;\n" +
+                                "knowledgebase:Delivery_hasTargetRepository \"%s\" ;\n" +
+                                "knowledgebase:Delivery_hasUser \"%s\" ;\n" +
+                                "knowledgebase:Delivery_DeliveryTime \"%s\" ;\n" +
+                                "knowledgebase:Delivery_RequestTime \"%s\" ;\n" +
+                                "}", delivery.getId(), delivery.getRefDiskImageId(), delivery.getRefDiskImageId(),
+                        delivery.getRefFunctionalityId(), delivery.getRefTargetRepositoryId(), delivery.getRefUserId
+                                (), delivery.getDeliveryTime(), delivery.getRequestTime());
+            }
+            // CREATE FUNCTIONALITY
+            else if (obj instanceof Functionality) {
+                Functionality functionality = (Functionality) obj;
+                functionality.setId(id);
+                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                        "knowledgebase:%s a knowledgebase:Functionality, owl:NamedIndividual ;" +
+                        "knowledgebase:Functionality_hasImplementation \"%s\" ;\n" +
+                        "knowledgebase:Functionality_Classification \"%s\" ;\n" +
+                        "knowledgebase:Functionality_Description \"%s\" ;\n" +
+                        "knowledgebase:Functionality_Domain \"%s\" ;\n" +
+                        "knowledgebase:Functionality_InputDescription \"%s\" ;\n" +
+                        "knowledgebase:Functionality_Name \"%s\" ;\n" +
+                        "knowledgebase:Functionality_OutputDescription \"%s\" ;\n" +
+                        "knowledgebase:Functionality_Tag \"%s\" ;\n" +
+                        "}", functionality.getId(), functionality.getRefImplementationId(), functionality
+                        .getClassification(), functionality.getInputDescription(), functionality.getDomain(),
+                        functionality.getInputDescription(), functionality.getName(), functionality
+                                .getOutputDescription(), functionality.getTag());
+            }
+            //todo: add other objects
+            else {
+                throw new InvalidObjectException("The selected object type is not currently supported!");
+            }
+        } catch (InvalidObjectException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static String getAllUploadedImages(Boolean optimizedOnly) {
 //        return "SELECT DISTINCT ?s\n" +
 //                "WHERE { ?s ?val  ?obj  FILTER regex(str(?s), \"http://example/\")   }\n" +
 //                "LIMIT 100";
-        if (optimizedOnly == null)
-            return "SELECT DISTINCT ?s\n" +
-                    "WHERE { ?s ?p  ?o  FILTER regex(str(?s), \"http://example/\")   }\n" +
-                    "LIMIT 25";
+        if (optimizedOnly == null) return "SELECT DISTINCT ?s\n" +
+                "WHERE { ?s ?p  ?o  FILTER regex(str(?s), \"http://example/\")   }\n" +
+                "LIMIT 25";
         else return "SELECT DISTINCT ?s\n" +
                 "WHERE { ?s <http://purl.org/dc/elements/1.1/optimize> \"" + (optimizedOnly ? "true" : "false") + "\"" +
                 " . FILTER regex(str(?s), \"http://example/\")  }\n" +
@@ -64,7 +169,7 @@ public class Fuseki {
     public static void insertDiskImage(String uniqueID, DiskImage di) {
         String endpoint = "http://localhost:3030/ds/update";
 
-        String queryString = "PREFIX f: <" + Fuseki.myNamespacePrefix + "> " +
+        String queryString = "PREFIX f: <" + FusekiUtils.myNamespacePrefix + "> " +
                 "INSERT { " +
                 "f:" + uniqueID + " " +
                 "f:imageType \"" + di.getImageType() + "\" ; " +
@@ -90,7 +195,7 @@ public class Fuseki {
         qe.execute();
 
         //TODO: Maybe I can pack these two SPARQL queries into one
-        String queryStr = "PREFIX f: <" + Fuseki.myNamespacePrefix + "> " +
+        String queryStr = "PREFIX f: <" + FusekiUtils.myNamespacePrefix + "> " +
                 "INSERT { " +
                 "f:" + uniqueID + " f:isA f:DiskImage" +
                 "} WHERE {?s ?p ?o}";
@@ -112,7 +217,7 @@ public class Fuseki {
     public static void deleteDiskImage(String imageID) {
         String endpoint = "http://localhost:3030/ds/update";
         //za razlago glej http://stackoverflow.com/questions/25531773/sparql-cascade-in-deleting-individuals
-        String queryString = "PREFIX f: <" + Fuseki.myNamespacePrefix + "> " +
+        String queryString = "PREFIX f: <" + FusekiUtils.myNamespacePrefix + "> " +
                 "DELETE WHERE {f:" + imageID + " ?p ?v} ";
         UpdateRequest query = UpdateFactory.create(queryString);
         UpdateProcessor qe = UpdateExecutionFactory.createRemoteForm(query, endpoint);
@@ -125,7 +230,7 @@ public class Fuseki {
         List<DiskImageResource> allImageResourcesWithThisType = new ArrayList<DiskImageResource>();
         String endpoint = "http://localhost:3030/ds/sparql";
         //Show me properties of all DiskImages that have imageType equal to "VMI"
-        String queryString = "PREFIX f: <" + Fuseki.myNamespacePrefix + ">" +
+        String queryString = "PREFIX f: <" + FusekiUtils.myNamespacePrefix + ">" +
                 "SELECT ?DiskImage ?imageType ?imageDescription ?imageTitle ?imagePredecessor ?imageFileFormat " +
                 "?imagePictureUrl ?imageEncription ?imageIri ?imageSlaId ?imagePrice ?imageOwnerId " +
                 "?imageFunctionallityId ?imageQualityId ?imageOperatingSystemId ?imageNeedsData ?imageGenerationTime " +
@@ -168,10 +273,10 @@ public class Fuseki {
             int generationTimeC = Integer.parseInt(qs.getLiteral("imageGenerationTime").toString());
             boolean obfuscationC = Boolean.parseBoolean(qs.getLiteral("imageObfuscation").toString());
             String resourceIdIri = qs.getResource("DiskImage").toString();
-            String resourceId = resourceIdIri.replace(Fuseki.myNamespacePrefix, "");
-            DiskImage di = new DiskImage(imageTypeC, descriptionC, titleC, predecessorC, fileFormatC, pictureUrlC,
-                    encriptionC, iriC, slaIdC, priceC, ownerIdC, functionallityIdC, qualityIdC, operatingSystemIdC,
-                    needsDataC, generationTimeC, obfuscationC);
+            String resourceId = resourceIdIri.replace(FusekiUtils.myNamespacePrefix, "");
+            DiskImage di = new DiskImage(UUID.randomUUID().toString(), imageTypeC, descriptionC, titleC,
+                    predecessorC, fileFormatC, pictureUrlC, encriptionC, iriC, slaIdC, priceC, ownerIdC,
+                    functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC);
             DiskImageResource dir = new DiskImageResource(resourceId, di);
             allImageResourcesWithThisType.add(dir);
         }
@@ -209,7 +314,7 @@ public class Fuseki {
         List<DiskImage> allImagesWithThisId = new ArrayList<DiskImage>();
         String endpoint = "http://localhost:3030/ds/sparql";
         //Show me properties of the DiskImage with specified ID
-        String queryString = "PREFIX f: <" + Fuseki.myNamespacePrefix + ">" +
+        String queryString = "PREFIX f: <" + FusekiUtils.myNamespacePrefix + ">" +
                 "SELECT ?DiskImage ?imageType ?imageDescription ?imageTitle ?imagePredecessor ?imageFileFormat " +
                 "?imagePictureUrl ?imageEncription ?imageIri ?imageSlaId ?imagePrice ?imageOwnerId " +
                 "?imageFunctionallityId ?imageQualityId ?imageOperatingSystemId ?imageNeedsData ?imageGenerationTime " +
@@ -252,9 +357,9 @@ public class Fuseki {
             boolean needsDataC = Boolean.parseBoolean(qs.getLiteral("imageNeedsData").toString());
             int generationTimeC = Integer.parseInt(qs.getLiteral("imageGenerationTime").toString());
             boolean obfuscationC = Boolean.parseBoolean(qs.getLiteral("imageObfuscation").toString());
-            DiskImage di = new DiskImage(imageTypeC, descriptionC, titleC, predecessorC, fileFormatC, pictureUrlC,
-                    encriptionC, iriC, slaIdC, priceC, ownerIdC, functionallityIdC, qualityIdC, operatingSystemIdC,
-                    needsDataC, generationTimeC, obfuscationC);
+            DiskImage di = new DiskImage(UUID.randomUUID().toString(), imageTypeC, descriptionC, titleC,
+                    predecessorC, fileFormatC, pictureUrlC, encriptionC, iriC, slaIdC, priceC, ownerIdC,
+                    functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC);
 
             allImagesWithThisId.add(di);
         }
@@ -269,7 +374,7 @@ public class Fuseki {
         List<DiskImageResource> allImages = new ArrayList<DiskImageResource>();
         String endpoint = "http://localhost:3030/ds/sparql";
         //Show me the properties of all of the DiskImages in the cassandra
-        String queryString = "PREFIX f: <" + Fuseki.myNamespacePrefix + ">" +
+        String queryString = "PREFIX f: <" + FusekiUtils.myNamespacePrefix + ">" +
                 "SELECT ?DiskImage ?imageType ?imageDescription ?imageTitle ?imagePredecessor ?imageFileFormat " +
                 "?imagePictureUrl ?imageEncription ?imageIri ?imageSlaId ?imagePrice ?imageOwnerId " +
                 "?imageFunctionallityId ?imageQualityId ?imageOperatingSystemId ?imageNeedsData ?imageGenerationTime " +
@@ -313,10 +418,10 @@ public class Fuseki {
             int generationTimeC = Integer.parseInt(qs.getLiteral("imageGenerationTime").toString());
             boolean obfuscationC = Boolean.parseBoolean(qs.getLiteral("imageObfuscation").toString());
             String resourceIdIri = qs.getResource("DiskImage").toString();
-            String resourceId = resourceIdIri.replace(Fuseki.myNamespacePrefix, "");
-            DiskImage di = new DiskImage(imageTypeC, descriptionC, titleC, predecessorC, fileFormatC, pictureUrlC,
-                    encriptionC, iriC, slaIdC, priceC, ownerIdC, functionallityIdC, qualityIdC, operatingSystemIdC,
-                    needsDataC, generationTimeC, obfuscationC);
+            String resourceId = resourceIdIri.replace(FusekiUtils.myNamespacePrefix, "");
+            DiskImage di = new DiskImage(UUID.randomUUID().toString(), imageTypeC, descriptionC, titleC,
+                    predecessorC, fileFormatC, pictureUrlC, encriptionC, iriC, slaIdC, priceC, ownerIdC,
+                    functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC);
             DiskImageResource dir = new DiskImageResource(resourceId, di);
             allImages.add(dir);
         }
