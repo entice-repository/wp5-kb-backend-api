@@ -18,6 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.fri.entice.webapp.cassandra.CassandraService;
 import org.fri.entice.webapp.entry.*;
+import org.fri.entice.webapp.uibk.client.IUibkService;
+import org.fri.entice.webapp.uibk.client.UibkService;
 import org.fri.entice.webapp.util.DBUtils;
 import org.fri.entice.webapp.util.FusekiUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -25,6 +27,8 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.joda.time.DateTime;
 
 import javax.ws.rs.*;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.*;
 import java.io.*;
 import java.text.DateFormat;
@@ -387,8 +391,34 @@ public class JSONService implements IMonitoringRequests {
 
         String output = "File saved to server location : " + filePath + "<br>Perform optimization: " + doOptimize;
 
+
         return Response.status(200).entity(output).build();
 
+    }
+
+    @GET
+    @Path("/async_test")
+    public void asyncGet(@Suspended final AsyncResponse asyncResponse) {
+        // TODO test it and implement it in method "uploadImageScript"
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String result = veryExpensiveOperation();
+                asyncResponse.resume(result);
+            }
+
+            private String veryExpensiveOperation() {
+                long l = 0;
+                for (int i = 0; i < 1000000000; i++) {
+                    //for (int j = 0; j < 1000000000; j++) {
+                        for (int j = 0; j < 10; j++) {
+                            l++;
+                        }
+                    //}
+                }
+                return "yes "+l;
+            }
+        }).start();
     }
 
     @POST
@@ -407,19 +437,23 @@ public class JSONService implements IMonitoringRequests {
 
             String insertStatementStr = FusekiUtils.generateInsertVMStatement(contentDispositionHeader.getFileName(),
                     true, "guest", doOptimize);
-            UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr), "http://localhost:3030/ds/update");
+            UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr),
+                    "http://localhost:3030/ds/update");
             upp.execute();
 
             // save the file to the server
             saveFile(fileInputStream, filePath);
 
-            //todo: connect with UIBK service
+            IUibkService uibkService = new UibkService();
+            File vmImage = new File(filePath);
+
+            // call UIBK add_interface service
+            uibkService.addInterface(vmImage);
 
             output = "Script file saved to server location : " + filePath + "<br>Perform optimization: " + doOptimize;
         }
         return Response.status(200).entity(output).build();
     }
-
 
 
     @GET
@@ -431,27 +465,25 @@ public class JSONService implements IMonitoringRequests {
         QueryExecution qe = QueryExecutionFactory.sparqlService("http://localhost:3030/ds/query", query);
         com.hp.hpl.jena.query.ResultSet results = qe.execSelect();
 
-        List<String> idsList =  DBUtils.parseSubjectResult(results);
+        List<String> idsList = DBUtils.parseSubjectResult(results);
         List<ImageObj> imageObjs = new ArrayList<ImageObj>();
-        for(String id : idsList){
+        for (String id : idsList) {
             String query2 = FusekiUtils.getAllAttributesMatchingSubjectID(id);
             qe = QueryExecutionFactory.sparqlService("http://localhost:3030/ds/query", query2);
             results = qe.execSelect();
-            List<ResultObj>  resultObjs =  DBUtils.parsePredicateObjectResult(id,results);
+            List<ResultObj> resultObjs = DBUtils.parsePredicateObjectResult(id, results);
 
-            ImageObj imageObj = new ImageObj(id,false,"",false);
-            for(ResultObj ro : resultObjs){
-                if(ro.getP().equals(DBUtils.OBJECT_PREFIX + "filename"))
-                    imageObj.setFilename(ro.getO());
-                else if(ro.getP().equals(DBUtils.OBJECT_PREFIX + "is_script"))
+            ImageObj imageObj = new ImageObj(id, false, "", false);
+            for (ResultObj ro : resultObjs) {
+                if (ro.getP().equals(DBUtils.OBJECT_PREFIX + "filename")) imageObj.setFilename(ro.getO());
+                else if (ro.getP().equals(DBUtils.OBJECT_PREFIX + "is_script"))
                     imageObj.setIsScript(ro.getO().contains("true"));
-                else if(ro.getP().equals(DBUtils.OBJECT_PREFIX + "owner"))
-                    imageObj.setOwner(ro.getO());
-                else if(ro.getP().equals(DBUtils.OBJECT_PREFIX + "optimize"))
+                else if (ro.getP().equals(DBUtils.OBJECT_PREFIX + "owner")) imageObj.setOwner(ro.getO());
+                else if (ro.getP().equals(DBUtils.OBJECT_PREFIX + "optimize"))
                     imageObj.setOptimize(ro.getO().contains("true"));
             }
 
-                imageObjs.add(imageObj);
+            imageObjs.add(imageObj);
         }
         ResultSetFormatter.out(System.out, results);
         qe.close();

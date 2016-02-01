@@ -14,3 +14,8 @@ LIMIT 25
 
 -----------------
 
+ prefix knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>
+
+ SELECT DISTINCT ?s ?o
+ WHERE { ?s knowledgebase:Fragment_HashValues  ?o }
+ LIMIT 25

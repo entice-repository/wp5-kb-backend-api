@@ -89,7 +89,7 @@ public class FusekiUtils {
                         "knowledgebase:Fragment_hasRepository \"%s\" ;\n" +
                         "knowledgebase:Fragment_IRI \"%s\" ;\n" +
 //                        "knowledgebase:Fragment_ReferenceImage \"%s\" ;\n" +
-                        "knowledgebase:Fragment_Size \"%s\" ;\n" +
+                        "knowledgebase:Fragment_Size %s ;\n" +
                         "knowledgebase:Fragment_HashValues " + hashValues + " ;\n" +
                         "}", fragment.getId(), fragment.getRefDiskImageId(), fragment.getRefRepositoryId(), fragment
                         .getAnyURI(), fragment.getFragmentSize());
@@ -115,16 +115,16 @@ public class FusekiUtils {
                 Functionality functionality = (Functionality) obj;
                 functionality.setId(id);
                 return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
-                        "knowledgebase:%s a knowledgebase:Functionality, owl:NamedIndividual ;" +
-                        "knowledgebase:Functionality_hasImplementation \"%s\" ;\n" +
-                        "knowledgebase:Functionality_Classification \"%s\" ;\n" +
-                        "knowledgebase:Functionality_Description \"%s\" ;\n" +
-                        "knowledgebase:Functionality_Domain \"%s\" ;\n" +
-                        "knowledgebase:Functionality_InputDescription \"%s\" ;\n" +
-                        "knowledgebase:Functionality_Name \"%s\" ;\n" +
-                        "knowledgebase:Functionality_OutputDescription \"%s\" ;\n" +
-                        "knowledgebase:Functionality_Tag \"%s\" ;\n" +
-                        "}", functionality.getId(), functionality.getRefImplementationId(), functionality
+                                "knowledgebase:%s a knowledgebase:Functionality, owl:NamedIndividual ;" +
+                                "knowledgebase:Functionality_hasImplementation \"%s\" ;\n" +
+                                "knowledgebase:Functionality_Classification \"%s\" ;\n" +
+                                "knowledgebase:Functionality_Description \"%s\" ;\n" +
+                                "knowledgebase:Functionality_Domain \"%s\" ;\n" +
+                                "knowledgebase:Functionality_InputDescription \"%s\" ;\n" +
+                                "knowledgebase:Functionality_Name \"%s\" ;\n" +
+                                "knowledgebase:Functionality_OutputDescription \"%s\" ;\n" +
+                                "knowledgebase:Functionality_Tag \"%s\" ;\n" +
+                                "}", functionality.getId(), functionality.getRefImplementationId(), functionality
                         .getClassification(), functionality.getInputDescription(), functionality.getDomain(),
                         functionality.getInputDescription(), functionality.getName(), functionality
                                 .getOutputDescription(), functionality.getTag());
