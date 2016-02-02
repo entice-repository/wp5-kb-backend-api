@@ -9,47 +9,50 @@ public class DiskImage {
     private String description; //string
     private String title; //string
     private String version; // VMI versioon
-    private String predecessor; //DiskImage_id / Fragment_id / Data_id - what data type is this???
+    private String predecessor; //todo clarify !! DiskImage_id / Fragment_id / Data_id - what data type is this???
     private FileFormat fileFormat; // enumeration ISO, DMG, FVD, IMG, NDIF, QCOW, UDIF, VDI, VHD, VMDK, WIM
     private String pictureUrl; //should contain the URL of picture of this image??
     private boolean encryption; //boolean true - false
     private String iri; //the URL address of the file
-    private int slaId; //the ID of the SLA associated with this image
+    private String refSlaId; //the ID of the SLA associated with this image
     private double price; //currency datatype?? I think that int would do it
-    private int ownerId; //the ID of the user owning the image
-    private int functionalityId; //the ID of the functionallity this image supports
-    private int qualityId; //the ID of the quality this image is associated with
-    private int operatingSystemId; //the ID Of the operating system this image can run on
+    private String refOwnerId; //the ID of the user owning the image
+    private String refFunctionalityId; //the ID of the functionallity this image supports
+    private String refQualityId; //the ID of the quality this image is associated with
+    private String refOperatingSystemId; //the ID Of the operating system this image can run on
     private boolean needsData; //boolean true-false
-    private int generationTime; //int in milliseconds after epoch
+    private long generationTime; //int in milliseconds after epoch
     private boolean obfuscation; //boolean true-false
+    private String dataId; // relation to Data entity
 
+//    //no arg constructor needed for JAXB
+//    public DiskImage() {
+//    }
 
-    //no arg constructor needed for JAXB
-    public DiskImage() {
-    }
-
-    public DiskImage(String id, ImageType imageTypeC, String descriptionC, String titleC, String predecessorC, FileFormat
-            fileFormatC, String pictureUrlC, boolean encriptionC, String iriC, int slaIdC, double priceC, int ownerIdC,
-                     int functionallityIdC, int qualityIdC, int operatingSystemIdC, boolean needsDataC, int
-                             generationTimeC, boolean obfuscationC) {
+    public DiskImage(String id, ImageType imageTypeC, String descriptionC, String titleC, String predecessorC,
+                     FileFormat fileFormatC, String pictureUrlC, boolean encryption, String iriC, String refSlaId,
+                     double priceC, String refOwnerId, String refFunctionalityId, String refQualityId, String
+                             refOperatingSystemId, boolean needsDataC, int generationTimeC, boolean obfuscationC,
+                     String version) {
+        this.id = id;
         this.imageType = imageTypeC;
         this.description = descriptionC;
         this.title = titleC;
         this.predecessor = predecessorC;
         this.fileFormat = fileFormatC;
         this.pictureUrl = pictureUrlC;
-        this.encryption = encriptionC;
+        this.encryption = encryption;
         this.iri = iriC;
-        this.slaId = slaIdC;
+        this.refSlaId = refSlaId;
         this.price = priceC;
-        this.ownerId = ownerIdC;
-        this.functionalityId = functionallityIdC;
-        this.qualityId = qualityIdC;
-        this.operatingSystemId = operatingSystemIdC;
+        this.refOwnerId = refOwnerId;
+        this.refFunctionalityId = refFunctionalityId;
+        this.refQualityId = refQualityId;
+        this.refOperatingSystemId = refOperatingSystemId;
         this.needsData = needsDataC;
         this.generationTime = generationTimeC;
         this.obfuscation = obfuscationC;
+        this.version = version;
     }
 
     public ImageType getImageType() {
@@ -84,36 +87,12 @@ public class DiskImage {
         return this.iri;
     }
 
-    public int getSlaId() {
-        return this.slaId;
-    }
-
     public double getPrice() {
         return this.price;
     }
 
-    public int getOwnerId() {
-        return this.ownerId;
-    }
-
-    public int getFunctionalityId() {
-        return this.functionalityId;
-    }
-
-    public int getQualityId() {
-        return this.qualityId;
-    }
-
-    public int getOperatingSystemId() {
-        return this.operatingSystemId;
-    }
-
-    public boolean getNeedsData() {
-        return this.needsData;
-    }
-
-    public int getGenerationTime() {
-        return this.generationTime;
+    public String getRefOwnerId() {
+        return this.refOwnerId;
     }
 
     public boolean getObfuscation() {
@@ -152,28 +131,12 @@ public class DiskImage {
         this.iri = iri;
     }
 
-    public void setSlaId(int slaId) {
-        this.slaId = slaId;
-    }
-
     public void setPrice(double price) {
         this.price = price;
     }
 
-    public void setOwnerId(int ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public void setFunctionalityId(int functionalityId) {
-        this.functionalityId = functionalityId;
-    }
-
-    public void setQualityId(int qualityId) {
-        this.qualityId = qualityId;
-    }
-
-    public void setOperatingSystemId(int operatingSystemId) {
-        this.operatingSystemId = operatingSystemId;
+    public void setRefOwnerId(String refOwnerId) {
+        this.refOwnerId = refOwnerId;
     }
 
     public void setNeedsData(boolean needsData) {
@@ -194,6 +157,74 @@ public class DiskImage {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public boolean isEncryption() {
+        return encryption;
+    }
+
+    public boolean isNeedsData() {
+        return needsData;
+    }
+
+    public boolean isObfuscation() {
+        return obfuscation;
+    }
+
+    public String getRefSlaId() {
+        return refSlaId;
+    }
+
+    public void setRefSlaId(String refSlaId) {
+        this.refSlaId = refSlaId;
+    }
+
+    public String getRefFunctionalityId() {
+        return refFunctionalityId;
+    }
+
+    public void setRefFunctionalityId(String refFunctionalityId) {
+        this.refFunctionalityId = refFunctionalityId;
+    }
+
+    public String getRefQualityId() {
+        return refQualityId;
+    }
+
+    public void setRefQualityId(String refQualityId) {
+        this.refQualityId = refQualityId;
+    }
+
+    public String getRefOperatingSystemId() {
+        return refOperatingSystemId;
+    }
+
+    public void setRefOperatingSystemId(String refOperatingSystemId) {
+        this.refOperatingSystemId = refOperatingSystemId;
+    }
+
+    public long getGenerationTime() {
+        return generationTime;
+    }
+
+    public void setGenerationTime(long generationTime) {
+        this.generationTime = generationTime;
+    }
+
+    public String getDataId() {
+        return dataId;
+    }
+
+    public void setDataId(String dataId) {
+        this.dataId = dataId;
     }
 }
 

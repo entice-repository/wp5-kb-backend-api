@@ -7,7 +7,9 @@ import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.update.UpdateExecutionFactory;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateProcessor;
-import org.fri.entice.webapp.entry.Functionality;
+import org.fri.entice.webapp.entry.DiskImage;
+import org.fri.entice.webapp.entry.FileFormat;
+import org.fri.entice.webapp.entry.ImageType;
 import org.fri.entice.webapp.entry.User;
 import org.fri.entice.webapp.util.FusekiUtils;
 
@@ -40,19 +42,18 @@ public class FusekiTest {
         String insertStatementStr = FusekiUtils.generateInsertObjectStatement(user);
         UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr),
                 "http://localhost:3030/entice/update");
-        /*
+
         upp.execute();
         System.out.println("User object added!");
 
         DiskImage diskImage = new DiskImage(UUID.randomUUID().toString(), ImageType.CI, "some description", "some " +
-                "title", "some predecessor..", FileFormat.ISO, "picture URL", true, "iriC", 123, 49.99, 333, 43, 54,
-                556, true, 5, false);
+                "title", "some predecessor..", FileFormat.IMG, "picture URL", false, "iriC", "123", 49.99, "333", "43", "54",
+                "556", false, 5, true,"1.1");
         insertStatementStr = FusekiUtils.generateInsertObjectStatement(diskImage);
         upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr),
                 "http://localhost:3030/entice/update");
         upp.execute();
         System.out.println("DiskImage object added!");
-        */
 
         /*
         List<String> hashValue = new ArrayList();
@@ -81,7 +82,7 @@ public class FusekiTest {
         upp.execute();
         System.out.println("Delivery object added!");
         */
-
+        /*
         Functionality functionality = new Functionality(UUID.randomUUID().toString(), 12, "some tag1", "some name1",
                 "some description...1", "some input description1", "some otuput description1", "someRefImplId", "some" +
                 " domain");
@@ -91,7 +92,7 @@ public class FusekiTest {
                 "http://localhost:3030/entice/update");
         upp.execute();
         System.out.println("Functionality object added!");
-
+        */
         String query = FusekiUtils.getAllUploadedImages(false);
 
 

@@ -62,15 +62,47 @@ public class FusekiUtils {
                 DiskImage diskImage = (DiskImage) obj;
                 diskImage.setId(id);
                 return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                                "knowledgebase:%s a knowledgebase:DiskImage, owl:NamedIndividual, knowledgebase:" +
+                                (diskImage.getImageType().equals(ImageType.CI) ? "CI" : "VMI") + " ; " +
+                                "knowledgebase:DiskImage_Description \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_Encryption  %s ;\n" +
+                                "knowledgebase:DiskImage_FileFormat  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_Owner  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_DataId  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_refFunctionalityId  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_generationTime  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_IRI  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_NeedsDataFile  %s ;\n" +
+                                "knowledgebase:DiskImage_Obfuscation  %s ;\n" +
+                                "knowledgebase:DiskImage_OperatingSystem  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_Picture  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_Predecessor  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_Price  %s ;\n" +
+                                "knowledgebase:DiskImage_Quality  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_SLA  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_Title  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_Version  \"%s\" ;\n" +
+                                "}", diskImage.getId(), diskImage.getDescription(), diskImage.getEncryption(),
+                        diskImage.getFileFormat().getValue(), diskImage.getRefOwnerId(), diskImage.getDataId(),
+                        diskImage.getRefFunctionalityId(), diskImage.getGenerationTime(), diskImage.getIri(),
+                        diskImage.isNeedsData(), diskImage.isObfuscation(), diskImage.getRefOperatingSystemId(),
+                        diskImage.getPictureUrl(), diskImage.getPredecessor(), diskImage.getPrice(), diskImage
+                                .getRefQualityId(), diskImage.getRefSlaId(), diskImage.getTitle(), diskImage
+                                .getVersion());
+            }
+            // CREATE DISK IMAGE SLA
+            else if (obj instanceof DiskImageSLA) {
+                DiskImageSLA diskImageSLA = (DiskImageSLA) obj;
+                diskImageSLA.setId(id);
+                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
                         "knowledgebase:%s a knowledgebase:DiskImage, owl:NamedIndividual, knowledgebase:" +
-                        (diskImage.getImageType().equals(ImageType.CI) ? "CI" : "VMI") + " ; " +
-                        "knowledgebase:DiskImage_Description \"%s\" ;\n" +
-                        "knowledgebase:DiskImage_Description \"%s\" ;\n" +
-                        "knowledgebase:DiskImage_Encryption  \"%s\" ;\n" +
-                        "knowledgebase:DiskImage_FileFormat  \"%s\" ;\n" +
-                        "knowledgebase:DiskImage_Owner  \"%s\" ;\n" +
-                        "}", diskImage.getId(), diskImage.getDescription(), "description2", diskImage.getEncryption()
-                        , diskImage.getFileFormat(), diskImage.getOwnerId());
+                        "knowledgebase:DiskImageSLA_hasAgreedAvailabilityCountry  \"%s\" ;\n" +
+                        "knowledgebase:DiskImageSLA_hasAgreedAvailabilityRepository  \"%s\" ;\n" +
+                        "knowledgebase:DiskImageSLA_hasAgreedRestriction  \"%s\" ;\n" +
+                        "knowledgebase:DiskImageSLA_hasAgreedPriorityLevel  \"%s\" ;\n" +
+                        "knowledgebase:DiskImageSLA_hasAgreedQoSOrder  \"%s\" ;\n" +
+                        "knowledgebase:DiskImageSLA_SecuredDelivery  \"%s\" ;\n" +
+                        "}", diskImageSLA.getId());   //TODO
             }
             // CREATE FRAGMENT
             else if (obj instanceof Fragment) {
@@ -180,13 +212,13 @@ public class FusekiUtils {
                 "f:imagePictureUrl \"" + di.getPictureUrl() + "\" ; " +
                 "f:imageEncription \"" + di.getEncryption() + "\" ; " +
                 "f:imageIri \"" + di.getIri() + "\" ; " +
-                "f:imageSlaId \"" + di.getSlaId() + "\" ; " +
+                "f:imageSlaId \"" + di.getRefSlaId() + "\" ; " +
                 "f:imagePrice \"" + di.getPrice() + "\" ; " +
-                "f:imageOwnerId \"" + di.getOwnerId() + "\" ; " +
-                "f:imageFunctionallityId \"" + di.getFunctionalityId() + "\" ; " +
-                "f:imageQualityId \"" + di.getQualityId() + "\" ; " +
-                "f:imageOperatingSystemId \"" + di.getOperatingSystemId() + "\" ; " +
-                "f:imageNeedsData \"" + di.getNeedsData() + "\" ; " +
+                "f:imageOwnerId \"" + di.getRefOwnerId() + "\" ; " +
+                "f:imageFunctionallityId \"" + di.getRefFunctionalityId() + "\" ; " +
+                "f:imageQualityId \"" + di.getRefQualityId() + "\" ; " +
+                "f:imageOperatingSystemId \"" + di.getRefOperatingSystemId() + "\" ; " +
+                "f:imageNeedsData \"" + di.isNeedsData() + "\" ; " +
                 "f:imageGenerationTime \"" + di.getGenerationTime() + "\" ; " +
                 "f:imageObfuscation \"" + di.getObfuscation() + "\"" +
                 "} WHERE {?s ?p ?o}";
@@ -263,20 +295,22 @@ public class FusekiUtils {
             String pictureUrlC = qs.getLiteral("imagePictureUrl").toString();
             boolean encriptionC = Boolean.parseBoolean(qs.getLiteral("imageEncription").toString());
             String iriC = qs.getLiteral("imageIri").toString();
-            int slaIdC = Integer.parseInt(qs.getLiteral("imageSlaId").toString());
-            int priceC = Integer.parseInt(qs.getLiteral("imagePrice").toString());
-            int ownerIdC = Integer.parseInt(qs.getLiteral("imageOwnerId").toString());
-            int functionallityIdC = Integer.parseInt(qs.getLiteral("imageFunctionallityId").toString());
-            int qualityIdC = Integer.parseInt(qs.getLiteral("imageQualityId").toString());
-            int operatingSystemIdC = Integer.parseInt(qs.getLiteral("imageOperatingSystemId").toString());
+            String slaIdC = qs.getLiteral("imageSlaId").toString();
+            double priceC = Double.parseDouble(qs.getLiteral("imagePrice").toString());
+            String ownerIdC = qs.getLiteral("imageOwnerId").toString();
+            String functionallityIdC = qs.getLiteral("imageFunctionallityId").toString();
+            String qualityIdC = qs.getLiteral("imageQualityId").toString();
+            String operatingSystemIdC = qs.getLiteral("imageOperatingSystemId").toString();
             boolean needsDataC = Boolean.parseBoolean(qs.getLiteral("imageNeedsData").toString());
             int generationTimeC = Integer.parseInt(qs.getLiteral("imageGenerationTime").toString());
             boolean obfuscationC = Boolean.parseBoolean(qs.getLiteral("imageObfuscation").toString());
             String resourceIdIri = qs.getResource("DiskImage").toString();
+            String version = qs.getResource("Version").toString();
             String resourceId = resourceIdIri.replace(FusekiUtils.myNamespacePrefix, "");
             DiskImage di = new DiskImage(UUID.randomUUID().toString(), imageTypeC, descriptionC, titleC,
                     predecessorC, fileFormatC, pictureUrlC, encriptionC, iriC, slaIdC, priceC, ownerIdC,
-                    functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC);
+                    functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC,
+                    version);
             DiskImageResource dir = new DiskImageResource(resourceId, di);
             allImageResourcesWithThisType.add(dir);
         }
@@ -334,35 +368,35 @@ public class FusekiUtils {
         ResultSet rs = qe.execSelect();
         //ResultSetFormatter.out(System.out, rs);
 
-        while (rs.hasNext()) {
-            QuerySolution qs = rs.next();
-            //Literal met=qs.getLiteral("imageObfuscation");
-            //System.out.println(met);
-            //TODO: here the type conversion should be handled in a better way, possibly also with connection with
-            // SPARQL cassandra (only allowing certain types of data to be inserted etc..)
-            ImageType imageTypeC = ImageType.valueOf(qs.getLiteral("imageType").toString());
-            String descriptionC = qs.getLiteral("imageDescription").toString();
-            String titleC = qs.getLiteral("imageTitle").toString();
-            String predecessorC = qs.getLiteral("imagePredecessor").toString();
-            FileFormat fileFormatC = FileFormat.valueOf(qs.getLiteral("imageFileFormat").toString());
-            String pictureUrlC = qs.getLiteral("imagePictureUrl").toString();
-            boolean encriptionC = Boolean.parseBoolean(qs.getLiteral("imageEncription").toString());
-            String iriC = qs.getLiteral("imageIri").toString();
-            int slaIdC = Integer.parseInt(qs.getLiteral("imageSlaId").toString());
-            int priceC = Integer.parseInt(qs.getLiteral("imagePrice").toString());
-            int ownerIdC = Integer.parseInt(qs.getLiteral("imageOwnerId").toString());
-            int functionallityIdC = Integer.parseInt(qs.getLiteral("imageFunctionallityId").toString());
-            int qualityIdC = Integer.parseInt(qs.getLiteral("imageQualityId").toString());
-            int operatingSystemIdC = Integer.parseInt(qs.getLiteral("imageOperatingSystemId").toString());
-            boolean needsDataC = Boolean.parseBoolean(qs.getLiteral("imageNeedsData").toString());
-            int generationTimeC = Integer.parseInt(qs.getLiteral("imageGenerationTime").toString());
-            boolean obfuscationC = Boolean.parseBoolean(qs.getLiteral("imageObfuscation").toString());
-            DiskImage di = new DiskImage(UUID.randomUUID().toString(), imageTypeC, descriptionC, titleC,
-                    predecessorC, fileFormatC, pictureUrlC, encriptionC, iriC, slaIdC, priceC, ownerIdC,
-                    functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC);
-
-            allImagesWithThisId.add(di);
-        }
+//        while (rs.hasNext()) {
+//            QuerySolution qs = rs.next();
+//            //Literal met=qs.getLiteral("imageObfuscation");
+//            //System.out.println(met);
+//            //TODO: here the type conversion should be handled in a better way, possibly also with connection with
+//            // SPARQL cassandra (only allowing certain types of data to be inserted etc..)
+//            ImageType imageTypeC = ImageType.valueOf(qs.getLiteral("imageType").toString());
+//            String descriptionC = qs.getLiteral("imageDescription").toString();
+//            String titleC = qs.getLiteral("imageTitle").toString();
+//            String predecessorC = qs.getLiteral("imagePredecessor").toString();
+//            FileFormat fileFormatC = FileFormat.valueOf(qs.getLiteral("imageFileFormat").toString());
+//            String pictureUrlC = qs.getLiteral("imagePictureUrl").toString();
+//            boolean encriptionC = Boolean.parseBoolean(qs.getLiteral("imageEncription").toString());
+//            String iriC = qs.getLiteral("imageIri").toString();
+//            int slaIdC = Integer.parseInt(qs.getLiteral("imageSlaId").toString());
+//            int priceC = Integer.parseInt(qs.getLiteral("imagePrice").toString());
+//            int ownerIdC = Integer.parseInt(qs.getLiteral("imageOwnerId").toString());
+//            int functionallityIdC = Integer.parseInt(qs.getLiteral("imageFunctionallityId").toString());
+//            int qualityIdC = Integer.parseInt(qs.getLiteral("imageQualityId").toString());
+//            int operatingSystemIdC = Integer.parseInt(qs.getLiteral("imageOperatingSystemId").toString());
+//            boolean needsDataC = Boolean.parseBoolean(qs.getLiteral("imageNeedsData").toString());
+//            int generationTimeC = Integer.parseInt(qs.getLiteral("imageGenerationTime").toString());
+//            boolean obfuscationC = Boolean.parseBoolean(qs.getLiteral("imageObfuscation").toString());
+//            DiskImage di = new DiskImage(UUID.randomUUID().toString(), imageTypeC, descriptionC, titleC,
+//                    predecessorC, fileFormatC, pictureUrlC, encriptionC, iriC, slaIdC, priceC, ownerIdC,
+//                    functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC, 1);
+//
+//            allImagesWithThisId.add(di);
+//        }
         return allImagesWithThisId;
     }
 
@@ -396,8 +430,6 @@ public class FusekiUtils {
 
         while (rs.hasNext()) {
             QuerySolution qs = rs.next();
-            //Literal met=qs.getLiteral("imageObfuscation");
-            //System.out.println(met);
             //TODO: here the type conversion should be handled in a better way, possibly also with connection with
             // SPARQL cassandra (only allowing certain types of data to be inserted etc..)
             ImageType imageTypeC = ImageType.valueOf(qs.getLiteral("imageType").toString());
@@ -408,20 +440,22 @@ public class FusekiUtils {
             String pictureUrlC = qs.getLiteral("imagePictureUrl").toString();
             boolean encriptionC = Boolean.parseBoolean(qs.getLiteral("imageEncription").toString());
             String iriC = qs.getLiteral("imageIri").toString();
-            int slaIdC = Integer.parseInt(qs.getLiteral("imageSlaId").toString());
-            int priceC = Integer.parseInt(qs.getLiteral("imagePrice").toString());
-            int ownerIdC = Integer.parseInt(qs.getLiteral("imageOwnerId").toString());
-            int functionallityIdC = Integer.parseInt(qs.getLiteral("imageFunctionallityId").toString());
-            int qualityIdC = Integer.parseInt(qs.getLiteral("imageQualityId").toString());
-            int operatingSystemIdC = Integer.parseInt(qs.getLiteral("imageOperatingSystemId").toString());
+            String slaIdC = qs.getLiteral("imageSlaId").toString();
+            double priceC = Double.parseDouble(qs.getLiteral("imagePrice").toString());
+            String ownerIdC = qs.getLiteral("imageOwnerId").toString();
+            String functionallityIdC = qs.getLiteral("imageFunctionallityId").toString();
+            String qualityIdC = qs.getLiteral("imageQualityId").toString();
+            String operatingSystemIdC = qs.getLiteral("imageOperatingSystemId").toString();
             boolean needsDataC = Boolean.parseBoolean(qs.getLiteral("imageNeedsData").toString());
             int generationTimeC = Integer.parseInt(qs.getLiteral("imageGenerationTime").toString());
             boolean obfuscationC = Boolean.parseBoolean(qs.getLiteral("imageObfuscation").toString());
             String resourceIdIri = qs.getResource("DiskImage").toString();
+            String version = qs.getResource("Version").toString();
             String resourceId = resourceIdIri.replace(FusekiUtils.myNamespacePrefix, "");
             DiskImage di = new DiskImage(UUID.randomUUID().toString(), imageTypeC, descriptionC, titleC,
                     predecessorC, fileFormatC, pictureUrlC, encriptionC, iriC, slaIdC, priceC, ownerIdC,
-                    functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC);
+                    functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC,
+                    version);
             DiskImageResource dir = new DiskImageResource(resourceId, di);
             allImages.add(dir);
         }
