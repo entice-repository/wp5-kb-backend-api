@@ -20,14 +20,19 @@ LIMIT 25
  WHERE { ?s knowledgebase:Fragment_HashValues  ?o }
  LIMIT 25
 
------------------ find image IDs with specific file format and parameter needsDataFile
+----------------- find image IDs with specific file format and parameter needsDataFile ; optional owner display
 
  prefix knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>
 
- SELECT DISTINCT ?s ?format
+ SELECT DISTINCT ?s ?owner
  WHERE {
   ?s a knowledgebase:DiskImage .
-  ?s knowledgebase:DiskImage_FileFormat "IMG"  .
-  ?s knowledgebase:DiskImage_NeedsDataFile false .
+  ?s knowledgebase:DiskImage_FileFormat "ISO"  .
+  ?s knowledgebase:DiskImage_NeedsDataFile true .
+    OPTIONAL
+    {
+		?s knowledgebase:DiskImage_Owner ?owner .
+    }
 }
  LIMIT 25
+

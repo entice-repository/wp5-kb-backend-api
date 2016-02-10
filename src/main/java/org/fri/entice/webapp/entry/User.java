@@ -1,5 +1,8 @@
 package org.fri.entice.webapp.entry;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class User {
     private String id;
     private String email;
@@ -7,6 +10,10 @@ public class User {
     private String password;
     private String phoneNumber;
     private String username;
+
+    public User(){
+
+    }
 
     public User(String id, String email, String fullName, String password, String phoneNumber, String username) {
         this.id = id;

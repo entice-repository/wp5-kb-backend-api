@@ -1,10 +1,5 @@
 package org.fri.entice.webapp.rest;
 
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Row;
-import com.datastax.driver.core.querybuilder.QueryBuilder;
-import com.datastax.driver.core.querybuilder.Select;
-import com.datastax.driver.core.utils.UUIDs;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QuerySolution;
@@ -14,27 +9,27 @@ import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.update.UpdateExecutionFactory;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateProcessor;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
-import org.fri.entice.webapp.cassandra.CassandraService;
 import org.fri.entice.webapp.entry.*;
 import org.fri.entice.webapp.uibk.client.IUibkService;
 import org.fri.entice.webapp.uibk.client.UibkService;
 import org.fri.entice.webapp.util.DBUtils;
 import org.fri.entice.webapp.util.FusekiUtils;
+import org.fri.entice.webapp.util.PasswordUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.joda.time.DateTime;
 
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.*;
 import java.io.*;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
 //import org.apache.shiro.SecurityUtils;
 //import org.apache.shiro.authc.*;
@@ -51,7 +46,7 @@ import java.util.*;
 @Path("/service/")
 //@Path("/images")
 //@RequiresPermissions("protected:read")
-public class JSONService implements IMonitoringRequests {
+public class JSONService implements IUserService {
 
     // Allows to insert contextual objects into the class (e.g. ServletContext, Request, Response, UriInfo)
     @Context
@@ -95,157 +90,6 @@ public class JSONService implements IMonitoringRequests {
         }
 
         return resultObjs;
-    }
-
-    @GET
-    @Path("get_user")
-    @Produces(MediaType.APPLICATION_JSON)
-    //@Consumes(MediaType.TEXT_PLAIN)
-    public String getUser(@QueryParam("user") String username) {
-        // subject.checkPermission("protected:read");
-        /*
-        //Example using most common scenario:
-        //String username and password.  Acquire in
-        //system-specific manner (HTTP request, GUI, etc)
-        System.out.println("user:: " + username);
-        UsernamePasswordToken token = new UsernamePasswordToken(username, "neki");
-
-        //"Remember Me" built-in, just do this:
-        token.setRememberMe(true);
-
-        //With most of Shiro, you'll always want to make sure you're working with the currently executing user,
-        // referred to as the subject
-        Subject currentUser = SecurityUtils.getSubject();
-        // Session session = currentUser.getSession();
-
-
-        try {
-            //Authenticate the subject by passing
-            //the user name and password token
-            //into the login method
-            currentUser.login(token);
-        } catch (UnknownAccountException uae) {
-            System.out.println(uae.getMessage());
-        } catch (IncorrectCredentialsException ice) {
-            System.out.println(ice.getMessage());
-        } catch (LockedAccountException lae) {
-            System.out.println(lae.getMessage());
-        } catch (ExcessiveAttemptsException eae) {
-            System.out.println(eae.getMessage());
-        } catch (AuthenticationException ae) {
-            //unexpected error?
-        }
-        */
-        //No problems, show authenticated view...
-
-        return "lalala";
-    }
-
-    @GET
-    @Path("get_metric_value_table")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Override
-    public String getMetricValueTable(@QueryParam("date_from") String dateFrom) {
-
-        com.datastax.driver.core.ResultSet resultSet = CassandraService.session.execute("select name from " +
-                "metric_value_table where mgroup = 'Network' and name = 'netPacketsOut' allow filtering;");
-
-        List<Row> resultList = resultSet.all();
-        new Date(UUIDs.unixTimestamp(resultList.get(1).getUUID("event_timestamp")));
-        return resultList.size() + "";
-    }
-
-    @GET
-    @Path("get_all_metrics")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Override
-    public String getAllMetrics() {
-        com.datastax.driver.core.ResultSet resultSet = CassandraService.session.execute("select * from metric_table;");
-
-        StringBuffer sb = new StringBuffer();
-        String formatedRule = "%-35s | %-50s | %10s | %15s | %15s | %10s \n";
-        sb.append(String.format(formatedRule, "agentid", "metricid", "mgroup", "name", "type", "units"));
-        sb.append(StringUtils.leftPad("", 150, '-') + "\n");
-
-
-        List<Row> resultList = resultSet.all();
-        for (int i = 0; i < resultList.size(); i++) {
-            sb.append(String.format(formatedRule, resultList.get(i).getString("agentid"), resultList.get(i).getString
-                    ("metricid"), resultList.get(i).getString("mgroup"), resultList.get(i).getString("name"),
-                    resultList.get(i).getString("type"), resultList.get(i).getString("units")));
-        }
-
-        return sb.toString();
-    }
-
-    @GET
-    @Path("get_used_metrics")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Override
-    public ListResponse getUsedMetrics() {
-        Select select = QueryBuilder.select().column("metricid").column("event_date").distinct().from
-                ("metric_value_table");
-//                .where(eq("type", "Frienwd"))
-//                .and(eq("city", "San Francisco"));
-        ResultSet results = CassandraService.session.execute(select);
-
-        List<Row> resulList = results.all();
-        Set<String> usedMonitoringData = new HashSet<String>();
-
-        for (int i = 0; i < resulList.size(); i++) {
-            usedMonitoringData.add(resulList.get(i).getString("metricid"));
-        }
-        return null;
-//        return new ListResponse(new ArrayList<String>(usedMonitoringData));
-    }
-
-    @GET
-    @Path("get_existing_metrics")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Override
-    public List<MetricTable> getAllMonitoringData() {
-        return CassandraService.allMonitoringData;
-    }
-
-    @Override
-    public String getPeriodMonitoringData(String dateFrom) {
-        return null;
-    }
-
-    @GET
-    @Path("get_cpu_usage_times")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getCPUUsageTimes(@QueryParam("min_cpu") String minCPU, @QueryParam("max_cpu") String maxCPU,
-                                   @QueryParam("date_from") String dateFrom) {
-        if (maxCPU == null) maxCPU = "100.0";
-
-        DateTime dateTime = null;
-        if (dateFrom != null) {
-            String[] dateSplit = dateFrom.split("\\.");
-            // year, month, day, hour, minute, second
-            dateTime = new DateTime(Integer.parseInt(dateSplit[2]), Integer.parseInt(dateSplit[1]), Integer.parseInt
-                    (dateSplit[0]), 0, 0, 0);
-        }
-
-        com.datastax.driver.core.ResultSet resultSet = CassandraService.session.execute("SELECT * FROM " +
-                "monitoring_data WHERE " +
-                "monitoring_metric = 'CPU_USAGE' and value >= " + minCPU + " and value <= " + maxCPU + " " +
-                (dateTime != null ? "and time >= " + dateTime.getMillis() : "") + " limit 1000 " +
-                "allow filtering;");
-
-        DecimalFormat df = new DecimalFormat("#.00");
-        StringBuffer sb = new StringBuffer();
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-
-        List<Row> resulsList = resultSet.all();
-        for (int i = 0; i < 20; i++) {
-            sb.append(String.format("%s | %s | %s \n", resulsList.get(i).getUUID("id"), df.format(resulsList.get(i)
-                    .getDouble("value")), dateFormat.format(resulsList.get(i).getDate("time"))));
-        }
-
-        sb.insert(0, "               ID                  |   CPU   | DATE \n");
-        sb.insert(0, "\n Result size: " + resulsList.size() + " ; Displayed results: 20\n");
-        return sb.toString();
     }
 
     /**
@@ -411,12 +255,12 @@ public class JSONService implements IMonitoringRequests {
                 long l = 0;
                 for (int i = 0; i < 1000000000; i++) {
                     //for (int j = 0; j < 1000000000; j++) {
-                        for (int j = 0; j < 10; j++) {
-                            l++;
-                        }
+                    for (int j = 0; j < 10; j++) {
+                        l++;
+                    }
                     //}
                 }
-                return "yes "+l;
+                return "yes " + l;
             }
         }).start();
     }
@@ -513,4 +357,74 @@ public class JSONService implements IMonitoringRequests {
 
     }
 
+    @GET
+    @Path("perform_user_login")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    public String performUserLogin(@QueryParam("username") String username, @QueryParam("password") String password) {
+        boolean matched = false;
+        try {
+            String query = FusekiUtils.getPassword(username);
+
+            //Query the collection, dump output
+            QueryExecution qe = QueryExecutionFactory.sparqlService(AppContextListener.prop.getProperty("fuseki.url.query")
+                    , query);
+            com.hp.hpl.jena.query.ResultSet results = qe.execSelect();
+            String x = null;
+            while (results.hasNext()) {
+                QuerySolution qs = results.next();
+                Iterator<Var> varIter = ((ResultBinding) qs).getBinding().vars();
+
+                while (varIter.hasNext()) {
+                    Var var = varIter.next();
+                    if (var.getVarName().equals("pass"))
+                        x = ((ResultBinding) qs).getBinding().get(var).getLiteralValue().toString();
+                }
+            }
+            qe.close();
+
+            matched = PasswordUtils.validatePassword(password, x);
+            return matched + " match";
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return "false";
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+            return "false";
+        }
+    }
+
+    @Override
+    public String performUserLogout(String sessionID) {
+        return null;
+    }
+
+    @POST
+    @Path("register_user")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Override
+    public Response registerUser(User user) {
+        try {
+            String generatedSecuredPasswordHash = PasswordUtils.generateStorngPasswordHash(user.getPassword());
+            user.setPassword(generatedSecuredPasswordHash);
+
+            String insertStatementStr = FusekiUtils.generateInsertObjectStatement(user);
+            UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr),
+                    AppContextListener.prop.getProperty("fuseki.url.update"));
+            upp.execute();
+            // ON SUCCESS USER CREATION
+            return Response.status(200).entity(true).type("text/plain").build();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            // ON ERROR WHILE CREATION ! !
+            return Response.status(200).entity(false).type("text/plain").build();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+            // ON ERROR WHILE CREATION ! !
+            return Response.status(200).entity(false).type("text/plain").build();
+
+        }
+
+    }
 }

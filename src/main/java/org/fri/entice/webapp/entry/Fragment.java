@@ -11,6 +11,9 @@ public class Fragment {
     private String refRepositoryId;
     private String anyURI;
     private int fragmentSize;   // probably in bytes
+
+    // Multi-value (Note: Structured values limit the ability for applications to query for specific data items, e.g. documents that have a specific keyword):
+    // http://patterns.dataincubator.org/book/repeated-property.html
     private List<String> hashValue = new ArrayList<String>(10);
 
     public Fragment(String id, String refDiskImageId, String refRepositoryId, String anyURI, int fragmentSize,

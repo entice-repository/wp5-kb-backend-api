@@ -1,5 +1,6 @@
 package org.fri.entice.webapp.client;
 
+import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.ResultSet;
@@ -7,12 +8,16 @@ import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.update.UpdateExecutionFactory;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateProcessor;
-import org.fri.entice.webapp.entry.DiskImage;
-import org.fri.entice.webapp.entry.FileFormat;
-import org.fri.entice.webapp.entry.ImageType;
 import org.fri.entice.webapp.entry.User;
 import org.fri.entice.webapp.util.FusekiUtils;
+import org.glassfish.jersey.client.ClientConfig;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.UUID;
 
 /**
@@ -35,33 +40,48 @@ public class FusekiTest {
         upp.execute();
         */
 
-
         User user = new User(UUID.randomUUID().toString(), "sandi.gec@gmail.com", "Sandi Gec4", "444",
                 "+38631873088", "sandig4");
+
+        ClientConfig config = new ClientConfig().register(JacksonFeatures.class);
+        Client client = ClientBuilder.newClient(config);
+        WebTarget service = client.target("http://localhost:8080/JerseyREST/");
+
+        user = new User(UUID.randomUUID().toString(), "sandokan@aa.com", "Sandokan G.", "pass1234", "090 000",
+                "sandigec");
+        Response resp = service.path("rest").path("service").path("register_user").request().post(Entity.entity(user,
+                MediaType.APPLICATION_JSON_TYPE));
+
 
         String insertStatementStr = FusekiUtils.generateInsertObjectStatement(user);
         UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr),
                 "http://localhost:3030/entice/update");
 
+        if (Boolean.valueOf(resp.readEntity(String.class)))
+            System.out.println("User " + user.getFullName() + " added into the KB.");
+
+          /*
         upp.execute();
         System.out.println("User object added!");
 
         DiskImage diskImage = new DiskImage(UUID.randomUUID().toString(), ImageType.CI, "some description", "some " +
-                "title", "some predecessor..", FileFormat.IMG, "picture URL", false, "iriC", "123", 49.99, "333", "43", "54",
+                "title", "some predecessor..", FileFormat.IMG, "picture URL", false, "iriC", "123", 49.99, "333",
+                "43", "54",
                 "556", false, 5, true,"1.1");
-        insertStatementStr = FusekiUtils.generateInsertObjectStatement(diskImage);
+        insertStatementStr = FusekiUtils.generateInsertObjectStatement(insertStatementStr);
         upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr),
                 "http://localhost:3030/entice/update");
         upp.execute();
         System.out.println("DiskImage object added!");
+        */
 
         /*
         List<String> hashValue = new ArrayList();
-        hashValue.add("val1");
-        hashValue.add("val2");
-        hashValue.add("val3");
-        hashValue.add("val4");
-        hashValue.add("val5");
+        hashValue.add("v1");
+        hashValue.add("v2");
+        hashValue.add("v3");
+        hashValue.add("v4");
+        hashValue.add("v5");
         Fragment fragment = new Fragment(UUID.randomUUID().toString(),"referenceImageId2","repositoryID2","anyURI2",
         32145,hashValue);
 

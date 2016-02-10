@@ -75,13 +75,13 @@ public class UibkService implements IUibkService {
                     byte[] vmImageBytes = new byte[1024 * 1024 * 32];
                     int bytesRead;
 
-                    double readMB = 0;
+                    double readMb = 0;
                     while ((bytesRead = bin.read(vmImageBytes)) != -1) {
                         service.receiveVMImage(vmImageBytes, vmImage.getName(), bytesRead);
-                        readMB += bytesRead * 1e-6;
-                        System.out.println("MB read: " + readMB + " | " + (int) (readMB / fileSize * 100) + "%");
+                        readMb += bytesRead / (1024 * 1024);
+                        System.out.println("MB read: " + readMb + " | " + (int) (readMb / fileSize * 100) + "%");
                     }
-
+                    // todo: Final message on upload?!
                 } catch (IOException e) {
                     System.err.println(e);
                 } finally {

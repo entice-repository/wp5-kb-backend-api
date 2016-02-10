@@ -46,6 +46,7 @@ public class FusekiUtils {
                         "        knowledgebase:User_FullName     \"%s\" ;\n" +
                         "        knowledgebase:User_PhoneNumber  \"%s\" ;\n" +
                         "        knowledgebase:User_UserName     \"%s\" ;" +
+                        "        knowledgebase:User_Password     \"%s\" ;" +
                         "}", user.getId(), user.getFullName(), user.getEmail(), user.getPhoneNumber(), user
                         .getUsername(), user.getPassword());
                 // OLD:
@@ -169,6 +170,15 @@ public class FusekiUtils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static String getPassword(String username){
+        return "prefix knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                "\n" +
+                "SELECT ?pass\n" +
+                "WHERE { ?s a knowledgebase:User ; knowledgebase:User_UserName \""+username+"\" ; " +
+                "knowledgebase:User_Password ?pass }\n" +
+                "LIMIT 25\n";
     }
 
     public static String getAllUploadedImages(Boolean optimizedOnly) {

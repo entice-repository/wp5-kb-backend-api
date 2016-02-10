@@ -244,7 +244,7 @@
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_hasCountry">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property means a repository‚Äôs infrastructure is in which country. Each county has a unique Country_id.</rationale>
+        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property means a repositoryís infrastructure is in which country. Each county has a unique Country_id.</rationale>
     </owl:ObjectProperty>
     
 
@@ -255,6 +255,16 @@
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#GeoLocation"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">There could be more than one repository in a particular country and geolocation of repository may influence the download time. Each GeoLocation has a unique GeoLocation_id.</rationale>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_hasUser -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_hasUser">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User"/>
+        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">It implies that the session belongs to which user; since each user has a unique User_id.</rationale>
     </owl:ObjectProperty>
     
 
@@ -292,19 +302,8 @@
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_User">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_DataProperty"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">It implies the comment belongs to which user; since each user has a unique User_id.</rationale>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_id -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_id">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property allows a unique number to be generated when a new individual as a Comment instance is inserted into the database.</rationale>
     </owl:DatatypeProperty>
     
 
@@ -322,17 +321,6 @@
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property implies the name of country.</rationale>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country_id -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country_id">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property allows a unique number to be generated when a new individual as a Country instance is inserted into the database.</rationale>
     </owl:DatatypeProperty>
     
 
@@ -495,17 +483,6 @@
     
 
 
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_id -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_id">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property allows a unique number to be generated when a new individual as a Data instance is inserted into the database.</rationale>
-    </owl:DatatypeProperty>
-    
-
-
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DataProperty -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DataProperty"/>
@@ -578,17 +555,6 @@
     
 
 
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_id -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_id">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property allows a unique number to be generated when a new individual as a Delivery instance is inserted into the database.</rationale>
-    </owl:DatatypeProperty>
-    
-
-
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedAvailabilityCountry -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedAvailabilityCountry">
@@ -617,7 +583,7 @@
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_DataProperty"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Since the repository of VMIs has to provide fast delivery, and the ‚Äúfast storage‚Äù may be expensive, it is necessary to provide mechanisms for storing images at three hierarchical levels supported by adequate technology for fast, medium and low-speed content delivery.</rationale>
+        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Since the repository of VMIs has to provide fast delivery, and the ìfast storageî may be expensive, it is necessary to provide mechanisms for storing images at three hierarchical levels supported by adequate technology for fast, medium and low-speed content delivery.</rationale>
     </owl:DatatypeProperty>
     
 
@@ -657,17 +623,6 @@
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The contents of some VMIs and data could be business-critical and not available under any circumstance to intruders. For this purpose, the repository must support content delivery through encrypted channels.</rationale>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_id -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_id">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property allows a unique number to be generated when a new individual as a DiskImageSLA instance is inserted into the database.</rationale>
     </owl:DatatypeProperty>
     
 
@@ -744,6 +699,15 @@
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">In the case of the Earth Observation Data (EOD) processing and distribution pilot case, we need to deliver satellite images together with the VM image containing a function that processes them.</rationale>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Obfuscation -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Obfuscation">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
     </owl:DatatypeProperty>
     
 
@@ -848,128 +812,19 @@
     
 
 
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property allows a unique number to be generated when a new individual as a DiskImage instance (VM image or Container image) is inserted into the database.</rationale>
-    </owl:DatatypeProperty>
-    
-
-
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
     
 
 
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue1 -->
+    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValues -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue1">
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValues">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">When a new fragment is generated, the ENTICE computes hash value which acts as a unique identifier of this fragment. Any new fragment with the same hash value is considered the same and there is no need to store it. In order to allow identification of even smaller parts (i.e. prospective new fragments) we need to have hashes for much more content. &quot;Fragment_HashValue1&quot; is a hash value generated by hash function for the first part of a particular fragment.</rationale>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue10 -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue10">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue1"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue2 -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue2">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue1"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue3 -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue3">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue1"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue4 -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue4">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue1"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue5 -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue5">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue1"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue6 -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue6">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue1"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue7 -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue7">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue1"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue8 -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue8">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue1"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue9 -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue9">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValue1"/>
+        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">When a new fragment is generated, the ENTICE computes hash value which acts as a unique identifier of this fragment. Any new fragment with the same hash value is considered the same and there is no need to store it. In order to allow identification of even smaller parts (i.e. prospective new fragments) we need to have hashes for much more content. &quot;Fragment_HashValues&quot; is a hash value generated by hash function for the first part of a particular fragment.</rationale>
     </owl:DatatypeProperty>
     
 
@@ -1017,17 +872,6 @@
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Just like DiskImage_storage_size</rationale>
         <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DiskImage_storage_size is missing!!</rdfs:comment>
         <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">int is 32-bit only. Too small for size.</rdfs:comment>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_id -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_id">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property allows a unique number to be generated when a new individual as a Fragment instance is inserted into the database.</rationale>
     </owl:DatatypeProperty>
     
 
@@ -1114,30 +958,9 @@
     
 
 
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_id -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_id">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property allows a unique number to be generated when a new individual as a Functionality instance is inserted into the database.</rationale>
-    </owl:DatatypeProperty>
-    
-
-
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#GeoLocation_DataProperty -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#GeoLocation_DataProperty"/>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#GeoLocation_id -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#GeoLocation_id">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#GeoLocation_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#GeoLocation"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property allows a unique number to be generated when a new individual as a GeoLocation instance is inserted into the database.</rationale>
-    </owl:DatatypeProperty>
     
 
 
@@ -1176,17 +999,6 @@
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This specifies the programming language that has been used to implement the functionality, potentially also libraries and other important information related to the implementation.</rationale>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_id -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_id">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property allows a unique number to be generated when a new individual as an Implementation instance is inserted into the database.</rationale>
     </owl:DatatypeProperty>
     
 
@@ -1248,17 +1060,6 @@
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">To make deployment flexible for different needs of users and applications, it is desirable for the Entice to support a variety of versions of VM images for different versions of operating systems.</rationale>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_id -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_id">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property allows a unique number to be generated when a new individual as a OperatingSystem instance is inserted into the database.</rationale>
     </owl:DatatypeProperty>
     
 
@@ -1394,24 +1195,13 @@
     
 
 
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_id -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_id">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property allows a unique number to be generated when a new individual as a Quality instance is inserted into the database.</rationale>
-    </owl:DatatypeProperty>
-    
-
-
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_Country -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_Country">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_DataProperty"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property means a repository‚Äôs infrastructure is in which country. Each county has a unique Country_id.</rationale>
+        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property means a repositoryís infrastructure is in which country. Each county has a unique Country_id.</rationale>
     </owl:DatatypeProperty>
     
 
@@ -1505,13 +1295,20 @@
     
 
 
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_id -->
+    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_ExpireDate -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_id">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property allows a unique number to be generated when a new individual as a Repository instance is inserted into the database.</rationale>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_ExpireDate">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_User -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_User">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:DatatypeProperty>
     
 
@@ -1575,17 +1372,6 @@
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the name of the user account used to log-in and authenticate.</rationale>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_id -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_id">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property allows a unique number to be generated when a new individual as a User instance is inserted into the database.</rationale>
     </owl:DatatypeProperty>
     
 
@@ -1722,408 +1508,19 @@
     
 
 
+    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession">
+        <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Session of logged users. We store the token of the successful logged user.</description>
+    </owl:Class>
+    
+
+
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
     </owl:Class>
-    
-
-
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // General axioms
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
-
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_id"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_NumberOfDownloads"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_ReferenceImage"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_StorageSize"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_UserComments"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_NumberOfDownloads"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_ReferenceImage"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_StorageSize"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_UserComments"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_id"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_id"/>
-        </owl:members>
-    </rdf:Description>
 </rdf:RDF>
 
 

@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class AppContextListener implements ServletContextListener {
 
     private Logger logger;
-    private static Properties prop = new Properties();
+    public static Properties prop = new Properties();
     private CassandraService cassandraService;
 
     /**
