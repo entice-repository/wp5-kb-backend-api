@@ -1,10 +1,13 @@
 package org.fri.entice.webapp.client;
 
 import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
+import com.hp.hpl.jena.ontology.OntModel;
+import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.update.UpdateExecutionFactory;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateProcessor;
@@ -57,8 +60,14 @@ public class FusekiTest {
         UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr),
                 "http://localhost:3030/entice/update");
 
-        if (Boolean.valueOf(resp.readEntity(String.class)))
-            System.out.println("User " + user.getFullName() + " added into the KB.");
+     //   if (Boolean.valueOf(resp.readEntity(String.class)))
+      //      System.out.println("User " + user.getFullName() + " added into the KB.");
+
+
+        String SOURCE = "http://www.opentox.org/api/1.1";
+        String NS = SOURCE + "#";
+        OntModel base = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF);
+        base.read( SOURCE, "RDF/XML" );
 
           /*
         upp.execute();

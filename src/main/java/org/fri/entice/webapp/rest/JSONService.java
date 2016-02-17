@@ -364,6 +364,7 @@ public class JSONService implements IUserService {
     public String performUserLogin(@QueryParam("username") String username, @QueryParam("password") String password) {
         boolean matched = false;
         try {
+            long startTime = System.currentTimeMillis();
             String query = FusekiUtils.getPassword(username);
 
             //Query the collection, dump output
@@ -384,7 +385,7 @@ public class JSONService implements IUserService {
             qe.close();
 
             matched = PasswordUtils.validatePassword(password, x);
-            return matched + " match";
+            return matched + " match. Time elapsed: "+ (System.currentTimeMillis()-startTime) + "ms";
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             return "false";

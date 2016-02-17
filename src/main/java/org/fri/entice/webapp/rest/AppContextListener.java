@@ -2,13 +2,10 @@ package org.fri.entice.webapp.rest;
 
 import org.fri.entice.webapp.cassandra.CassandraParamsObj;
 import org.fri.entice.webapp.cassandra.CassandraService;
+import org.fri.entice.webapp.util.CommonUtils;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -39,7 +36,7 @@ public class AppContextListener implements ServletContextListener {
             logger = Logger.getLogger(this.getClass().getName());
 
             // init db.property list
-            initProperties();
+            CommonUtils.initProperties(prop,"db.properties");
             logger.log(Level.INFO, "DB properties successfully initialized.");
 
             // connect to Cassandra Service
@@ -52,8 +49,8 @@ public class AppContextListener implements ServletContextListener {
     private void initCassandraConnectionToService() {
         List<String> clusters = new ArrayList<String>();
         clusters.add(prop.getProperty("apache.cassandra.ip"));
-        cassandraService = new CassandraService(new CassandraParamsObj(Integer.parseInt(prop.getProperty("apache"
-                + ".cassandra.port")), prop.getProperty("apache.cassandra.keyspace"), clusters));
+        cassandraService = new CassandraService(new CassandraParamsObj(Integer.parseInt(prop.getProperty("apache" + "" +
+                ".cassandra.port")), prop.getProperty("apache.cassandra.keyspace"), clusters));
         logger.log(Level.INFO, "Cassandra connected");
 
 
@@ -64,22 +61,5 @@ public class AppContextListener implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
 
-    }
-
-
-    private void initProperties() {
-        try {
-            InputStream input = new FileInputStream(new File("src/main/resources/db.properties"));
-
-            // load a properties file
-            prop.load(input);
-
-            // get the property value and print it out
-//            System.out.println(prop.getProperty("apache.cassandra.port"));
-//            System.out.println(prop.getProperty("apache.cassandra.keyspace"));
-//            System.out.println(prop.getProperty("dbpassword"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
