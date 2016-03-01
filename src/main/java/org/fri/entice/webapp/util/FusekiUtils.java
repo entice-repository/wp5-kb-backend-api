@@ -2,21 +2,26 @@ package org.fri.entice.webapp.util;
 
 //web interface to FusekiUtils - http://localhost:3030/fuseki.html
 
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.update.UpdateExecutionFactory;
-import com.hp.hpl.jena.update.UpdateFactory;
-import com.hp.hpl.jena.update.UpdateProcessor;
-import com.hp.hpl.jena.update.UpdateRequest;
-import com.hp.hpl.jena.vocabulary.VCARD;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.reasoner.ReasonerRegistry;
+import org.apache.jena.sparql.core.ResultBinding;
+import org.apache.jena.sparql.core.Var;
+import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateProcessor;
+import org.apache.jena.update.UpdateRequest;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.ReasonerVocabulary;
+import org.apache.jena.vocabulary.VCARD;
 import org.fri.entice.webapp.entry.*;
 
-import java.io.InvalidObjectException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.io.*;
+import java.net.URL;
+import java.util.*;
 
 public class FusekiUtils {
 
@@ -34,12 +39,9 @@ public class FusekiUtils {
 
     public static String generateInsertObjectStatement(Object obj) {
         try {
-            String id = UUID.randomUUID().toString();
-
             // CREATE USER
             if (obj instanceof User) {
                 User user = (User) obj;
-                user.setId(id);
                 return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
                         "knowledgebase:%s  a knowledgebase:User , owl:NamedIndividual ;" +
                         "     knowledgebase:User_Email        \"%s\" ;\n" +
@@ -61,7 +63,6 @@ public class FusekiUtils {
             // CREATE DISK IMAGE
             else if (obj instanceof DiskImage) {
                 DiskImage diskImage = (DiskImage) obj;
-                diskImage.setId(id);
                 return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
                                 "knowledgebase:%s a knowledgebase:DiskImage, owl:NamedIndividual, knowledgebase:" +
                                 (diskImage.getImageType().equals(ImageType.CI) ? "CI" : "VMI") + " ; " +
@@ -94,7 +95,6 @@ public class FusekiUtils {
             // CREATE DISK IMAGE SLA
             else if (obj instanceof DiskImageSLA) {
                 DiskImageSLA diskImageSLA = (DiskImageSLA) obj;
-                diskImageSLA.setId(id);
                 return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
                         "knowledgebase:%s a knowledgebase:DiskImage, owl:NamedIndividual, knowledgebase:" +
                         "knowledgebase:DiskImageSLA_hasAgreedAvailabilityCountry  \"%s\" ;\n" +
@@ -108,12 +108,10 @@ public class FusekiUtils {
             // CREATE FRAGMENT
             else if (obj instanceof Fragment) {
                 Fragment fragment = (Fragment) obj;
-                fragment.setId(id);
                 String hashValues = new String();
                 for (String val : fragment.getHashValue()) {
                     hashValues += "\"" + val + "\",";
                 }
-
                 if (hashValues.length() > 0) hashValues = hashValues.substring(0, hashValues.length() - 1);
 
                 return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
@@ -130,7 +128,6 @@ public class FusekiUtils {
             // CREATE DELIVERY
             else if (obj instanceof Delivery) {
                 Delivery delivery = (Delivery) obj;
-                delivery.setId(id);
                 return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
                                 "knowledgebase:%s a knowledgebase:Delivery, owl:NamedIndividual ;" +
                                 "knowledgebase:Delivery_hasDeliveredDiskImage \"%s\" ;\n" +
@@ -146,7 +143,6 @@ public class FusekiUtils {
             // CREATE FUNCTIONALITY
             else if (obj instanceof Functionality) {
                 Functionality functionality = (Functionality) obj;
-                functionality.setId(id);
                 return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
                                 "knowledgebase:%s a knowledgebase:Functionality, owl:NamedIndividual ;" +
                                 "knowledgebase:Functionality_hasImplementation \"%s\" ;\n" +
@@ -162,6 +158,30 @@ public class FusekiUtils {
                         functionality.getInputDescription(), functionality.getName(), functionality
                                 .getOutputDescription(), functionality.getTag());
             }
+            // CREATE REPOSITORY
+            else if (obj instanceof Repository) {
+                Repository repository = (Repository) obj;
+                String supportedFormats = new String();
+                for (String val : repository.getSupportedFormat()) {
+                    supportedFormats += "\"" + val + "\",";
+                }
+                if (supportedFormats.length() > 0)
+                    supportedFormats = supportedFormats.substring(0, supportedFormats.length() - 1);
+
+                return String.format(Locale.US, "PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                                "knowledgebase:%s a knowledgebase:Repository, owl:NamedIndividual ;" +
+                                "knowledgebase:Repository_Country \"%s\" ;\n" +
+                                "knowledgebase:Repository_GeoLocation \"%s\" ;\n" +
+                                "knowledgebase:Repository_OperationalCost %f ;\n" +
+                                "knowledgebase:Repository_PriorityLevel1Cost %f ;\n" +
+                                "knowledgebase:Repository_PriorityLevel2Cost %f ;\n" +
+                                "knowledgebase:Repository_PriorityLevel3Cost %f ;\n" +
+                                "knowledgebase:Repository_Space %f ;\n" +
+                                "knowledgebase:Repository_SupportedFormat " + supportedFormats + " ;\n" +
+                                "}", repository.getId(), repository.getCountryId(), repository.getGeolocationId(),
+                        repository.getOperationalCost(), repository.getPriorityLevel1Cost(), repository
+                                .getPriorityLevel2Cost(), repository.getPriorityLevel3Cost(), repository.getSpace());
+            }
             //todo: add other objects
             else {
                 throw new InvalidObjectException("The selected object type is not currently supported!");
@@ -172,13 +192,20 @@ public class FusekiUtils {
         }
     }
 
-    public static String getPassword(String username){
+    public static String getPassword(String username) {
         return "prefix knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                 "\n" +
                 "SELECT ?pass\n" +
-                "WHERE { ?s a knowledgebase:User ; knowledgebase:User_UserName \""+username+"\" ; " +
+                "WHERE { ?s a knowledgebase:User ; knowledgebase:User_UserName \"" + username + "\" ; " +
                 "knowledgebase:User_Password ?pass }\n" +
                 "LIMIT 25\n";
+    }
+
+    public static String getAllEntitiesQuery(String entityClass) {
+        return "prefix knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                "\n" +
+                "SELECT ?s ?p ?o\n" +
+                "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o }";
     }
 
     public static String getAllUploadedImages(Boolean optimizedOnly) {
@@ -198,6 +225,38 @@ public class FusekiUtils {
         return "SELECT ?p ?o\n" +
                 "WHERE { <" + id + "> ?p  ?o . }\n" +
                 "LIMIT 25";
+    }
+
+    public static String getFusekiDBSource(String sourceURL) {
+        InputStream is = null;
+        try {
+            is = new URL(sourceURL).openStream();
+            java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+            String result = s.hasNext() ? s.next() : "";
+            // ugly hack but works. The original content have not valid format using "{" and "}"
+            result = result.replace("{", "");
+            result = result.replace("}", "");
+
+            //write content to tmp file
+            File temp = File.createTempFile("tempfile", ".tmp");
+
+            //write it
+            BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
+            bw.write(result);
+            bw.close();
+            return temp.getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void getAllReasoners() {
+        Model reasoners = ReasonerRegistry.theRegistry().getAllDescriptions();
+        ResIterator ri = reasoners.listSubjectsWithProperty(RDF.type, ReasonerVocabulary.ReasonerClass);
+        while (ri.hasNext()) {
+            System.out.println(" " + ri.next());
+        }
     }
 
     public static final String myNamespacePrefix = "http://entice-project/jernej/test/";
@@ -473,5 +532,33 @@ public class FusekiUtils {
     }
 
 
+    public static List<ResultObj> getResultObjectListFromResultSet(ResultSet results) {
+        List<ResultObj> resultObjs = new ArrayList<ResultObj>();
+
+        // For each solution in the result set
+        while (results.hasNext()) {
+            QuerySolution qs = results.next();
+            Iterator<Var> varIter = ((ResultBinding) qs).getBinding().vars();
+            String x = null;
+            String r = null;
+            String y = null;
+            while (varIter.hasNext()) {
+                Var var = varIter.next();
+                if (var.getVarName().equals("s")) x = ((ResultBinding) qs).getBinding().get(var).toString();
+                else if (var.getVarName().equals("p")) r = ((ResultBinding) qs).getBinding().get(var).toString();
+                else if (var.getVarName().equals("o")) {
+                    try {
+                        y = String.valueOf(((ResultBinding) qs).getBinding().get(var).getLiteral().getValue());
+                    } catch (Exception e) {
+                        y = ((ResultBinding) qs).getBinding().get(var).toString();
+                    }
+                }
+            }
+
+            resultObjs.add(new ResultObj(x, r, y));
+        }
+
+        return resultObjs;
+    }
 }
 

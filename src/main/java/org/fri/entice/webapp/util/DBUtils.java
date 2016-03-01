@@ -1,9 +1,9 @@
 package org.fri.entice.webapp.util;
 
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.sparql.core.ResultBinding;
-import com.hp.hpl.jena.sparql.core.Var;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.sparql.core.ResultBinding;
+import org.apache.jena.sparql.core.Var;
 import org.fri.entice.webapp.entry.ResultObj;
 
 import java.util.ArrayList;

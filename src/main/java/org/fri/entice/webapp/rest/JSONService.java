@@ -1,18 +1,16 @@
 package org.fri.entice.webapp.rest;
 
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSetFormatter;
-import com.hp.hpl.jena.sparql.core.ResultBinding;
-import com.hp.hpl.jena.sparql.core.Var;
-import com.hp.hpl.jena.update.UpdateExecutionFactory;
-import com.hp.hpl.jena.update.UpdateFactory;
-import com.hp.hpl.jena.update.UpdateProcessor;
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.jena.query.*;
+import org.apache.jena.sparql.core.ResultBinding;
+import org.apache.jena.sparql.core.Var;
+import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateProcessor;
 import org.fri.entice.webapp.entry.*;
 import org.fri.entice.webapp.uibk.client.IUibkService;
 import org.fri.entice.webapp.uibk.client.UibkService;
+import org.fri.entice.webapp.util.CommonUtils;
 import org.fri.entice.webapp.util.DBUtils;
 import org.fri.entice.webapp.util.FusekiUtils;
 import org.fri.entice.webapp.util.PasswordUtils;
@@ -54,6 +52,8 @@ public class JSONService implements IUserService {
     @Context
     Request request;
 
+    private String KB_PREFIX = "http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#";
+
     /**
      * Test GET request with JSON response
      *
@@ -68,7 +68,7 @@ public class JSONService implements IUserService {
         //Query the collection, dump output
         QueryExecution qe = QueryExecutionFactory.sparqlService("http://localhost:3030/ds/query", "SELECT * WHERE " +
                 "{?x" + " ?r ?y}");
-        com.hp.hpl.jena.query.ResultSet results = qe.execSelect();
+        ResultSet results = qe.execSelect();
 
         List<ResultObj> resultObjs = new ArrayList<ResultObj>();
 
@@ -307,7 +307,7 @@ public class JSONService implements IUserService {
         //Query the collection, dump output
         String query = FusekiUtils.getAllUploadedImages(optimized);
         QueryExecution qe = QueryExecutionFactory.sparqlService("http://localhost:3030/ds/query", query);
-        com.hp.hpl.jena.query.ResultSet results = qe.execSelect();
+        ResultSet results = qe.execSelect();
 
         List<String> idsList = DBUtils.parseSubjectResult(results);
         List<ImageObj> imageObjs = new ArrayList<ImageObj>();
@@ -368,9 +368,9 @@ public class JSONService implements IUserService {
             String query = FusekiUtils.getPassword(username);
 
             //Query the collection, dump output
-            QueryExecution qe = QueryExecutionFactory.sparqlService(AppContextListener.prop.getProperty("fuseki.url.query")
-                    , query);
-            com.hp.hpl.jena.query.ResultSet results = qe.execSelect();
+            QueryExecution qe = QueryExecutionFactory.sparqlService(AppContextListener.prop.getProperty("fuseki.url"
+                    + ".query"), query);
+            ResultSet results = qe.execSelect();
             String x = null;
             while (results.hasNext()) {
                 QuerySolution qs = results.next();
@@ -385,7 +385,7 @@ public class JSONService implements IUserService {
             qe.close();
 
             matched = PasswordUtils.validatePassword(password, x);
-            return matched + " match. Time elapsed: "+ (System.currentTimeMillis()-startTime) + "ms";
+            return matched + " match. Time elapsed: " + (System.currentTimeMillis() - startTime) + "ms";
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             return "false";
@@ -428,4 +428,49 @@ public class JSONService implements IUserService {
         }
 
     }
+
+    //TODO HIGHT PRIORITY: Access the data for the algorithm: informations about all fragments, diskImage and
+    // repository.
+    @GET
+    @Path("get_all_repositories")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Repository> getAllRepositories() {
+        String selectQuery = FusekiUtils.getAllEntitiesQuery("Repository");
+
+        QueryExecution qe = QueryExecutionFactory.sparqlService("http://localhost:3030/entice/query", selectQuery);
+        ResultSet results = qe.execSelect();
+
+//        Query query = QueryFactory.create(selectQuery);
+//        ResultSetFormatter.out(System.out, results, query);
+//        return ResultSetFormatter.asText(results);
+
+        List<ResultObj> resultObjs = FusekiUtils.getResultObjectListFromResultSet(results);
+
+        List<Repository> repositoryList = new ArrayList<Repository>();
+        for (ResultObj resultObj : resultObjs) {
+            if (resultObj.getO().equals("http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#Repository")) {
+                repositoryList.add(new Repository(resultObj.getS().replace(KB_PREFIX, "")));
+            }
+
+            CommonUtils.mapResultObjectToEntry(repositoryList,resultObj);
+        }
+
+        return repositoryList;
+    }
+
+    @GET
+    @Path("get_all_disk_images")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<DiskImage> getAllDiskImages() {
+        return null;
+    }
+
+    @GET
+    @Path("get_fragment_data")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Fragment> getFragmentData(@QueryParam("disk_image_id") String diskImageId) {
+        return null;
+    }
+
 }

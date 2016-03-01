@@ -36,3 +36,14 @@ LIMIT 25
 }
  LIMIT 25
 
+
+-------------------------- Production DiskImage listing
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>
+
+SELECT ?subject ?predicate ?object
+WHERE {
+  ?subject  a knowledgebase:DiskImage ; ?predicate ?object
+}
+LIMIT 30
