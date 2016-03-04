@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement
-public class Repository {
-    private String id;
-
+public class Repository extends MyEntry {
     // This property means a repository’s infrastructure is in which country. Each county has a unique Country_id.
     private String countryId;
 
@@ -45,7 +43,7 @@ public class Repository {
     public Repository(String id, String countryId, String geolocationId, String interfaceEndpoint, double
             operationalCost, double priorityLevel1Cost, double priorityLevel2Cost, double priorityLevel3Cost, double
             space, List<String> supportedFormat) {
-        this.id = id;
+        super(id);
         this.countryId = countryId;
         this.geolocationId = geolocationId;
         this.interfaceEndpoint = interfaceEndpoint;
@@ -58,16 +56,14 @@ public class Repository {
     }
 
     public Repository(String id) {
-        this.id = id;
+       super(id);
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+//    @Override
+//    public void createInstanceWithId(String id) {
+//        this.i
+//        super(id);
+//    }
 
     public String getCountryId() {
         return countryId;

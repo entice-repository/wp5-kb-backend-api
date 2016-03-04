@@ -10,7 +10,6 @@ import org.apache.jena.update.UpdateProcessor;
 import org.fri.entice.webapp.entry.*;
 import org.fri.entice.webapp.uibk.client.IUibkService;
 import org.fri.entice.webapp.uibk.client.UibkService;
-import org.fri.entice.webapp.util.CommonUtils;
 import org.fri.entice.webapp.util.DBUtils;
 import org.fri.entice.webapp.util.FusekiUtils;
 import org.fri.entice.webapp.util.PasswordUtils;
@@ -64,7 +63,6 @@ public class JSONService implements IUserService {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public List<ResultObj> getTrackInJSON() {
-
         //Query the collection, dump output
         QueryExecution qe = QueryExecutionFactory.sparqlService("http://localhost:3030/ds/query", "SELECT * WHERE " +
                 "{?x" + " ?r ?y}");
@@ -429,48 +427,28 @@ public class JSONService implements IUserService {
 
     }
 
-    //TODO HIGHT PRIORITY: Access the data for the algorithm: informations about all fragments, diskImage and
-    // repository.
     @GET
     @Path("get_all_repositories")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Repository> getAllRepositories() {
-        String selectQuery = FusekiUtils.getAllEntitiesQuery("Repository");
-
-        QueryExecution qe = QueryExecutionFactory.sparqlService("http://localhost:3030/entice/query", selectQuery);
-        ResultSet results = qe.execSelect();
-
-//        Query query = QueryFactory.create(selectQuery);
-//        ResultSetFormatter.out(System.out, results, query);
-//        return ResultSetFormatter.asText(results);
-
-        List<ResultObj> resultObjs = FusekiUtils.getResultObjectListFromResultSet(results);
-
-        List<Repository> repositoryList = new ArrayList<Repository>();
-        for (ResultObj resultObj : resultObjs) {
-            if (resultObj.getO().equals("http://www.semanticweb" +
-                    ".org/project-entice/ontologies/2015/7/knowledgebase#Repository")) {
-                repositoryList.add(new Repository(resultObj.getS().replace(KB_PREFIX, "")));
-            }
-
-            CommonUtils.mapResultObjectToEntry(repositoryList,resultObj);
-        }
-
-        return repositoryList;
+        return FusekiUtils.getAllEntityAttributes(Repository.class);
     }
 
     @GET
     @Path("get_all_disk_images")
     @Produces(MediaType.APPLICATION_JSON)
     public List<DiskImage> getAllDiskImages() {
-        return null;
+        return FusekiUtils.getAllEntityAttributes(DiskImage.class);
     }
 
     @GET
     @Path("get_fragment_data")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Fragment> getFragmentData(@QueryParam("disk_image_id") String diskImageId) {
-        return null;
+        String queryCondition = null;
+        if (diskImageId != null) queryCondition = ".?s knowledgebase:Fragment_hasReferenceImage \"" + diskImageId + "\"";
+
+        return FusekiUtils.getAllEntityAttributes(Fragment.class, queryCondition);
     }
 
 }

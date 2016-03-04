@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement
-public class Fragment {
-    private String id;
+public class Fragment extends MyEntry {
     private String refDiskImageId;
     private String refRepositoryId;
     private String anyURI;
@@ -18,7 +17,7 @@ public class Fragment {
 
     public Fragment(String id, String refDiskImageId, String refRepositoryId, String anyURI, int fragmentSize,
                     List<String> hashValue) {
-        this.id = id;
+        super(id);
         this.refDiskImageId = refDiskImageId;
         this.refRepositoryId = refRepositoryId;
         this.anyURI = anyURI;
@@ -26,12 +25,8 @@ public class Fragment {
         this.hashValue = hashValue;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public Fragment(String id) {
+        super(id);
     }
 
     public String getRefDiskImageId() {
@@ -72,5 +67,11 @@ public class Fragment {
 
     public void setHashValue(List<String> hashValue) {
         this.hashValue = hashValue;
+    }
+
+    public void setHashValue(String val) {
+        if (hashValue == null) hashValue = new ArrayList<String>();
+
+        hashValue.add(val);
     }
 }

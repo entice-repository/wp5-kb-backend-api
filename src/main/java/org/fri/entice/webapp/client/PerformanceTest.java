@@ -21,14 +21,12 @@ public class PerformanceTest {
 
     public static void main(String[] args) {
         try {
-//            final String PATH = "http://193.2.72.90:3030/entice/update";
-            final String PATH = "http://localhost:3030/entice/update";
+            final String PATH = "http://193.2.72.90:3030/entice/update";
             /**
              *  Insert repositories, fragments and disk images.
              */
             final int repositorySize = 100;
-//            final int diskImageSize = 5000;
-            final int diskImageSize = 100;
+            final int diskImageSize = 2000;
             final int fragmentMaxSize = 10;
 
 
@@ -72,8 +70,10 @@ public class PerformanceTest {
                     public void run() {
                         DiskImage diskImage = new DiskImage(UUID.randomUUID().toString(), ImageType.CI, "some " +
                                 "description", "some" +
-                                " " + "title", "some predecessor..", FileFormat.IMG, "picture URL", false, "iriC",
-                                "123", 49.99, "333", "43", "54", "556", false, 5, true, "1.1");
+                                " " + "title", "some predecessor..", FileFormat.IMG, "picture URL", Math.random() < 0.5,
+                                "iriC", "123", 50 + Math.random() * 100, "456", "789", "100", "007", Math.random() < 0.5,
+                                (int) (Math.random() * 30), Math.random() < 0.5, "1.0", (int) (1000 + Math.random() *
+                                100000));
                         diskImages.add(diskImage);
                         String insertStatement = FusekiUtils.generateInsertObjectStatement(diskImage);
                         UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create
@@ -85,11 +85,12 @@ public class PerformanceTest {
                         for (int j = 0; j < selectedFragmentSize; j++) {
                             List<String> hashValue = new ArrayList<String>();
                             hashValue.add("a");
-                            hashValue.add("b");
-                            hashValue.add("c");
-                            hashValue.add("d");
+                            if (Math.random() < 0.5) hashValue.add("b");
+                            if (Math.random() < 0.5) hashValue.add("c");
+                            if (Math.random() < 0.5) hashValue.add("d");
                             Fragment fragment = new Fragment(UUID.randomUUID().toString(), diskImage.getId(),
-                                    repositories.get((int) (Math.random() * repositorySize)).getId(), "aaa", 1,
+                                    repositories.get((int) (Math.random() * repositorySize)).getId(), "anyURI..", 1 + (int) (Math
+                                    .random() * 10),
                                     hashValue);
                             insertStatement = FusekiUtils.generateInsertObjectStatement(fragment);
                             upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);

@@ -18,6 +18,7 @@
     </repositories>
 
     <dependencies>
+        <!--Apache JClouds-->
         <dependency>
             <groupId>org.apache.jclouds</groupId>
             <artifactId>jclouds-all</artifactId>
@@ -40,7 +41,7 @@
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
-            <version>2.22.1</version>
+            <version>2.22.2</version>
         </dependency>
 
         <!-- if you are using Jersey client specific features without the server side -->
@@ -56,6 +57,7 @@
             <version>2.0.1</version>
         </dependency>
 
+        <!--Java Jersey RESTful service-->
         <dependency>
             <groupId>org.glassfish.jersey.connectors</groupId>
             <artifactId>jersey-jetty-connector</artifactId>
@@ -74,13 +76,7 @@
             <version>2.22</version>
         </dependency>
 
-        <!--TO OLD FOR JENA 3.0.1 !!!-->
-        <!--<dependency>-->
-            <!--<groupId>com.github.ansell.pellet</groupId>-->
-            <!--<artifactId>pellet-jena</artifactId>-->
-            <!--<version>2.3.6-ansell</version>-->
-        <!--</dependency>-->
-
+        <!--Apache Jena core libs-->
         <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>jena-core</artifactId>
@@ -94,6 +90,7 @@
             </exclusions>
         </dependency>
 
+        <!--Apache Jena arq libs-->
         <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>jena-arq</artifactId>
@@ -119,6 +116,8 @@
             <scope>provided</scope>
         </dependency>
 
+
+        <!--Apache Cassandra libs-->
         <dependency>
             <groupId>org.apache.cassandra</groupId>
             <artifactId>cassandra-all</artifactId>
@@ -131,6 +130,7 @@
             <version>2.1.8</version>
         </dependency>
 
+        <!--Apache Shiro security framework-->
         <dependency>
             <groupId>org.secnod.shiro</groupId>
             <artifactId>shiro-jersey</artifactId>

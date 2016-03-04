@@ -18,6 +18,7 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.ReasonerVocabulary;
 import org.apache.jena.vocabulary.VCARD;
 import org.fri.entice.webapp.entry.*;
+import org.fri.entice.webapp.rest.AppContextListener;
 
 import java.io.*;
 import java.net.URL;
@@ -25,6 +26,8 @@ import java.util.*;
 
 public class FusekiUtils {
 
+    private static String KB_PREFIX_SHORT = "http://www.semanticweb" + "" +
+            ".org/project-entice/ontologies/2015/7/knowledgebase#";
     private static String KB_PREFIX = "knowledgebase:<http://www.semanticweb" + "" +
             ".org/project-entice/ontologies/2015/7/knowledgebase#>";
     private static String OWL_PREFIX = "owl:<http://www.w3.org/2002/07/owl#>";
@@ -51,14 +54,6 @@ public class FusekiUtils {
                         "        knowledgebase:User_Password     \"%s\" ;" +
                         "}", user.getId(), user.getFullName(), user.getEmail(), user.getPhoneNumber(), user
                         .getUsername(), user.getPassword());
-                // OLD:
-                //return String.format("PREFIX user:<http://www.semanticweb.org/project-entice/ontologies/User/>
-                // INSERT " +
-                // "DATA {" +
-                // "user:%s user:User_FullName \"%s\" ;" +
-                // "user:User_Email \"%s\" ; user:User_PhoneNumber \"%s\" ; user:User_UserName \"%s\" ; " +
-                // "user:User_Password \"%s\" . }", user.getId(), user.getFullName(), user.getEmail(), user
-                // .getPhoneNumber(), user.getUsername(), user.getPassword());
             }
             // CREATE DISK IMAGE
             else if (obj instanceof DiskImage) {
@@ -84,13 +79,14 @@ public class FusekiUtils {
                                 "knowledgebase:DiskImage_SLA  \"%s\" ;\n" +
                                 "knowledgebase:DiskImage_Title  \"%s\" ;\n" +
                                 "knowledgebase:DiskImage_Version  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_Size  %d ;\n" +
                                 "}", diskImage.getId(), diskImage.getDescription(), diskImage.getEncryption(),
                         diskImage.getFileFormat().getValue(), diskImage.getRefOwnerId(), diskImage.getDataId(),
                         diskImage.getRefFunctionalityId(), diskImage.getGenerationTime(), diskImage.getIri(),
                         diskImage.isNeedsData(), diskImage.isObfuscation(), diskImage.getRefOperatingSystemId(),
                         diskImage.getPictureUrl(), diskImage.getPredecessor(), diskImage.getPrice(), diskImage
                                 .getRefQualityId(), diskImage.getRefSlaId(), diskImage.getTitle(), diskImage
-                                .getVersion());
+                                .getVersion(), diskImage.getDiskImageSize());
             }
             // CREATE DISK IMAGE SLA
             else if (obj instanceof DiskImageSLA) {
@@ -201,11 +197,21 @@ public class FusekiUtils {
                 "LIMIT 25\n";
     }
 
-    public static String getAllEntitiesQuery(String entityClass) {
-        return "prefix knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
-                "\n" +
-                "SELECT ?s ?p ?o\n" +
-                "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o }";
+    public static String getAllEntitiesQuery(String entityClass, String... queryFilterCondition) {
+        if (queryFilterCondition.length > 0 && queryFilterCondition[0] != null)
+            return "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "\n" +
+                    "SELECT ?s ?p ?o\n" +
+                    "WHERE { ?s a knowledgebase:" + entityClass + " " + queryFilterCondition[0] + " ; ?p ?o }\n" +
+                    "LIMIT 200";
+        else
+            return "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "\n" +
+                    "SELECT ?s ?p ?o\n" +
+                    "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o }\n" +
+                    "LIMIT 200";
     }
 
     public static String getAllUploadedImages(Boolean optimizedOnly) {
@@ -379,7 +385,7 @@ public class FusekiUtils {
             DiskImage di = new DiskImage(UUID.randomUUID().toString(), imageTypeC, descriptionC, titleC,
                     predecessorC, fileFormatC, pictureUrlC, encriptionC, iriC, slaIdC, priceC, ownerIdC,
                     functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC,
-                    version);
+                    version, (int) (1000 + Math.random() * 100000));
             DiskImageResource dir = new DiskImageResource(resourceId, di);
             allImageResourcesWithThisType.add(dir);
         }
@@ -524,7 +530,7 @@ public class FusekiUtils {
             DiskImage di = new DiskImage(UUID.randomUUID().toString(), imageTypeC, descriptionC, titleC,
                     predecessorC, fileFormatC, pictureUrlC, encriptionC, iriC, slaIdC, priceC, ownerIdC,
                     functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC,
-                    version);
+                    version, (int) (1000 + Math.random() * 100000));
             DiskImageResource dir = new DiskImageResource(resourceId, di);
             allImages.add(dir);
         }
@@ -559,6 +565,31 @@ public class FusekiUtils {
         }
 
         return resultObjs;
+    }
+
+    public static <T extends MyEntry> List<T> getAllEntityAttributes(Class<T> clazz, String... conditions) {
+        String selectQuery = FusekiUtils.getAllEntitiesQuery(clazz.getSimpleName(), conditions);
+
+        QueryExecution qe = QueryExecutionFactory.sparqlService(AppContextListener.prop.getProperty("fuseki.url" + "" + ".query"), selectQuery);
+//        QueryExecution qe = QueryExecutionFactory.sparqlService("http://localhost:3030/entice/query", selectQuery);
+        ResultSet results = qe.execSelect();
+
+        List<ResultObj> resultObjs = FusekiUtils.getResultObjectListFromResultSet(results);
+
+        List<T> list = new ArrayList<T>();
+        for (ResultObj resultObj : resultObjs) {
+            if (resultObj.getO().equals(KB_PREFIX_SHORT + clazz.getSimpleName())) {
+                list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
+            }
+            else if (resultObj.getO().equals(KB_PREFIX_SHORT + "CI") || resultObj.getO().equals(KB_PREFIX_SHORT + "VMI")) {
+                list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
+            }
+
+
+            CommonUtils.mapResultObjectToEntry(list, resultObj);
+        }
+
+        return list;
     }
 }
 

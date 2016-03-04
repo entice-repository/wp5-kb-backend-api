@@ -34,7 +34,6 @@ public class AppContextListener implements ServletContextListener {
         try {
             // init logger
             logger = Logger.getLogger(this.getClass().getName());
-
             // init db.property list
             CommonUtils.initProperties(prop,"db.properties");
             logger.log(Level.INFO, "DB properties successfully initialized.");

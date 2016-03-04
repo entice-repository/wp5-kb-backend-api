@@ -3,8 +3,7 @@ package org.fri.entice.webapp.entry;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class DiskImage {
-    private String id; //unique indentifier , String better than int!!
+public class DiskImage extends MyEntry {
     private ImageType imageType; //enumerated type VMI or CI
     private String description; //string
     private String title; //string
@@ -24,17 +23,19 @@ public class DiskImage {
     private long generationTime; //int in milliseconds after epoch
     private boolean obfuscation; //boolean true-false
     private String dataId; // relation to Data entity
+    private int diskImageSize;   // probably in bytes
 
-//    //no arg constructor needed for JAXB
-//    public DiskImage() {
-//    }
+
+    public DiskImage(String id) {
+        super(id);
+    }
 
     public DiskImage(String id, ImageType imageTypeC, String descriptionC, String titleC, String predecessorC,
                      FileFormat fileFormatC, String pictureUrlC, boolean encryption, String iriC, String refSlaId,
                      double priceC, String refOwnerId, String refFunctionalityId, String refQualityId, String
                              refOperatingSystemId, boolean needsDataC, int generationTimeC, boolean obfuscationC,
-                     String version) {
-        this.id = id;
+                     String version, int diskImageSize) {
+        super(id);
         this.imageType = imageTypeC;
         this.description = descriptionC;
         this.title = titleC;
@@ -53,6 +54,7 @@ public class DiskImage {
         this.generationTime = generationTimeC;
         this.obfuscation = obfuscationC;
         this.version = version;
+        this.diskImageSize = diskImageSize;
     }
 
     public ImageType getImageType() {
@@ -151,14 +153,6 @@ public class DiskImage {
         this.obfuscation = obfuscation;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getVersion() {
         return version;
     }
@@ -225,6 +219,14 @@ public class DiskImage {
 
     public void setDataId(String dataId) {
         this.dataId = dataId;
+    }
+
+    public int getDiskImageSize() {
+        return diskImageSize;
+    }
+
+    public void setDiskImageSize(int diskImageSize) {
+        this.diskImageSize = diskImageSize;
     }
 }
 
