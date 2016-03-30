@@ -1,11 +1,15 @@
 package org.fri.entice.webapp.rest;
 
+import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
+import org.apache.jena.reasoner.rulesys.Rule;
 import org.fri.entice.webapp.cassandra.CassandraParamsObj;
 import org.fri.entice.webapp.cassandra.CassandraService;
 import org.fri.entice.webapp.util.CommonUtils;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -40,6 +44,24 @@ public class AppContextListener implements ServletContextListener {
 
             // connect to Cassandra Service
             //initCassandraConnectionToService();
+
+
+            // Read JRules from file ...
+            BufferedReader br = null;
+            try{
+                br = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("test_rules.txt")));
+
+                List rules = Rule.parseRules(Rule.rulesParserFromReader(br));
+                GenericRuleReasoner genericRuleReasoner = new GenericRuleReasoner(rules);
+                genericRuleReasoner.setMode(GenericRuleReasoner.FORWARD);
+                genericRuleReasoner.setTraceOn(true);
+
+                for(Object r : rules)  //... and print them
+                    System.out.println(r.toString());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

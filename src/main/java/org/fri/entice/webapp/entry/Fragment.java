@@ -8,7 +8,9 @@ import java.util.List;
 public class Fragment extends MyEntry {
     private String refDiskImageId;
     private String refRepositoryId;
-    private String anyURI;
+    private String anyURI;      // TODO: list of string showing the name/ipadress/geolocation of the given cloud  + date
+    // TODO: Then by using simple search I could sort all entries by name and find how many times the fragment was deployed to any given cloud.
+    // So we only need deployment time and the URI field to be populated with some data.
     private int fragmentSize;   // probably in bytes
 
     // Multi-value (Note: Structured values limit the ability for applications to query for specific data items, e.g. documents that have a specific keyword):

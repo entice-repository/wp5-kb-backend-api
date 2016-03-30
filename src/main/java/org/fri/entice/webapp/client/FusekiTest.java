@@ -4,14 +4,14 @@ import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.InfModel;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.reasoner.ValidityReport;
 import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateProcessor;
-import org.apache.log4j.BasicConfigurator;
-import org.fri.entice.webapp.entry.DiskImage;
-import org.fri.entice.webapp.entry.FileFormat;
-import org.fri.entice.webapp.entry.ImageType;
+import org.apache.jena.util.FileManager;
 import org.fri.entice.webapp.entry.User;
 import org.fri.entice.webapp.util.FusekiUtils;
 import org.glassfish.jersey.client.ClientConfig;
@@ -22,6 +22,7 @@ import javax.ws.rs.client.WebTarget;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.UUID;
 
 /**
@@ -37,7 +38,9 @@ public class FusekiTest {
             ".Other\" ." + "}   ";
 
     public static void main(String[] args) {
-        BasicConfigurator.configure();
+        validateOntology();
+
+        //BasicConfigurator.configure();
 
         /*
         System.out.println(String.format("Adding %s", id));
@@ -68,13 +71,13 @@ public class FusekiTest {
 //        System.out.println("Jena Fuseki existing reasoners:");
 //        FusekiUtils.getAllReasoners();
 
-       // reasonerTest();
+        reasonerTest();
 //        pelletTest();
 
 
    //     upp.execute();
     //    System.out.println("User object added!");
-
+          /*
         DiskImage diskImage = new DiskImage(UUID.randomUUID().toString(), ImageType.CI, "some description", "some " +
                 "title", "some predecessor..", FileFormat.IMG, "picture URL", false, "iriC", "123", 49.99, "333",
                 "43", "54",
@@ -84,7 +87,7 @@ public class FusekiTest {
                 "http://localhost:3030/entice/update");
         upp.execute();
         System.out.println("DiskImage object added!");
-
+        */
 
         /*
         List<String> hashValue = new ArrayList();
@@ -136,6 +139,20 @@ public class FusekiTest {
         */
     }
 
+    private static void validateOntology() {
+        Model data = FileManager.get().loadModel("http://193.2.72.90:3030/entice");
+        InfModel infmodel = ModelFactory.createRDFSModel(data);
+        ValidityReport validity = infmodel.validate();
+        if (validity.isValid()) {
+            System.out.println("OK");
+        } else {
+            System.out.println("Conflicts");
+            for (Iterator i = validity.getReports(); i.hasNext(); ) {
+                System.out.println(" - " + i.next());
+            }
+        }
+    }
+
     private static void pelletTest() {
         // ontology that will be used
 //        String ont = "http://www.mindswap.org/2004/owl/mindswappers";
@@ -152,7 +169,8 @@ public class FusekiTest {
 
     private static void reasonerTest() {
         try {
-            String SOURCE = FusekiUtils.getFusekiDBSource("http://193.2.72.90:3030/switch/data");
+//            String SOURCE = FusekiUtils.getFusekiDBSource("http://193.2.72.90:3030/switch/data");
+            String SOURCE = FusekiUtils.getFusekiDBSource("http://193.2.72.90:3030/test2");
 
             //create a model using TRANSITIVE reasoner (can identify transactional relationships)
             OntModel model1 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_TRANS_INF);
@@ -166,10 +184,10 @@ public class FusekiTest {
             model1.read(new FileInputStream(SOURCE), null, format);
             model2.read(new FileInputStream(SOURCE), null, format);
 
-            String queryString = "PREFIX class: <http://www.switch-project.eu/2015/10/reference_model#>\n" +
+            String queryString = "PREFIX tutorial: <http://acrab.ics.muni.cz/ontologies/tutorial.owl#>\n" +
                     "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
                     "select  ?uri\n" +
-                    "where { ?uri rdfs:subClassOf class:InformationConcept \n" +
+                    "where { ?uri rdfs:subClassOf tutorial:Person \n" +
                     "}";
 
             Query query = QueryFactory.create(queryString);

@@ -26,6 +26,7 @@ import java.util.*;
 
 public class FusekiUtils {
 
+    private static final String XSD_PREFIX = "xsd:<http://www.w3.org/2001/XMLSchema#>";
     private static String KB_PREFIX_SHORT = "http://www.semanticweb" + "" +
             ".org/project-entice/ontologies/2015/7/knowledgebase#";
     private static String KB_PREFIX = "knowledgebase:<http://www.semanticweb" + "" +
@@ -58,25 +59,26 @@ public class FusekiUtils {
             // CREATE DISK IMAGE
             else if (obj instanceof DiskImage) {
                 DiskImage diskImage = (DiskImage) obj;
-                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                return String.format(Locale.US,"PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " + XSD_PREFIX + " " +
+                                "INSERT DATA {" +
                                 "knowledgebase:%s a knowledgebase:DiskImage, owl:NamedIndividual, knowledgebase:" +
                                 (diskImage.getImageType().equals(ImageType.CI) ? "CI" : "VMI") + " ; " +
                                 "knowledgebase:DiskImage_Description \"%s\" ;\n" +
                                 "knowledgebase:DiskImage_Encryption  %s ;\n" +
                                 "knowledgebase:DiskImage_FileFormat  \"%s\" ;\n" +
-                                "knowledgebase:DiskImage_Owner  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_hasOwner \"%s\"^^xsd:anyURI ;\n" +
                                 "knowledgebase:DiskImage_DataId  \"%s\" ;\n" +
                                 "knowledgebase:DiskImage_refFunctionalityId  \"%s\" ;\n" +
                                 "knowledgebase:DiskImage_generationTime  \"%s\" ;\n" +
-                                "knowledgebase:DiskImage_IRI  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_IRI  \"%s\"^^xsd:anyURI ;\n" +
                                 "knowledgebase:DiskImage_NeedsDataFile  %s ;\n" +
                                 "knowledgebase:DiskImage_Obfuscation  %s ;\n" +
-                                "knowledgebase:DiskImage_OperatingSystem  \"%s\" ;\n" +
-                                "knowledgebase:DiskImage_Picture  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_OperatingSystem  %s ;\n" +
+                                "knowledgebase:DiskImage_Picture  \"%s\"^^xsd:anyURI ;\n" +
                                 "knowledgebase:DiskImage_Predecessor  \"%s\" ;\n" +
-                                "knowledgebase:DiskImage_Price  %s ;\n" +
-                                "knowledgebase:DiskImage_Quality  \"%s\" ;\n" +
-                                "knowledgebase:DiskImage_SLA  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_Price \"%f\"^^xsd:double ;\n" +
+                                "knowledgebase:DiskImage_Quality  %s ;\n" +
+                                "knowledgebase:DiskImage_SLA  %s ;\n" +
                                 "knowledgebase:DiskImage_Title  \"%s\" ;\n" +
                                 "knowledgebase:DiskImage_Version  \"%s\" ;\n" +
                                 "knowledgebase:DiskImage_Size  %d ;\n" +
@@ -110,16 +112,15 @@ public class FusekiUtils {
                 }
                 if (hashValues.length() > 0) hashValues = hashValues.substring(0, hashValues.length() - 1);
 
-                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " + XSD_PREFIX + " INSERT DATA {" +
                         "knowledgebase:%s a knowledgebase:Fragment, owl:NamedIndividual ;" +
-                        "knowledgebase:Fragment_hasReferenceImage \"%s\" ;\n" +
-                        "knowledgebase:Fragment_hasRepository \"%s\" ;\n" +
-                        "knowledgebase:Fragment_IRI \"%s\" ;\n" +
+                        "knowledgebase:Fragment_hasReferenceImage knowledgebase:%s ;\n" +
+                        "knowledgebase:Fragment_hasRepository knowledgebase:%s ;\n" +
+                        "knowledgebase:Fragment_IRI \"%s\"^^xsd:anyURI ;\n" +
 //                        "knowledgebase:Fragment_ReferenceImage \"%s\" ;\n" +
                         "knowledgebase:Fragment_Size %s ;\n" +
                         "knowledgebase:Fragment_HashValues " + hashValues + " ;\n" +
-                        "}", fragment.getId(), fragment.getRefDiskImageId(), fragment.getRefRepositoryId(), fragment
-                        .getAnyURI(), fragment.getFragmentSize());
+                        "}", fragment.getId(), fragment.getRefDiskImageId(), fragment.getRefRepositoryId(), fragment.getAnyURI(), fragment.getFragmentSize());
             }
             // CREATE DELIVERY
             else if (obj instanceof Delivery) {
@@ -149,10 +150,8 @@ public class FusekiUtils {
                                 "knowledgebase:Functionality_Name \"%s\" ;\n" +
                                 "knowledgebase:Functionality_OutputDescription \"%s\" ;\n" +
                                 "knowledgebase:Functionality_Tag \"%s\" ;\n" +
-                                "}", functionality.getId(), functionality.getRefImplementationId(), functionality
-                        .getClassification(), functionality.getInputDescription(), functionality.getDomain(),
-                        functionality.getInputDescription(), functionality.getName(), functionality
-                                .getOutputDescription(), functionality.getTag());
+                                "}", functionality.getId(), functionality.getRefImplementationId(), functionality.getClassification(), functionality.getInputDescription(), functionality.getDomain(),
+                        functionality.getInputDescription(), functionality.getName(), functionality.getOutputDescription(), functionality.getTag());
             }
             // CREATE REPOSITORY
             else if (obj instanceof Repository) {
@@ -164,19 +163,19 @@ public class FusekiUtils {
                 if (supportedFormats.length() > 0)
                     supportedFormats = supportedFormats.substring(0, supportedFormats.length() - 1);
 
-                return String.format(Locale.US, "PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                return String.format(Locale.US, "PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " + XSD_PREFIX + " " + " INSERT DATA {" +
                                 "knowledgebase:%s a knowledgebase:Repository, owl:NamedIndividual ;" +
-                                "knowledgebase:Repository_Country \"%s\" ;\n" +
-                                "knowledgebase:Repository_GeoLocation \"%s\" ;\n" +
+                                "knowledgebase:Repository_hasCountry \"%s\"^^xsd:anyURI ;\n" +
+                                "knowledgebase:Repository_hasGeoLocation \"%s\"^^xsd:anyURI ;\n" +
                                 "knowledgebase:Repository_OperationalCost %f ;\n" +
                                 "knowledgebase:Repository_PriorityLevel1Cost %f ;\n" +
                                 "knowledgebase:Repository_PriorityLevel2Cost %f ;\n" +
                                 "knowledgebase:Repository_PriorityLevel3Cost %f ;\n" +
-                                "knowledgebase:Repository_Space %f ;\n" +
+                                "knowledgebase:Repository_Space \"%f\"^^xsd:double ;\n" +
                                 "knowledgebase:Repository_SupportedFormat " + supportedFormats + " ;\n" +
+                                //todo: interfaceEndpoint anyURI
                                 "}", repository.getId(), repository.getCountryId(), repository.getGeolocationId(),
-                        repository.getOperationalCost(), repository.getPriorityLevel1Cost(), repository
-                                .getPriorityLevel2Cost(), repository.getPriorityLevel3Cost(), repository.getSpace());
+                        repository.getOperationalCost(), repository.getPriorityLevel1Cost(), repository.getPriorityLevel2Cost(), repository.getPriorityLevel3Cost(), repository.getSpace());
             }
             //todo: add other objects
             else {
@@ -205,13 +204,12 @@ public class FusekiUtils {
                     "SELECT ?s ?p ?o\n" +
                     "WHERE { ?s a knowledgebase:" + entityClass + " " + queryFilterCondition[0] + " ; ?p ?o }\n" +
                     "LIMIT 200";
-        else
-            return "prefix knowledgebase: <http://www.semanticweb" +
-                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
-                    "\n" +
-                    "SELECT ?s ?p ?o\n" +
-                    "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o }\n" +
-                    "LIMIT 200";
+        else return "prefix knowledgebase: <http://www.semanticweb" +
+                ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                "\n" +
+                "SELECT ?s ?p ?o\n" +
+                "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o }\n" +
+                "LIMIT 200";
     }
 
     public static String getAllUploadedImages(Boolean optimizedOnly) {
@@ -570,7 +568,8 @@ public class FusekiUtils {
     public static <T extends MyEntry> List<T> getAllEntityAttributes(Class<T> clazz, String... conditions) {
         String selectQuery = FusekiUtils.getAllEntitiesQuery(clazz.getSimpleName(), conditions);
 
-        QueryExecution qe = QueryExecutionFactory.sparqlService(AppContextListener.prop.getProperty("fuseki.url" + "" + ".query"), selectQuery);
+        QueryExecution qe = QueryExecutionFactory.sparqlService(AppContextListener.prop.getProperty("fuseki.url" + ""
+                + ".query"), selectQuery);
 //        QueryExecution qe = QueryExecutionFactory.sparqlService("http://localhost:3030/entice/query", selectQuery);
         ResultSet results = qe.execSelect();
 
@@ -581,7 +580,8 @@ public class FusekiUtils {
             if (resultObj.getO().equals(KB_PREFIX_SHORT + clazz.getSimpleName())) {
                 list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
             }
-            else if (resultObj.getO().equals(KB_PREFIX_SHORT + "CI") || resultObj.getO().equals(KB_PREFIX_SHORT + "VMI")) {
+            else if (resultObj.getO().equals(KB_PREFIX_SHORT + "CI") || resultObj.getO().equals(KB_PREFIX_SHORT +
+                    "VMI")) {
                 list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
             }
 

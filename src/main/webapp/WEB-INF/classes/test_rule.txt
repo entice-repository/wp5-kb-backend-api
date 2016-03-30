@@ -1,0 +1,18 @@
+# I mean the following key rules in RDFS, which are:
+# rdfs:range, rdfs:domain, rdfs:subClassOf, rdfs:subPropertyOf
+# and the addition of these lightweight but useful OWL rules:
+# owl:inversOf, owl:TransitiveProperty, owl:sameAs
+
+@prefix : <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#> .
+#(?s :hasClass ?p)
+#[ruleHasFragments: ( ?s rdfs:subClassOf  :DiskImage )  -> (?o :hasRepo ?s)]
+
+#[owltra:  (?y ?p ?z), (?p rdf:type owl:TransitiveProperty) -> (?x ?p ?z)]
+#[owltra: rdfs:subClassOf(?y,:DiskImage) -> (?y ?p ?z)]
+#has(<http://www.foo.org/myont.owl#hasSibling>, ?z, ?y)
+#[ has(:DiskImage, ?x, ?z) -> has(:DiskImage_Owner, ?x, ?y) ]
+
+#http://answers.semanticweb.com/questions/3152/latest-best-support-for-swrl
+#Meanwhile, you should consider SPARQL as a mapping and translation language. This is supported by a large number of rule engines and has been a W3C recommendation since January 2008. Any SWRL rule can easily be converted to a SPARQL query, and SPARQL is more expressive than SWRL.
+
+Person(?x), hasParent(?x, ?y), hasParent(?x, ?z), hasSpouse(?y, ?z) -> ChildOfMarriedParents(?x)

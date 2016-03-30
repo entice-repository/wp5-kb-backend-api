@@ -5,8 +5,11 @@
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
      xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+     xmlns:swrl="http://www.w3.org/2003/11/swrl#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:swrla="http://swrl.stanford.edu/ontologies/3.3/swrla.owl#">
     <owl:Ontology rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase">
         <owl:versionIRI rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase/0.2"/>
     </owl:Ontology>
@@ -21,6 +24,12 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
+    
+
+
+    <!-- http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled -->
+
+    <owl:AnnotationProperty rdf:about="http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled"/>
     
 
 
@@ -50,6 +59,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_hasUser -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_hasUser">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_hasUser"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">It implies the comment belongs to which user; since each user has a unique User_id.</rationale>
@@ -60,7 +70,9 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_hasDiskImage -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_hasDiskImage">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_hasDiskImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property defines that a particular Data belongs to which DiskImage.</rationale>
     </owl:ObjectProperty>
     
@@ -69,7 +81,9 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_hasUserComments -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_hasUserComments">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_hasUserComments"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The ENTICE repository should be able to support user complaints.</rationale>
     </owl:ObjectProperty>
@@ -79,6 +93,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_hasDeliveredDiskImage -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_hasDeliveredDiskImage">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_hasDeliveredDiskImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the disk image which was delivered upon the request of the user or the Cloud application.</rationale>
     </owl:ObjectProperty>
@@ -88,6 +103,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_hasFunctionality -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_hasFunctionality">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_hasFunctionality"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the functionality that was requested.</rationale>
@@ -98,6 +114,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_hasTargetRepository -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_hasTargetRepository">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_hasTargetRepository"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the target repository where according to the internal reasoning method of the ENTICE repository the disk image must be delivered.</rationale>
@@ -108,6 +125,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_hasUser -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_hasUser">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_hasUser"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the user or the Cloud application that requested the delivery of a particular disk image implementing a particular functionality.</rationale>
@@ -118,7 +136,11 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_hasAgreedAvailabilityCountry -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_hasAgreedAvailabilityCountry">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_hasAgreedAvailabilityCountry"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#CI"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The user may wish to specify countries or wider regions where a particular disk image has to be highly-available. This means, that the image will have to be stored in one or more repositories in the designated countries.</rationale>
     </owl:ObjectProperty>
@@ -128,7 +150,11 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_hasAgreedAvailabilityRepository -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_hasAgreedAvailabilityRepository">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_hasAgreedAvailabilityRepository"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#CI"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The user may wish to specify for every uploaded disk image exactly in which repositories of the ENTICE environment it must be stored.</rationale>
     </owl:ObjectProperty>
@@ -138,7 +164,11 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_hasAgreedRestriction -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_hasAgreedRestriction">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_hasAgreedRestriction"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#CI"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Due to privacy and security reasons and National regulations, some users may wish to restrict the availability of a disk image in certain countries.</rationale>
     </owl:ObjectProperty>
@@ -148,6 +178,8 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasFunctionality -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasFunctionality">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasFunctionality"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasPredecessor"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality"/>
         <owl:propertyDisjointWith rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasPredecessor"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The application developer can add generic functional requirements at any time to new or existing VMIs.</rationale>
@@ -158,6 +190,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasOperatingSystem -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasOperatingSystem">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasOperatingSystem"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A virtual machine image must include an operating system (OS). The ENTICE solution should be agnostic to the applied operating systems by the application providers and must support the OSs necessary to run all pilot cases as a minimum (WP3).</rationale>
     </owl:ObjectProperty>
@@ -167,7 +200,11 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasOwner -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasOwner">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasOwner"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#CI"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Both the application developer and the service provider (ENTICE users) can introduce a new image to the ENTICE environment. For example, the application developer may release a new application independent of the previously uploaded VMIs. After this process the new image should be uploaded and undergo an optimization process. This property shows a DiskImage belongs to which user; since each user has a unique User_id.</rationale>
     </owl:ObjectProperty>
@@ -177,6 +214,9 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasPredecessor -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasPredecessor">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasFunctionality"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasPredecessor"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Uploading an image means introducing previously non-existing images into the repository; adding some structurally and/or semantically new content. Uploading an image is not an individual use case but part of others: it can be either part of introducing a new VMI (adding an entirely new image) or updating an unoptimized image (modifying some existing images and uploading the new image).</rationale>
     </owl:ObjectProperty>
     
@@ -185,6 +225,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasQuality -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasQuality">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasQuality"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Each VM image has its own quality information such as image size, image rate, number of downloads and so on.</rationale>
     </owl:ObjectProperty>
@@ -194,7 +235,11 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasSLA -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasSLA">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_hasSLA"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#CI"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies a contract between the user and the Entice for a particular VM image.</rationale>
     </owl:ObjectProperty>
     
@@ -203,7 +248,9 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_hasReferenceImage -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_hasReferenceImage">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_hasReferenceImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">VM image fragment storage is necessary to allow faster delivery of VMIs at geographic locations, by quickly reconstructing it nearby based on fragments available at the location and perhaps few fragments from remote locations of the repository (this is the expected main functionality of VMMTs). This will significantly improve the delivery time for VMIs.</rationale>
     </owl:ObjectProperty>
     
@@ -212,6 +259,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_hasRepository -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_hasRepository">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_hasRepository"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">VMIs and image fragments need to be properly indexed. The semantic model will contain information about the actual VMIs and their functionality, the geographic location, the URI, and other details for the search facility.</rationale>
@@ -222,6 +270,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_hasImplementation -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_hasImplementation">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_hasImplementation"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This is the application domain for the given functionality, e.g. used in civil engineering, medicine etc.</rationale>
@@ -229,9 +278,30 @@
     
 
 
+    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Multi-objective_optimization_output_hasParetoFront -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Multi-objective_optimization_output_hasParetoFront">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Multi-objective_optimization_output_hasParetoFront"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Multi-objective_optimization_output"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Pareto_front"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#ParetoFront_hasObjective -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#ParetoFront_hasObjective">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#ParetoFront_hasObjective"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Pareto_front"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Objective"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_hasUserComments -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_hasUserComments">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_hasUserComments"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The ENTICE repository should be able to support user complaints.</rationale>
@@ -242,9 +312,10 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_hasCountry -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_hasCountry">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_hasCountry"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property means a repositoryís infrastructure is in which country. Each county has a unique Country_id.</rationale>
+        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property means a repository‚Äôs infrastructure is in which country. Each county has a unique Country_id.</rationale>
     </owl:ObjectProperty>
     
 
@@ -252,6 +323,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_hasGeoLocation -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_hasGeoLocation">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_hasGeoLocation"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#GeoLocation"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">There could be more than one repository in a particular country and geolocation of repository may influence the download time. Each GeoLocation has a unique GeoLocation_id.</rationale>
@@ -262,6 +334,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_hasUser -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_hasUser">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_hasUser"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">It implies that the session belongs to which user; since each user has a unique User_id.</rationale>
@@ -283,6 +356,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_Content -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_Content">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_Content"/>
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_DataProperty"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
@@ -293,7 +367,9 @@
 
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_DataProperty -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_DataProperty"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_DataProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_DataProperty"/>
+    </owl:DatatypeProperty>
     
 
 
@@ -301,6 +377,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_User">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment_User"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Comment"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">It implies the comment belongs to which user; since each user has a unique User_id.</rationale>
@@ -310,7 +387,9 @@
 
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country_DataProperty -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country_DataProperty"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country_DataProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country_DataProperty"/>
+    </owl:DatatypeProperty>
     
 
 
@@ -318,6 +397,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country_Name">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country_Name"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Country"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property implies the name of country.</rationale>
@@ -328,7 +408,9 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
     </owl:DatatypeProperty>
     
 
@@ -337,7 +419,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Description">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Description"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The ENTICE environment must support in some cases the delivery of data in the form of files or folders containing satellite images. In such cases, ENTICE must provide appropriate storage and data delivery mechanism alongside the VMIs. We will have to properly indexed, so that we can search and deliver to certain geographic locations.</rationale>
     </owl:DatatypeProperty>
@@ -348,7 +432,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Encryption">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Encryption"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Just like DiskImage_Encryption</rationale>
         <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
@@ -360,7 +446,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_FileFormat">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_FileFormat"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Data files can have different types of contents. File types can be determined by their extensions.</rationale>
     </owl:DatatypeProperty>
@@ -371,7 +459,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_GenerationTime">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_GenerationTime"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Just like DiskImage_GenerationTime</rationale>
         <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
@@ -383,7 +473,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_IRI">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_IRI"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The external Interface shall allow for data download needed by the application through an API, which allows the delivery of a pointer (i.e. URI) so that the Cloud application can access and use the data (files or folders) while running at the Cloud provider.</rationale>
     </owl:DatatypeProperty>
@@ -394,7 +486,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_NumberOfDownloads">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_NumberOfDownloads"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Some of the data must be frequently accessed and some not, as there is different demands for it. Therefore, we need a mechanism to allow for moving data from one hierarchy level to another, supported by adequate technology for fast, medium and low-speed content delivery. Also ENTICE needs to collect information about the usage of Data and store it in the knowledge base for later statistics.</rationale>
     </owl:DatatypeProperty>
@@ -405,7 +499,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Picture">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Picture"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Just like DiskImage_Picture</rationale>
         <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
@@ -417,7 +513,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Price">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Price"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Just like DiskImage_price</rationale>
         <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
@@ -429,7 +527,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_ReferenceImage">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_ReferenceImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property defines that a particular Data belongs to which DiskImage.</rationale>
     </owl:DatatypeProperty>
@@ -440,7 +540,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_StorageSize">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_StorageSize"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Just like DiskImage_storage_size</rationale>
         <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">If storage size means actual size when stored, it can be only obtained after data is already stored somewhere due to the varying factors like file system, block size, whether multiple files are stored (more internal fragmentation) or a single one, etc.</rdfs:comment>
@@ -454,7 +556,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Title">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Title"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
     </owl:DatatypeProperty>
@@ -465,7 +569,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_UserComments">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_UserComments"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The ENTICE repository should be able to support user complaints.</rationale>
     </owl:DatatypeProperty>
@@ -476,7 +582,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Version">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_Version"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rdfs:seeAlso rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
     </owl:DatatypeProperty>
@@ -485,7 +593,9 @@
 
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DataProperty -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DataProperty"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DataProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DataProperty"/>
+    </owl:DatatypeProperty>
     
 
 
@@ -493,6 +603,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DeliveredDiskImage">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DeliveredDiskImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the disk image which was delivered upon the request of the user or the Cloud application.</rationale>
@@ -504,6 +615,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DeliveryTime">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DeliveryTime"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the delivery time for a disk image - the moment when the download of a specific disk image successfully completed.</rationale>
@@ -515,6 +627,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_Functionality">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_Functionality"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the functionality that was requested.</rationale>
@@ -526,6 +639,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_RequestTime">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_RequestTime"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the time when the delivery request was received by the ENTICE environment.</rationale>
@@ -537,6 +651,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_TargetRepository">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_TargetRepository"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the target repository where according to the internal reasoning method of the ENTICE repository the disk image must be delivered.</rationale>
@@ -548,6 +663,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_User">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery_User"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Delivery"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the user or the Cloud application that requested the delivery of a particular disk image implementing a particular functionality.</rationale>
@@ -558,8 +674,12 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedAvailabilityCountry -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedAvailabilityCountry">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedAvailabilityCountry"/>
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_DataProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#CI"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The user may wish to specify countries or wider regions where a particular disk image has to be highly-available. This means, that the image will have to be stored in one or more repositories in the designated countries.</rationale>
     </owl:DatatypeProperty>
@@ -569,8 +689,12 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedAvailabilityRepository -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedAvailabilityRepository">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedAvailabilityRepository"/>
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_DataProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#CI"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The user may wish to specify for every uploaded disk image exactly in which repositories of the ENTICE environment it must be stored.</rationale>
     </owl:DatatypeProperty>
@@ -580,10 +704,14 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedPriorityLevel -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedPriorityLevel">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedPriorityLevel"/>
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_DataProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#CI"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Since the repository of VMIs has to provide fast delivery, and the ìfast storageî may be expensive, it is necessary to provide mechanisms for storing images at three hierarchical levels supported by adequate technology for fast, medium and low-speed content delivery.</rationale>
+        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Since the repository of VMIs has to provide fast delivery, and the ‚Äúfast storage‚Äù may be expensive, it is necessary to provide mechanisms for storing images at three hierarchical levels supported by adequate technology for fast, medium and low-speed content delivery.</rationale>
     </owl:DatatypeProperty>
     
 
@@ -591,8 +719,12 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedQoSOrder -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedQoSOrder">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedQoSOrder"/>
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_DataProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#CI"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Users will be able to specify one or multiple objectives to optimise their VM image and fragments distribution. The objectives are from three types of conflicting metrics: QoS-related, operational cost, and storage. The user can specify what is the most important objective or will have to choose between different solutions showing compromises between the different objectives.</rationale>
     </owl:DatatypeProperty>
@@ -602,8 +734,12 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedRestriction -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedRestriction">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_AgreedRestriction"/>
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_DataProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#CI"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Due to privacy and security reasons and National regulations, some users may wish to restrict the availability of a disk image in certain countries.</rationale>
     </owl:DatatypeProperty>
@@ -612,7 +748,9 @@
 
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_DataProperty -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_DataProperty"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_DataProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_DataProperty"/>
+    </owl:DatatypeProperty>
     
 
 
@@ -620,7 +758,11 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_SecuredDelivery">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA_SecuredDelivery"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#CI"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The contents of some VMIs and data could be business-critical and not available under any circumstance to intruders. For this purpose, the repository must support content delivery through encrypted channels.</rationale>
     </owl:DatatypeProperty>
@@ -629,7 +771,9 @@
 
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+    </owl:DatatypeProperty>
     
 
 
@@ -637,6 +781,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Description"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property is used to display the description about the VM image.</rationale>
     </owl:DatatypeProperty>
@@ -647,6 +792,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Encryption"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The contents of some VMIs and data could be business-critical and not available under any circumstance to intruders. For this purpose, the repository must support content delivery through encrypted channels. Moreover, the analysis methods for VMIs of the ENTICE environment should not compromise the privacy and security of the Cloud application owners.</rationale>
     </owl:DatatypeProperty>
@@ -657,6 +803,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_FileFormat"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Virtual machine images come in different formats, including ISO, DMG, FVD, IMG, NDIF, QCOW, UDIF, VDI, VHD, VMDK, WIM, and so on.</rationale>
     </owl:DatatypeProperty>
@@ -667,6 +814,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Functionality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The application developer can add generic functional requirements at any time to new or existing VMIs.</rationale>
     </owl:DatatypeProperty>
@@ -677,6 +825,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_GenerationTime"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies when a particular VM image was generated.</rationale>
     </owl:DatatypeProperty>
@@ -687,6 +836,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_IRI"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">VMIs and image fragments need to be properly indexed. The semantic model will contain information about the actual VMIs and their functionality, the geographic location, the URI, and other details for the search facility.</rationale>
     </owl:DatatypeProperty>
@@ -697,6 +847,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_NeedsDataFile"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">In the case of the Earth Observation Data (EOD) processing and distribution pilot case, we need to deliver satellite images together with the VM image containing a function that processes them.</rationale>
     </owl:DatatypeProperty>
@@ -707,6 +858,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Obfuscation">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Obfuscation"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Data"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
     </owl:DatatypeProperty>
     
@@ -716,18 +870,9 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_OperatingSystem"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A virtual machine image must include an operating system (OS). The ENTICE solution should be agnostic to the applied operating systems by the application providers and must support the OSs necessary to run all pilot cases as a minimum (WP3).</rationale>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Owner">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Both the application developer and the service provider (ENTICE users) can introduce a new image to the ENTICE environment. For example, the application developer may release a new application independent of the previously uploaded VMIs. After this process the new image should be uploaded and undergo an optimization process. This property shows a DiskImage belongs to which user; since each user has a unique User_id.</rationale>
     </owl:DatatypeProperty>
     
 
@@ -736,6 +881,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Picture"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A big part of having a comprehensible interface, means having nice pictures for VM images.</rationale>
     </owl:DatatypeProperty>
@@ -746,7 +892,8 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Predecessor"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Uploading an image means introducing previously non-existing images into the repository; adding some structurally and/or semantically new content. Uploading an image is not an individual use case but part of others: it can be either part of introducing a new VMI (adding an entirely new image) or updating an unoptimized image (modifying some existing images and uploading the new image).</rationale>
     </owl:DatatypeProperty>
     
@@ -756,7 +903,8 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Price"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">VM image can have a price value.</rationale>
     </owl:DatatypeProperty>
     
@@ -766,6 +914,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Quality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A particular VMI may receive an upgrade by changing of the operating system, the storage size, and so on.</rationale>
     </owl:DatatypeProperty>
@@ -776,8 +925,19 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_SLA"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies a contract between the user and the Entice for a particular VM image.</rationale>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Size -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Size">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Size"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
     </owl:DatatypeProperty>
     
 
@@ -786,6 +946,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Title"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Title is a short and keywords-relevant description of VM image.</rationale>
     </owl:DatatypeProperty>
@@ -796,6 +957,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Type"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Some applications require use containers for their execution. Similarly to VMIs and image fragments, the ENTICE environment should be designed to also support the management of containers, such as those of CoreOS/Rocket and Docker.</rationale>
     </owl:DatatypeProperty>
@@ -806,6 +968,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage_Version"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">During the Cloud application lifecycle, VMIs may be upgraded (e.g. operating system or software component changes) several times. As the existing Cloud application may be long running, an upgrade to a new VMI must happen during its execution. The ENTICE environment must provide the latest needed VMI at all the geographic locations where the Cloud application is currently running.</rationale>
     </owl:DatatypeProperty>
@@ -814,7 +977,9 @@
 
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
+    </owl:DatatypeProperty>
     
 
 
@@ -822,6 +987,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValues">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_HashValues"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">When a new fragment is generated, the ENTICE computes hash value which acts as a unique identifier of this fragment. Any new fragment with the same hash value is considered the same and there is no need to store it. In order to allow identification of even smaller parts (i.e. prospective new fragments) we need to have hashes for much more content. &quot;Fragment_HashValues&quot; is a hash value generated by hash function for the first part of a particular fragment.</rationale>
@@ -833,6 +999,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_IRI">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_IRI"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Just like Fragment_geographic_location</rationale>
@@ -845,6 +1012,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_ReferenceImage">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_ReferenceImage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">VM image fragment storage is necessary to allow faster delivery of VMIs at geographic locations, by quickly reconstructing it nearby based on fragments available at the location and perhaps few fragments from remote locations of the repository (this is the expected main functionality of VMMTs). This will significantly improve the delivery time for VMIs.</rationale>
@@ -856,6 +1024,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_Repository">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_Repository"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">VMIs and image fragments need to be properly indexed. The semantic model will contain information about the actual VMIs and their functionality, the geographic location, the URI, and other details for the search facility.</rationale>
@@ -867,6 +1036,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_Size">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment_Size"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Fragment"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Just like DiskImage_storage_size</rationale>
@@ -879,6 +1049,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Classification -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Classification">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Classification"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A classification system, such as Universal Decimal Classification (UDC) or any other taxonomy could be used to classify various functionalities. The users will then be able to search according to various clearly defined taxonomical concepts.</rationale>
@@ -890,6 +1061,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Description -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Description">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Description"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This is a longer, freestyle textual description of the functionality as provided by the person who is uploading the disk image.</rationale>
@@ -900,6 +1072,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Domain -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Domain">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Domain"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This is the application domain for the given functionality, e.g. used in civil engineering, medicine etc.</rationale>
@@ -910,6 +1083,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Implementation -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Implementation">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Implementation"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This is a description of the programming language, algorithm, libraries used to implement the functionality, and may be used as part of the search criteria.</rationale>
@@ -921,6 +1095,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_InputDescription -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_InputDescription">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_InputDescription"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This is a freestyle description of the input data needed by the image. E.g. a data disk that should be mounted to the image.</rationale>
@@ -931,6 +1106,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Name -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Name">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Name"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Similarly to practices adopted by YouTube, functionalities must have clearly defined names corresponding to the core aspects covered.</rationale>
@@ -941,6 +1117,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_OutputDescription -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_OutputDescription">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_OutputDescription"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This is a freestyle description of the output data of the disk image when it is running.</rationale>
@@ -951,6 +1128,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Tag -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Tag">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality_Tag"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Functionality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Tags may additionally be used to describe a functionality. By using tags, it may be possible to induce various functionality domains for which the users frequently upload or search for VMIs/Dis.</rationale>
@@ -960,13 +1138,16 @@
 
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#GeoLocation_DataProperty -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#GeoLocation_DataProperty"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#GeoLocation_DataProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#GeoLocation_DataProperty"/>
+    </owl:DatatypeProperty>
     
 
 
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_Algorithm -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_Algorithm">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_Algorithm"/>
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_DataProperty"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
@@ -977,7 +1158,9 @@
 
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_DataProperty -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_DataProperty"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_DataProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_DataProperty"/>
+    </owl:DatatypeProperty>
     
 
 
@@ -985,6 +1168,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_Description">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_Description"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This is a textual description about how the functionality has been implemented.</rationale>
@@ -996,6 +1180,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_ProgrammingLanguage">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation_ProgrammingLanguage"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Implementation"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This specifies the programming language that has been used to implement the functionality, potentially also libraries and other important information related to the implementation.</rationale>
@@ -1006,6 +1191,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_Architecture -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_Architecture">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_Architecture"/>
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_DataProperty"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
@@ -1016,7 +1202,9 @@
 
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_DataProperty -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_DataProperty"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_DataProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_DataProperty"/>
+    </owl:DatatypeProperty>
     
 
 
@@ -1024,6 +1212,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_FileSystem">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_FileSystem"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">To make deployment flexible for different needs of users and applications, it is desirable for the Entice to support a variety of versions of VM images for different types of file systems.</rationale>
@@ -1035,6 +1224,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_MobileOS">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_MobileOS"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies if the operating system is a mobile operating system like Google Android or Windows Phone OS.</rationale>
@@ -1046,6 +1236,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_Types">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_Types"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The operating systems of the VM images include ArchLinux, CentOS, Debian, Fedora, OpenSUSE, Ubuntu, AIX, Amiga, Android, AROS, Bada, BeOS, Blackberry OS, Brew, Chrome OS, COS, Danger Hiptop, DragonFly BSD, Fire OS, Firefox OS, FreeBSD, GNU OS, Haiku OS, HP-UX, Inferno OS, iOS, IRIX, ...</rationale>
@@ -1057,6 +1248,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_Version">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem_Version"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">To make deployment flexible for different needs of users and applications, it is desirable for the Entice to support a variety of versions of VM images for different versions of operating systems.</rationale>
@@ -1066,7 +1258,9 @@
 
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_DataProperty -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_DataProperty"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_DataProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_DataProperty"/>
+    </owl:DatatypeProperty>
     
 
 
@@ -1074,6 +1268,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_FunctionalityTested">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_FunctionalityTested"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A Cloud application developer may use the ENTICE repository to optimize an own prepared and un-optimized VMI. For this purpose, he needs to upload the VMI along with its functional description and all the necessary functionality testing mechanism to the repository. The functionality testing mechanism should then assure that the optimized VMI preserves the original functionality.</rationale>
@@ -1085,6 +1280,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_IsOptimizationNecessary">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_IsOptimizationNecessary"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Updating an optimized image involves deciding the inclusion of an update by a service provider, i.e. depending on the decision of a service provider the update may or may not take place (e.g. a certain service is no longer used hence, its update is not necessary); and redistributing the optimized image fragments.</rationale>
@@ -1096,6 +1292,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_IsUpdateNecessary">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_IsUpdateNecessary"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">During the Cloud application lifecycle, VMIs may be upgraded (e.g. operating system or software component changes) several times. The application developer may request the update of an optimized VMI and subsequently. Updating an optimized image involves deciding the inclusion of an update by a service provider, i.e. depending on the decision of a service provider the update may or may not take place. Therefore, automatic updates may be allowed or disallowed by the developer of the image.</rationale>
@@ -1107,6 +1304,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_NumberOfDownloads">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_NumberOfDownloads"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Also ENTICE needs to collect information about the usage of the VMI repository and store it in the knowledge base for later statistics. ENTICE will automatically discover user demand patterns by analyzing the metadata (e.g. sequence and number of downloads of particular images or fragments) published by the provider-operated repositories (e.g. similar to Glance from OpenStack) and replicate the highly demanded images or fragments according to user demands.</rationale>
@@ -1118,6 +1316,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_OptimizedSize">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_OptimizedSize"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">In ENTICE, the VMIs will be passed over several treatments that reduce their size in order to reduce the necessary delivery time and storage needs for a particular functional requirement set.</rationale>
@@ -1130,6 +1329,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_PercentStorageOptimized">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_PercentStorageOptimized"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality"/>
         <rdfs:range>
             <rdfs:Datatype>
@@ -1153,6 +1353,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_RoughSize">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_RoughSize"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the first size of un-optimised uploaded VMI.</rationale>
@@ -1165,6 +1366,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_UserComments">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_UserComments"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The ENTICE repository should be able to support user complaints.</rationale>
@@ -1176,6 +1378,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_UserRating">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality_UserRating"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Quality"/>
         <rdfs:range>
             <rdfs:Datatype>
@@ -1195,30 +1398,10 @@
     
 
 
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_Country -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_Country">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property means a repositoryís infrastructure is in which country. Each county has a unique Country_id.</rationale>
-    </owl:DatatypeProperty>
-    
-
-
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_DataProperty -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_DataProperty"/>
-    
-
-
-    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_GeoLocation -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_GeoLocation">
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_DataProperty">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_DataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">There could be more than one repository in a particular country and geolocation of repository may influence the download time. Each GeoLocation has a unique GeoLocation_id.</rationale>
     </owl:DatatypeProperty>
     
 
@@ -1227,6 +1410,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_InterfaceEndPoint">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_InterfaceEndPoint"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Each repository can be easily accessed through its unique url.</rationale>
@@ -1238,6 +1422,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_OperationalCost">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_OperationalCost"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ENTICE will research heuristics for multi-objective distribution and placement of VM images across a decentralised ENTICE repository that optimises multiple conflicting objectives including performance-related goals, operational costs, and storage space.</rationale>
@@ -1249,6 +1434,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_PriorityLevel1Cost">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_PriorityLevel1Cost"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">As fast storage costs more and slow storage costs less, it is necessary to provide mechanisms for storing VM images at three speed levels; namely: fast, medium and low-speed. Level1 means fast storage.</rationale>
@@ -1262,6 +1448,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_PriorityLevel2Cost">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_PriorityLevel2Cost"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">As fast storage costs more and slow storage costs less, it is necessary to provide mechanisms for storing VM images at three speed levels; namely: fast, medium and low-speed. Level2 means medium level.</rationale>
@@ -1275,6 +1462,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_PriorityLevel3Cost">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_PriorityLevel3Cost"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">As fast storage costs more and slow storage costs less, it is necessary to provide mechanisms for storing VM images at three speed levels; namely: fast, medium and low-speed. Level3 means low-speed storage.</rationale>
@@ -1288,6 +1476,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_Space">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_Space"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">In the ENTICE environment, dynamic information about the underlying federated Cloud infrastructure resources such as storage space is needed to be stored.</rationale>
@@ -1295,9 +1484,21 @@
     
 
 
+    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_SupportedFormat -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_SupportedFormat">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository_SupportedFormat"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Repository"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_ExpireDate -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_ExpireDate">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_ExpireDate"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
     </owl:DatatypeProperty>
@@ -1307,6 +1508,7 @@
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_User -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_User">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession_User"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#UserSession"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:DatatypeProperty>
@@ -1315,7 +1517,9 @@
 
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_DataProperty -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_DataProperty"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_DataProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_DataProperty"/>
+    </owl:DatatypeProperty>
     
 
 
@@ -1323,6 +1527,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_Email">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_Email"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the email of the user used to automatically send and receive the notifications and transactions.</rdfs:comment>
@@ -1334,6 +1539,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_FullName">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_FullName"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the name of the individual user (like application developer) or company (like Service provider).</rationale>
@@ -1345,6 +1551,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_Password">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_Password"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the password of the user account used to log-in and authenticate.</rationale>
@@ -1357,6 +1564,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_PhoneNumber">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_PhoneNumber"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Is string data type necessary?</rationale>
@@ -1369,6 +1577,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_UserName">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_DataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User_UserName"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#User"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rationale rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specifies the name of the user account used to log-in and authenticate.</rationale>
@@ -1438,6 +1647,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImageSLA">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#CI"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI"/>
         <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">To support the overall lifecycle of applications deployed as VM images and to facilitate automatic optimization, setup and management in federated Cloud environments, information on the potentially new and resulting Service Level Agreements (SLA) are needed to be stored.</description>
     </owl:Class>
@@ -1476,10 +1686,30 @@
     
 
 
+    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Multi-objective_optimization_output -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Multi-objective_optimization_output"/>
+    
+
+
+    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Objective -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Objective"/>
+    
+
+
     <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#OperatingSystem">
         <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The ENTICE environment should support various types of VMI operating systems.</description>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Pareto_front -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Pareto_front">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#Multi-objective_optimization_output"/>
     </owl:Class>
     
 
@@ -1521,6 +1751,12 @@
     <owl:Class rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#VMI">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
     </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2002/07/owl#Thing -->
+
+    <owl:Class rdf:about="http://www.w3.org/2002/07/owl#Thing"/>
 </rdf:RDF>
 
 
