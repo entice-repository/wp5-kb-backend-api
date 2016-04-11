@@ -16,3 +16,5 @@
 #Meanwhile, you should consider SPARQL as a mapping and translation language. This is supported by a large number of rule engines and has been a W3C recommendation since January 2008. Any SWRL rule can easily be converted to a SPARQL query, and SPARQL is more expressive than SWRL.
 
 Person(?x), hasParent(?x, ?y), hasParent(?x, ?z), hasSpouse(?y, ?z) -> ChildOfMarriedParents(?x)
+
+#rdf:type(s, sub) ∧ rdfs:subclassOf(super, sub) ⇒ rdf:type(s, super)

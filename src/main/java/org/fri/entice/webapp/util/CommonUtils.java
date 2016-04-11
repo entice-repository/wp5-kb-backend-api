@@ -90,6 +90,8 @@ public class CommonUtils {
                     repositoryList.get(repositoryList.size() - 1).setVersion(resultObj.getO());
                 else if (resultObj.getP().endsWith("DiskImage_Size"))
                     repositoryList.get(repositoryList.size() - 1).setDiskImageSize(Integer.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("DiskImage_Size"))
+                    repositoryList.get(repositoryList.size() - 1).setDiskImageSize(Integer.valueOf(resultObj.getO()));
             }
             else if (list.get(list.size() - 1) instanceof Fragment) {
                 List<Fragment> fragmentList = (List<Fragment>) list;
@@ -103,6 +105,21 @@ public class CommonUtils {
                     fragmentList.get(fragmentList.size() - 1).setAnyURI(resultObj.getO());
                 else if (resultObj.getP().endsWith("Fragment_HashValues"))
                     fragmentList.get(fragmentList.size() - 1).setHashValue(resultObj.getO());
+            }
+            else if (list.get(list.size() - 1) instanceof Delivery) {
+                List<Delivery> fragmentList = (List<Delivery>) list;
+                if (resultObj.getP().endsWith("Delivery_hasDeliveredDiskImage"))
+                    fragmentList.get(fragmentList.size() - 1).setRefDiskImageId(resultObj.getO());
+                else if (resultObj.getP().endsWith("Delivery_hasFunctionality"))
+                    fragmentList.get(fragmentList.size() - 1).setRefFunctionalityId(resultObj.getO());
+                else if (resultObj.getP().endsWith("Delivery_hasTargetRepository"))
+                    fragmentList.get(fragmentList.size() - 1).setRefTargetRepositoryId(resultObj.getO());
+                else if (resultObj.getP().endsWith("Delivery_hasUser"))
+                    fragmentList.get(fragmentList.size() - 1).setRefUserId(resultObj.getO());
+                else if (resultObj.getP().endsWith("Delivery_DeliveryTime"))
+                    fragmentList.get(fragmentList.size() - 1).setDeliveryTime(Long.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Delivery_RequestTime"))
+                    fragmentList.get(fragmentList.size() - 1).setRequestTime(Long.valueOf(resultObj.getO()));
             }
             else {
                 throw new UnsupportedOperationException("The mapping is not implemented for this class! ! " + list.get(list.size() - 1).getClass());

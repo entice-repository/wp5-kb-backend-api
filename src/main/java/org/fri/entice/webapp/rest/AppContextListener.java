@@ -49,7 +49,7 @@ public class AppContextListener implements ServletContextListener {
             // Read JRules from file ...
             BufferedReader br = null;
             try{
-                br = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("test_rules.txt")));
+                br = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("test_rule.txt")));
 
                 List rules = Rule.parseRules(Rule.rulesParserFromReader(br));
                 GenericRuleReasoner genericRuleReasoner = new GenericRuleReasoner(rules);

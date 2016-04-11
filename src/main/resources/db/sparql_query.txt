@@ -47,3 +47,15 @@ WHERE {
   ?subject  a knowledgebase:DiskImage ; ?predicate ?object
 }
 LIMIT 30
+
+-------------------------- Read rdf:seq data
+prefix knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>
+prefix : <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>
+prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+
+ SELECT ?seq ?p
+    FROM :76dd8f1f-3cda-4fd2-942e-401486813b43
+    WHERE {?sep a rdf:Seq.
+    ?seq rdfs:member ?p} LIMIT 25

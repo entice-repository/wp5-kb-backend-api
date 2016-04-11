@@ -92,7 +92,7 @@ public class PerformanceTest {
                             if (Math.random() < 0.5) hashValue.add("d");
                             Fragment fragment = new Fragment(UUID.randomUUID().toString(), diskImage.getId(),
                                     repositories.get((int) (Math.random() * repositorySize)).getId(), "http://www" +
-                                    ".example.org/do", 1 + (int) (Math.random() * 10), hashValue);
+                                    ".example.org/do", 1 + (int) (Math.random() * 10), hashValue,null);
                             insertStatement = FusekiUtils.generateInsertObjectStatement(fragment);
                             upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
                             upp.execute();

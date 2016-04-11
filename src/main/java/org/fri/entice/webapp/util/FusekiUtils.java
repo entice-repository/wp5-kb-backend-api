@@ -27,6 +27,7 @@ import java.util.*;
 public class FusekiUtils {
 
     private static final String XSD_PREFIX = "xsd:<http://www.w3.org/2001/XMLSchema#>";
+    private static final String RDF_PREFIX = "rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
     private static String KB_PREFIX_SHORT = "http://www.semanticweb" + "" +
             ".org/project-entice/ontologies/2015/7/knowledgebase#";
     private static String KB_PREFIX = "knowledgebase:<http://www.semanticweb" + "" +
@@ -59,7 +60,8 @@ public class FusekiUtils {
             // CREATE DISK IMAGE
             else if (obj instanceof DiskImage) {
                 DiskImage diskImage = (DiskImage) obj;
-                return String.format(Locale.US,"PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " + XSD_PREFIX + " " +
+                return String.format(Locale.US, "PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " +
+                                XSD_PREFIX + " " +
                                 "INSERT DATA {" +
                                 "knowledgebase:%s a knowledgebase:DiskImage, owl:NamedIndividual, knowledgebase:" +
                                 (diskImage.getImageType().equals(ImageType.CI) ? "CI" : "VMI") + " ; " +
@@ -112,15 +114,29 @@ public class FusekiUtils {
                 }
                 if (hashValues.length() > 0) hashValues = hashValues.substring(0, hashValues.length() - 1);
 
-                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " + XSD_PREFIX + " INSERT DATA {" +
-                        "knowledgebase:%s a knowledgebase:Fragment, owl:NamedIndividual ;" +
-                        "knowledgebase:Fragment_hasReferenceImage knowledgebase:%s ;\n" +
-                        "knowledgebase:Fragment_hasRepository knowledgebase:%s ;\n" +
-                        "knowledgebase:Fragment_IRI \"%s\"^^xsd:anyURI ;\n" +
+                String historyDataListStr = new String();
+                if (fragment.getHistoryDataList() != null) {
+                    int count = 1;
+                    for (HistoryData historyData : fragment.getHistoryDataList()) {
+                        historyDataListStr += " rdf:_" + count + "  \"" + historyData.getId() + "\"^^xsd:anyURI ;";
+                        count++;
+                    }
+                }
+
+                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " + XSD_PREFIX + " " +
+                                "PREFIX " + RDF_PREFIX + " " +
+                                "INSERT DATA {" +
+                                "knowledgebase:%s a knowledgebase:Fragment, owl:NamedIndividual ;" +
+                                "knowledgebase:Fragment_hasReferenceImage knowledgebase:%s ;\n" +
+                                "knowledgebase:Fragment_hasRepository knowledgebase:%s ;\n" +
+                                "knowledgebase:Fragment_IRI \"%s\"^^xsd:anyURI ;\n" +
 //                        "knowledgebase:Fragment_ReferenceImage \"%s\" ;\n" +
-                        "knowledgebase:Fragment_Size %s ;\n" +
-                        "knowledgebase:Fragment_HashValues " + hashValues + " ;\n" +
-                        "}", fragment.getId(), fragment.getRefDiskImageId(), fragment.getRefRepositoryId(), fragment.getAnyURI(), fragment.getFragmentSize());
+                                "knowledgebase:Fragment_Size %s ;\n" +
+                                "knowledgebase:Fragment_HashValues " + hashValues + " ;\n" +
+                                (historyDataListStr.length() == 0 ? "" : "knowledgebase:hasHistoryData [ a       " +
+                                        "rdf:Seq ;\n" + historyDataListStr + "] .") +
+                                "}", fragment.getId(), fragment.getRefDiskImageId(), fragment.getRefRepositoryId(),
+                        fragment.getAnyURI(), fragment.getFragmentSize());
             }
             // CREATE DELIVERY
             else if (obj instanceof Delivery) {
@@ -133,9 +149,9 @@ public class FusekiUtils {
                                 "knowledgebase:Delivery_hasUser \"%s\" ;\n" +
                                 "knowledgebase:Delivery_DeliveryTime \"%s\" ;\n" +
                                 "knowledgebase:Delivery_RequestTime \"%s\" ;\n" +
-                                "}", delivery.getId(), delivery.getRefDiskImageId(), delivery.getRefDiskImageId(),
-                        delivery.getRefFunctionalityId(), delivery.getRefTargetRepositoryId(), delivery.getRefUserId
-                                (), delivery.getDeliveryTime(), delivery.getRequestTime());
+                                "}", delivery.getId(), delivery.getRefDiskImageId(), delivery.getRefFunctionalityId()
+                        , delivery.getRefTargetRepositoryId(), delivery.getRefUserId(), delivery.getDeliveryTime(),
+                        delivery.getRequestTime());
             }
             // CREATE FUNCTIONALITY
             else if (obj instanceof Functionality) {
@@ -150,8 +166,10 @@ public class FusekiUtils {
                                 "knowledgebase:Functionality_Name \"%s\" ;\n" +
                                 "knowledgebase:Functionality_OutputDescription \"%s\" ;\n" +
                                 "knowledgebase:Functionality_Tag \"%s\" ;\n" +
-                                "}", functionality.getId(), functionality.getRefImplementationId(), functionality.getClassification(), functionality.getInputDescription(), functionality.getDomain(),
-                        functionality.getInputDescription(), functionality.getName(), functionality.getOutputDescription(), functionality.getTag());
+                                "}", functionality.getId(), functionality.getRefImplementationId(), functionality
+                        .getClassification(), functionality.getInputDescription(), functionality.getDomain(),
+                        functionality.getInputDescription(), functionality.getName(), functionality
+                                .getOutputDescription(), functionality.getTag());
             }
             // CREATE REPOSITORY
             else if (obj instanceof Repository) {
@@ -163,7 +181,8 @@ public class FusekiUtils {
                 if (supportedFormats.length() > 0)
                     supportedFormats = supportedFormats.substring(0, supportedFormats.length() - 1);
 
-                return String.format(Locale.US, "PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " + XSD_PREFIX + " " + " INSERT DATA {" +
+                return String.format(Locale.US, "PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " +
+                                XSD_PREFIX + " " + " INSERT DATA {" +
                                 "knowledgebase:%s a knowledgebase:Repository, owl:NamedIndividual ;" +
                                 "knowledgebase:Repository_hasCountry \"%s\"^^xsd:anyURI ;\n" +
                                 "knowledgebase:Repository_hasGeoLocation \"%s\"^^xsd:anyURI ;\n" +
@@ -175,7 +194,21 @@ public class FusekiUtils {
                                 "knowledgebase:Repository_SupportedFormat " + supportedFormats + " ;\n" +
                                 //todo: interfaceEndpoint anyURI
                                 "}", repository.getId(), repository.getCountryId(), repository.getGeolocationId(),
-                        repository.getOperationalCost(), repository.getPriorityLevel1Cost(), repository.getPriorityLevel2Cost(), repository.getPriorityLevel3Cost(), repository.getSpace());
+                        repository.getOperationalCost(), repository.getPriorityLevel1Cost(), repository
+                                .getPriorityLevel2Cost(), repository.getPriorityLevel3Cost(), repository.getSpace());
+            }
+            // CREATE HISTORY DATA
+            else if (obj instanceof HistoryData) {
+                HistoryData historyData = (HistoryData) obj;
+                return String.format(Locale.US, "PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " +
+                                XSD_PREFIX + " " + " INSERT DATA {" +
+                                "knowledgebase:%s a knowledgebase:HistoryData, owl:NamedIndividual ;" +
+                                "knowledgebase:HistoryData_Location \"%s\"^^xsd:anyURI ;\n" +
+                                "knowledgebase:HistoryData_ValidFrom \"%s\"^^xsd:dateTime ;\n" +
+                                "knowledgebase:HistoryData_ValidTo \"%s\"^^xsd:dateTime ;\n" +
+                                "knowledgebase:HistoryData_Value %s ;\n" +
+                                "}", historyData.getId(), historyData.getLocation(), historyData.getValidFrom(),
+                        historyData.getValidTo(), historyData.getValue());
             }
             //todo: add other objects
             else {
@@ -210,6 +243,16 @@ public class FusekiUtils {
                 "SELECT ?s ?p ?o\n" +
                 "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o }\n" +
                 "LIMIT 200";
+    }
+
+    public static String getIdBasedEntitiesQuery(String clazz, String id) {
+        if (clazz.equals("Fragment")) return "prefix knowledgebase: <http://www.semanticweb" +
+                ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                "SELECT ?s\n" +
+                "WHERE { ?s a knowledgebase:Fragment ; knowledgebase:Fragment_hasReferenceImage ?o , " +
+                "knowledgebase:" + id + " }\n" +
+                "LIMIT 200";
+        else throw new UnsupportedOperationException("not implemented for this class");
     }
 
     public static String getAllUploadedImages(Boolean optimizedOnly) {
@@ -590,6 +633,53 @@ public class FusekiUtils {
         }
 
         return list;
+    }
+
+    public static <T extends MyEntry> List<T> getIdEntityAttributes(Class<T> clazz, String id) {
+        String selectQuery = FusekiUtils.getIdBasedEntitiesQuery(clazz.getSimpleName(), id);
+
+        QueryExecution qe = QueryExecutionFactory.sparqlService(AppContextListener.prop.getProperty("fuseki.url" + ""
+                + ".query"), selectQuery);
+        ResultSet results = qe.execSelect();
+
+        //todo: optimize
+        List<ResultObj> queryResults = FusekiUtils.getResultObjectListFromResultSet(results);
+
+        List<T> fragmentList = new ArrayList<T>(queryResults.size());
+
+        for (ResultObj resObj : queryResults) {
+            String fragmentId = resObj.getS();
+
+            selectQuery = "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "\n" +
+                    "SELECT ?s ?p ?o\n" +
+                    "WHERE { knowledgebase:" + fragmentId.substring(fragmentId.indexOf("#") + 1) + " a " +
+                    "knowledgebase:Fragment; ?p ?o }\n" +
+                    "LIMIT 200";
+
+            qe = QueryExecutionFactory.sparqlService(AppContextListener.prop.getProperty("fuseki.url" + "" + "" +
+                    ".query"), selectQuery);
+            results = qe.execSelect();
+
+            List<ResultObj> resultObjs = FusekiUtils.getResultObjectListFromResultSet(results);
+
+            List<T> list = new ArrayList<T>();
+            for (ResultObj resultObj : resultObjs) {
+                if (resultObj.getO().equals(KB_PREFIX_SHORT + clazz.getSimpleName())) {
+                    list.add(EntryFactory.getInstance(clazz, fragmentId.replace(KB_PREFIX_SHORT, "")));
+                }
+                else if (resultObj.getO().equals(KB_PREFIX_SHORT + "CI") || resultObj.getO().equals(KB_PREFIX_SHORT +
+                        "VMI")) {
+                    list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
+                }
+
+
+                CommonUtils.mapResultObjectToEntry(list, resultObj);
+            }
+            fragmentList.add(list.get(0));
+        }
+        return fragmentList;
     }
 }
 

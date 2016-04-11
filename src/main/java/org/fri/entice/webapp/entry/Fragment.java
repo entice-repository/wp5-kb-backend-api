@@ -9,22 +9,27 @@ public class Fragment extends MyEntry {
     private String refDiskImageId;
     private String refRepositoryId;
     private String anyURI;      // TODO: list of string showing the name/ipadress/geolocation of the given cloud  + date
-    // TODO: Then by using simple search I could sort all entries by name and find how many times the fragment was deployed to any given cloud.
+    // TODO: Then by using simple search I could sort all entries by name and find how many times the fragment was
+    // deployed to any given cloud.
     // So we only need deployment time and the URI field to be populated with some data.
     private int fragmentSize;   // probably in bytes
 
-    // Multi-value (Note: Structured values limit the ability for applications to query for specific data items, e.g. documents that have a specific keyword):
+    // Multi-value (Note: Structured values limit the ability for applications to query for specific data items, e.g.
+    // documents that have a specific keyword):
     // http://patterns.dataincubator.org/book/repeated-property.html
     private List<String> hashValue = new ArrayList<String>(10);
 
+    private List<HistoryData> historyDataList;
+
     public Fragment(String id, String refDiskImageId, String refRepositoryId, String anyURI, int fragmentSize,
-                    List<String> hashValue) {
+                    List<String> hashValue, List<HistoryData> historyDataList) {
         super(id);
         this.refDiskImageId = refDiskImageId;
         this.refRepositoryId = refRepositoryId;
         this.anyURI = anyURI;
         this.fragmentSize = fragmentSize;
         this.hashValue = hashValue;
+        this.historyDataList = historyDataList;
     }
 
     public Fragment(String id) {
@@ -75,5 +80,13 @@ public class Fragment extends MyEntry {
         if (hashValue == null) hashValue = new ArrayList<String>();
 
         hashValue.add(val);
+    }
+
+    public List<HistoryData> getHistoryDataList() {
+        return historyDataList;
+    }
+
+    public void setHistoryDataList(List<HistoryData> historyDataList) {
+        this.historyDataList = historyDataList;
     }
 }

@@ -70,7 +70,7 @@ public class JSONService implements IUserService {
 
         List<ResultObj> resultObjs = new ArrayList<ResultObj>();
 
-        // For each solution in the result set
+        // For each solution in the result set                        c
         while (results.hasNext()) {
             QuerySolution qs = results.next();
             Iterator<Var> varIter = ((ResultBinding) qs).getBinding().vars();
@@ -437,8 +437,17 @@ public class JSONService implements IUserService {
     @GET
     @Path("get_all_disk_images")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<DiskImage> getAllDiskImages() {
-        return FusekiUtils.getAllEntityAttributes(DiskImage.class);
+    public List<DiskImage> getAllDiskImages(@QueryParam("deep") Boolean deep) {
+        List<DiskImage> diskImages = FusekiUtils.getAllEntityAttributes(DiskImage.class);
+
+        if (deep != null && deep == true) {
+            for (DiskImage diskImage : diskImages) {
+                List<Fragment> fragmentList = FusekiUtils.getIdEntityAttributes(Fragment.class, diskImage.getId());
+                diskImage.setFragmentList(fragmentList);
+            }
+        }
+
+        return diskImages;
     }
 
     @GET
@@ -449,6 +458,16 @@ public class JSONService implements IUserService {
         if (diskImageId != null) queryCondition = ".?s knowledgebase:Fragment_hasReferenceImage \"" + diskImageId + "\"";
 
         return FusekiUtils.getAllEntityAttributes(Fragment.class, queryCondition);
+    }
+
+    @GET
+    @Path("get_delivery_data")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Delivery> getDeliveryData(@QueryParam("disk_image_id") String diskImageId) {
+        String queryCondition = null;
+        if (diskImageId != null) queryCondition = ".?s knowledgebase:Delivery_hasDeliveredDiskImage \"" + diskImageId + "\"";
+
+        return FusekiUtils.getAllEntityAttributes(Delivery.class, queryCondition);
     }
 
 }

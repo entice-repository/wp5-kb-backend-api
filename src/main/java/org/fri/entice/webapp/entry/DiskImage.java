@@ -1,6 +1,7 @@
 package org.fri.entice.webapp.entry;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 @XmlRootElement
 public class DiskImage extends MyEntry {
@@ -25,6 +26,7 @@ public class DiskImage extends MyEntry {
     private String dataId; // relation to Data entity
     private int diskImageSize;   // probably in bytes
 
+    List<Fragment> fragmentList;
 
     public DiskImage(String id) {
         super(id);
@@ -227,6 +229,14 @@ public class DiskImage extends MyEntry {
 
     public void setDiskImageSize(int diskImageSize) {
         this.diskImageSize = diskImageSize;
+    }
+
+    public List<Fragment> getFragmentList() {
+        return fragmentList;
+    }
+
+    public void setFragmentList(List<Fragment> fragmentList) {
+        this.fragmentList = fragmentList;
     }
 }
 

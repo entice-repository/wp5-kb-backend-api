@@ -7,6 +7,7 @@ public class EntryFactory {
         if (clazz.getSimpleName().equals("Repository")) return (T) new Repository(id);
         else if (clazz.getSimpleName().equals("DiskImage")) return (T) new DiskImage(id);
         else if (clazz.getSimpleName().equals("Fragment")) return (T) new Fragment(id);
+        else if (clazz.getSimpleName().equals("Delivery")) return (T) new Delivery(id);
         return null;
     }
 }

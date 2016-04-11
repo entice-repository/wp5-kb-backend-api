@@ -39,6 +39,8 @@ public class PelletTest {
 
     public static void main(String args[]) {
         try {
+           // executeWorkingReasoningTest(BASE_URL);
+
             //prepare ontology and reasoner
             OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
             // String source = FusekiUtils.getFusekiDBSource("http://193.2.72.90:3030/entice/data");
@@ -96,7 +98,7 @@ public class PelletTest {
 //            boolean asserted = assertedClasses.contains(c);
                 boolean asserted = assertedClasses.equals(c);
 
-                System.out.println((asserted ? "asserted" : "inferred") + " class for Martin: " + renderer.render(c));
+                System.out.println((asserted ? "asserted" : "inferred") + " class: " + renderer.render(c));
             }
 
             OWLNamedIndividual individualRepository = null;
@@ -111,10 +113,20 @@ public class PelletTest {
                     if (renderer.render(objProp).contains("hasReferenceImage")) individualImage = ind;
                     else if (renderer.render(objProp).contains("hasRepository")) individualRepository = ind;
 
-                    System.out.println((asserted ? "asserted" : "inferred") + " object property for Martin: " +
+                    System.out.println((asserted ? "asserted" : "inferred") + " object property: " +
                             renderer.render(objProp) + " -> " + renderer.render(ind));
                 }
             }
+
+            OWLObjectProperty hasReferenceImage = factory.getOWLObjectProperty(":Fragment_hasReferenceImage", pm);
+            OWLNamedIndividual repo1 = factory.getOWLNamedIndividual(":78cd9996-ea71-4718-99f8-76874c157f2c",pm);
+            boolean result = reasoner.isEntailed(factory.getOWLObjectPropertyAssertionAxiom(hasReferenceImage, someFragment, repo1));
+            System.out.println("Some fragment has reference image "+repo1.getIRI()+"? " + result);
+
+            OWLNamedIndividual repo2 = factory.getOWLNamedIndividual(":d0eb1c49-e049-4341-830d-751f9d44ffe9",pm);
+            result = reasoner.isEntailed(factory.getOWLObjectPropertyAssertionAxiom(hasReferenceImage, someFragment, repo2));
+            System.out.println("Some fragment has reference image "+repo2.getIRI()+"? " + result);
+
 
             for (OWLLiteral size : reasoner.getDataPropertyValues(individualRepository, factory.getOWLDataProperty
                     (":Repository_OperationalCost", pm))) {
@@ -132,78 +144,85 @@ public class PelletTest {
         }
     }
 
-    private static void executeWorkingReasoningTest(String baseUrl) throws OWLOntologyCreationException {
-        //prepare ontology and reasoner
-        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        OWLOntology ontology = manager.loadOntology(IRI.create(baseUrl));
-        OWLReasonerFactory reasonerFactory = PelletReasonerFactory.getInstance();
-        OWLReasoner reasoner = reasonerFactory.createReasoner(ontology);
-        OWLDataFactory factory = manager.getOWLDataFactory();
-        PrefixManager pm = (PrefixManager) manager.getOntologyFormat(ontology);
-//        ((PrefixOWLOntologyFormat) pm).setDefaultPrefix(BASE_URL + "#");
-        pm.setDefaultPrefix(baseUrl + "#");
-        Map<String, String> prefixMap = pm.getPrefixName2PrefixMap();
+    private static void executeWorkingReasoningTest(String baseUrl) {
+        try {
+            //prepare ontology and reasoner
+            OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+            OWLOntology ontology = manager.loadOntology(IRI.create(baseUrl));
+            OWLReasonerFactory reasonerFactory = PelletReasonerFactory.getInstance();
+            OWLReasoner reasoner = reasonerFactory.createReasoner(ontology);
+            OWLDataFactory factory = manager.getOWLDataFactory();
+            PrefixManager pm = (PrefixManager) manager.getOntologyFormat(ontology);
+            pm.setDefaultPrefix(baseUrl + "#");
+            Map<String, String> prefixMap = pm.getPrefixName2PrefixMap();
 
-        //get class and its individuals
-        OWLClass personClass = factory.getOWLClass(":Person", pm);
-        System.out.println("Found persons:");
-        for (OWLNamedIndividual person : reasoner.getInstances(personClass, false).getFlattened()) {
-            System.out.println("person : " + renderer.render(person));
-        }
-
-        //get a given individual
-        OWLNamedIndividual martin = factory.getOWLNamedIndividual(":Martin", pm);
-
-        //get values of selected properties on the individual
-        OWLDataProperty hasEmailProperty = factory.getOWLDataProperty(":hasEmail", pm);
-
-        OWLObjectProperty isEmployedAtProperty = factory.getOWLObjectProperty(":isEmployedAt", pm);
-
-        for (OWLLiteral email : reasoner.getDataPropertyValues(martin, hasEmailProperty)) {
-            System.out.println("Martin has email: " + email.getLiteral());
-        }
-
-        for (OWLNamedIndividual ind : reasoner.getObjectPropertyValues(martin, isEmployedAtProperty).getFlattened()) {
-            System.out.println("Martin is employed at: " + renderer.render(ind));
-        }
-
-        //get labels
-        LocalizedAnnotationSelector as = new LocalizedAnnotationSelector(ontology, factory, "en", "cs");
-        for (OWLNamedIndividual ind : reasoner.getObjectPropertyValues(martin, isEmployedAtProperty).getFlattened()) {
-            System.out.println("Martin is employed at: '" + as.getLabel(ind) + "'");
-        }
-
-        //get inverse of a property, i.e. which individuals are in relation with a given individual
-        OWLNamedIndividual university = factory.getOWLNamedIndividual(":MU", pm);
-        OWLObjectPropertyExpression inverse = factory.getOWLObjectInverseOf(isEmployedAtProperty);
-        for (OWLNamedIndividual ind : reasoner.getObjectPropertyValues(university, inverse).getFlattened()) {
-            System.out.println("MU inverseOf(isEmployedAt) -> " + renderer.render(ind));
-        }
-
-        //find to which classes the individual belongs
-        Collection<OWLClassExpression> assertedClasses = EntitySearcher.getTypes(martin, ontology);
-        for (OWLClass c : reasoner.getTypes(martin, false).getFlattened()) {
-            // old version:
-//            boolean asserted = assertedClasses.contains(c);
-            boolean asserted = assertedClasses.equals(c);
-
-            System.out.println((asserted ? "asserted" : "inferred") + " class for Martin: " + renderer.render(c));
-        }
-
-        //list all object property values for the individual
-        Multimap<OWLObjectPropertyExpression, OWLIndividual> assertedValues = EntitySearcher.getObjectPropertyValues
-                (martin, ontology);
-        for (OWLObjectPropertyExpression objProp : ontology.getObjectPropertiesInSignature(true)) {
-            for (OWLNamedIndividual ind : reasoner.getObjectPropertyValues(martin, objProp).getFlattened()) {
-                boolean asserted = assertedValues.get(objProp).contains(ind);
-                System.out.println((asserted ? "asserted" : "inferred") + " object property for Martin: " + renderer
-                        .render(objProp) + " -> " + renderer.render(ind));
+            //get class and its individuals
+            OWLClass personClass = factory.getOWLClass(":Person", pm);
+            System.out.println("Found persons:");
+            for (OWLNamedIndividual person : reasoner.getInstances(personClass, false).getFlattened()) {
+                System.out.println("person : " + renderer.render(person));
             }
-        }
 
-        //list all same individuals
-        for (OWLNamedIndividual ind : reasoner.getSameIndividuals(martin)) {
-            System.out.println("same as Martin: " + renderer.render(ind));
+            //get a given individual
+            OWLNamedIndividual martin = factory.getOWLNamedIndividual(":Martin", pm);
+
+            //get values of selected properties on the individual
+            OWLDataProperty hasEmailProperty = factory.getOWLDataProperty(":hasEmail", pm);
+
+            OWLObjectProperty isEmployedAtProperty = factory.getOWLObjectProperty(":isEmployedAt", pm);
+
+            for (OWLLiteral email : reasoner.getDataPropertyValues(martin, hasEmailProperty)) {
+                System.out.println("Martin has email: " + email.getLiteral());
+            }
+
+            for (OWLNamedIndividual ind : reasoner.getObjectPropertyValues(martin, isEmployedAtProperty).getFlattened
+                    ()) {
+                System.out.println("Martin is employed at: " + renderer.render(ind));
+            }
+
+            //get labels
+            LocalizedAnnotationSelector as = new LocalizedAnnotationSelector(ontology, factory, "en", "cs");
+            for (OWLNamedIndividual ind : reasoner.getObjectPropertyValues(martin, isEmployedAtProperty).getFlattened
+                    ()) {
+                System.out.println("Martin is employed at: '" + as.getLabel(ind) + "'");
+            }
+
+            //get inverse of a property, i.e. which individuals are in relation with a given individual
+            OWLNamedIndividual university = factory.getOWLNamedIndividual(":MU", pm);
+            OWLObjectPropertyExpression inverse = factory.getOWLObjectInverseOf(isEmployedAtProperty);
+            for (OWLNamedIndividual ind : reasoner.getObjectPropertyValues(university, inverse).getFlattened()) {
+                System.out.println("MU inverseOf(isEmployedAt) -> " + renderer.render(ind));
+            }
+
+            //find to which classes the individual belongs
+            Collection<OWLClassExpression> assertedClasses = EntitySearcher.getTypes(martin, ontology);
+            for (OWLClass c : reasoner.getTypes(martin, false).getFlattened()) {
+                // old version:
+//            boolean asserted = assertedClasses.contains(c);
+                boolean asserted = assertedClasses.equals(c);
+
+                System.out.println((asserted ? "asserted" : "inferred") + " class for Martin: " + renderer.render(c));
+            }
+
+            //list all object property values for the individual
+            Multimap<OWLObjectPropertyExpression, OWLIndividual> assertedValues = EntitySearcher
+                    .getObjectPropertyValues(martin, ontology);
+            for (OWLObjectPropertyExpression objProp : ontology.getObjectPropertiesInSignature(true)) {
+                for (OWLNamedIndividual ind : reasoner.getObjectPropertyValues(martin, objProp).getFlattened()) {
+                    boolean asserted = assertedValues.get(objProp).contains(ind);
+                    System.out.println((asserted ? "asserted" : "inferred") + " object property for Martin: " +
+                            renderer.render(objProp) + " -> " + renderer.render(ind));
+                }
+            }
+
+            //list all same individuals
+            for (OWLNamedIndividual ind : reasoner.getSameIndividuals(martin)) {
+                System.out.println("same as Martin: " + renderer.render(ind));
+            }
+        } catch (OWLOntologyAlreadyExistsException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -7,9 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * This class specifies the overall disk image delivery event. It collects important information needed for reasoning,
  * e.g. to check out if the Quality of Service and Service Level Agreement is met by the services of the distributed
  * ENTICE repository.
- */ public class Delivery {
-
-    private String id;
+ */ public class Delivery extends MyEntry {
 
     // Specifies the user or the Cloud application that requested the delivery of a particular disk image implementing
     // a particular functionality.
@@ -32,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
     public Delivery(String id, String refUserId, String refFunctionalityId, long requestTime, String
             refTargetRepositoryId, String refDiskImageId, long deliveryTime) {
-        this.id = id;
+        super(id);
         this.refUserId = refUserId;
         this.refFunctionalityId = refFunctionalityId;
         this.requestTime = requestTime;
@@ -41,12 +39,8 @@ import javax.xml.bind.annotation.XmlRootElement;
         this.deliveryTime = deliveryTime;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public Delivery(String id){
+        super(id);
     }
 
     public String getRefUserId() {
