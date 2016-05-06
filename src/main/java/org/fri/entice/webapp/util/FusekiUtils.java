@@ -19,6 +19,7 @@ import org.apache.jena.vocabulary.ReasonerVocabulary;
 import org.apache.jena.vocabulary.VCARD;
 import org.fri.entice.webapp.entry.*;
 import org.fri.entice.webapp.rest.AppContextListener;
+import org.joda.time.DateTime;
 
 import java.io.*;
 import java.net.URL;
@@ -116,11 +117,16 @@ public class FusekiUtils {
 
                 String historyDataListStr = new String();
                 if (fragment.getHistoryDataList() != null) {
-                    int count = 1;
+//                    int count = 1;
+//                    for (HistoryData historyData : fragment.getHistoryDataList()) {
+//                        historyDataListStr += " rdf:_" + count + "  \"" + historyData.getId() + "\"^^xsd:anyURI ;";
+//                        count++;
+//                    }
                     for (HistoryData historyData : fragment.getHistoryDataList()) {
-                        historyDataListStr += " rdf:_" + count + "  \"" + historyData.getId() + "\"^^xsd:anyURI ;";
-                        count++;
+                        historyDataListStr += "\"" + historyData.getId() + "\",";
                     }
+                    if (historyDataListStr.length() > 0)
+                        historyDataListStr = historyDataListStr.substring(0, historyDataListStr.length() - 1);
                 }
 
                 return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " + XSD_PREFIX + " " +
@@ -133,10 +139,23 @@ public class FusekiUtils {
 //                        "knowledgebase:Fragment_ReferenceImage \"%s\" ;\n" +
                                 "knowledgebase:Fragment_Size %s ;\n" +
                                 "knowledgebase:Fragment_HashValues " + hashValues + " ;\n" +
-                                (historyDataListStr.length() == 0 ? "" : "knowledgebase:hasHistoryData [ a       " +
-                                        "rdf:Seq ;\n" + historyDataListStr + "] .") +
+                                "knowledgebase:hasHistoryData " + historyDataListStr + " ;\n" +
+//                                (historyDataListStr.length() == 0 ? "" : "knowledgebase:hasHistoryData [ a       " +
+//                                        "rdf:Seq ;\n" + historyDataListStr + "] .") +
                                 "}", fragment.getId(), fragment.getRefDiskImageId(), fragment.getRefRepositoryId(),
                         fragment.getAnyURI(), fragment.getFragmentSize());
+
+                /**
+                 * OLD: (historyDataListStr.length() == 0 ? "" : "knowledgebase:hasHistoryData [ a       " +"rdf:Seq
+                 * ;\n" + historyDataListStr + "] .")
+                 * ABOUT rdf:Seq and rdf:List:
+                 * This isn't really an answer, but I try to avoid both rdf:List and rdf:Seq and instead use some
+                 * “natural” order in the modelled domain whenever possible. For example, to indicate the order of
+                 * posts in a feed I wouldn't use an explicit order, but implicit ordering based on the publication
+                 * date if the use case allows it. There are of course legitimate cases where that's not an option
+                 * and where there simply isn't any “natural” ordering that could be used. rdf:List and rdf:Seq both
+                 * suck for large lists.
+                 */
             }
             // CREATE DELIVERY
             else if (obj instanceof Delivery) {
@@ -145,7 +164,7 @@ public class FusekiUtils {
                                 "knowledgebase:%s a knowledgebase:Delivery, owl:NamedIndividual ;" +
                                 "knowledgebase:Delivery_hasDeliveredDiskImage \"%s\" ;\n" +
                                 "knowledgebase:Delivery_hasFunctionality \"%s\" ;\n" +
-                                "knowledgebase:Delivery_hasTargetRepository \"%s\" ;\n" +
+                                "knowledgebase:Delivery_hasTargetRepository knowledgebase:%s ;\n" +
                                 "knowledgebase:Delivery_hasUser \"%s\" ;\n" +
                                 "knowledgebase:Delivery_DeliveryTime \"%s\" ;\n" +
                                 "knowledgebase:Delivery_RequestTime \"%s\" ;\n" +
@@ -207,8 +226,37 @@ public class FusekiUtils {
                                 "knowledgebase:HistoryData_ValidFrom \"%s\"^^xsd:dateTime ;\n" +
                                 "knowledgebase:HistoryData_ValidTo \"%s\"^^xsd:dateTime ;\n" +
                                 "knowledgebase:HistoryData_Value %s ;\n" +
-                                "}", historyData.getId(), historyData.getLocation(), historyData.getValidFrom(),
-                        historyData.getValidTo(), historyData.getValue());
+                                "}", historyData.getId(), historyData.getLocation(), new DateTime(historyData
+                        .getValidTo()).toString(), new DateTime(historyData.getValidTo()).toString(), historyData
+                        .getValue());
+            }
+            // CREATE PARETO
+            else if (obj instanceof Pareto) {
+                Pareto pareto = (Pareto) obj;
+
+                if (pareto.getId() == null || pareto.getId().length() == 0) pareto.setId(UUID.randomUUID().toString());
+
+                String objectivesStr = new String();
+                for (int i = 0; i < pareto.getObjectives().length; i++) {
+                    objectivesStr += "\"" + pareto.getObjectives()[i][0] + "\",";
+                    objectivesStr += "\"" + pareto.getObjectives()[i][1] + "\",";
+                }
+                if (objectivesStr.length() > 0) objectivesStr = objectivesStr.substring(0, objectivesStr.length() - 1);
+
+                String variablesStr = new String();
+                for (int i = 0; i < pareto.getVariables().length; i++) {
+                    variablesStr += "\"" + pareto.getVariables()[i][0] + "\",";
+                    variablesStr += "\"" + pareto.getVariables()[i][1] + "\",";
+                }
+                if (variablesStr.length() > 0) variablesStr = variablesStr.substring(0, variablesStr.length() - 1);
+
+                return String.format(Locale.US, "PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " +
+                        XSD_PREFIX + " " + " INSERT DATA {" +
+                        "knowledgebase:%s a knowledgebase:Pareto, owl:NamedIndividual ;" +
+                        "knowledgebase:Pareto_Create_Date \"%s\"^^xsd:dateTime ;\n" +
+                        "knowledgebase:Pareto_Objectives %s ;\n" +
+                        "knowledgebase:Pareto_Variables %s ;\n" +
+                        "}", pareto.getId(), new DateTime(pareto.getSaveTime()).toString(),objectivesStr,variablesStr);
             }
             //todo: add other objects
             else {
@@ -230,19 +278,54 @@ public class FusekiUtils {
     }
 
     public static String getAllEntitiesQuery(String entityClass, String... queryFilterCondition) {
-        if (queryFilterCondition.length > 0 && queryFilterCondition[0] != null)
+        if (entityClass.equals("HistoryData") && queryFilterCondition.length > 1)
+            return "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
+                    "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "\n" +
+                    "SELECT ?s ?p ?o\n" +
+                    "WHERE { \n" +
+                    "knowledgebase:" + queryFilterCondition[0] + " a knowledgebase:" + entityClass + " ; ?p ?o . \n" +
+                    "  ?s knowledgebase:HistoryData_ValidFrom ?dateFrom , ?o .\n" +
+                    "  ?s knowledgebase:HistoryData_ValidTo ?dateTo , ?o .\n" +
+                    "FILTER(?dateTo <= \"" + new DateTime(Long.valueOf(queryFilterCondition[2])) + "\"^^xsd:dateTime " +
+                    ")  \n" +
+                    "FILTER(?dateFrom >= \"" + new DateTime(Long.valueOf(queryFilterCondition[1])) +
+                    "\"^^xsd:dateTime )  \n" +
+                    "} \n" +
+                    "LIMIT 200";
+        else if (entityClass.equals("HistoryData")) {
+            return "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "SELECT ?s ?p ?o\n" +
+                    "WHERE { knowledgebase:" + queryFilterCondition[0] + " a knowledgebase:" + entityClass + " ; ?p " +
+                    "?o " +
+                    "}\n" +
+                    "LIMIT 200";
+        }
+        else if (queryFilterCondition.length > 0 && queryFilterCondition[0] != null) {
             return "prefix knowledgebase: <http://www.semanticweb" +
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                     "\n" +
                     "SELECT ?s ?p ?o\n" +
                     "WHERE { ?s a knowledgebase:" + entityClass + " " + queryFilterCondition[0] + " ; ?p ?o }\n" +
                     "LIMIT 200";
+//            return "prefix knowledgebase: <http://www.semanticweb" +
+//                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+//                    "\n" +
+//                    "SELECT ?s ?p ?o\n" +
+//                    "WHERE { knowledgebase:" + queryFilterCondition[0] + " a knowledgebase:" + entityClass + " ;
+// ?p " +
+//                    "?o " +
+//                    "}\n" +
+//                    "LIMIT 200";
+        }
         else return "prefix knowledgebase: <http://www.semanticweb" +
-                ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
-                "\n" +
-                "SELECT ?s ?p ?o\n" +
-                "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o }\n" +
-                "LIMIT 200";
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "\n" +
+                    "SELECT ?s ?p ?o\n" +
+                    "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o }\n" +
+                    "LIMIT 200";
     }
 
     public static String getIdBasedEntitiesQuery(String clazz, String id) {
@@ -253,6 +336,16 @@ public class FusekiUtils {
                 "knowledgebase:" + id + " }\n" +
                 "LIMIT 200";
         else throw new UnsupportedOperationException("not implemented for this class");
+    }
+
+    public static String getHistoryDataIDs(String fragmentId) {
+        return "prefix knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                "prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                "\n" +
+                "select ?o\n" +
+                "where { knowledgebase:" + fragmentId + " knowledgebase:hasHistoryData ?o\n" +
+                "}";
     }
 
     public static String getAllUploadedImages(Boolean optimizedOnly) {
@@ -595,7 +688,11 @@ public class FusekiUtils {
                 else if (var.getVarName().equals("p")) r = ((ResultBinding) qs).getBinding().get(var).toString();
                 else if (var.getVarName().equals("o")) {
                     try {
-                        y = String.valueOf(((ResultBinding) qs).getBinding().get(var).getLiteral().getValue());
+                        String resStr = ((ResultBinding) qs).getBinding().get(var).toString();
+                        if (resStr.contains("^^http://www.w3.org/2001/XMLSchema#dateTime"))
+                            y = ((ResultBinding) qs).getBinding().get(var).getLiteral().getValue().toString();
+                        else if (resStr.contains("-")) y = resStr.replaceAll("\"", "");
+                        else y = String.valueOf(((ResultBinding) qs).getBinding().get(var).getLiteral().getValue());
                     } catch (Exception e) {
                         y = ((ResultBinding) qs).getBinding().get(var).toString();
                     }
@@ -618,21 +715,7 @@ public class FusekiUtils {
 
         List<ResultObj> resultObjs = FusekiUtils.getResultObjectListFromResultSet(results);
 
-        List<T> list = new ArrayList<T>();
-        for (ResultObj resultObj : resultObjs) {
-            if (resultObj.getO().equals(KB_PREFIX_SHORT + clazz.getSimpleName())) {
-                list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
-            }
-            else if (resultObj.getO().equals(KB_PREFIX_SHORT + "CI") || resultObj.getO().equals(KB_PREFIX_SHORT +
-                    "VMI")) {
-                list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
-            }
-
-
-            CommonUtils.mapResultObjectToEntry(list, resultObj);
-        }
-
-        return list;
+        return FusekiUtils.mapResultObjectListToEntry(clazz, resultObjs);
     }
 
     public static <T extends MyEntry> List<T> getIdEntityAttributes(Class<T> clazz, String id) {
@@ -642,7 +725,6 @@ public class FusekiUtils {
                 + ".query"), selectQuery);
         ResultSet results = qe.execSelect();
 
-        //todo: optimize
         List<ResultObj> queryResults = FusekiUtils.getResultObjectListFromResultSet(results);
 
         List<T> fragmentList = new ArrayList<T>(queryResults.size());
@@ -667,6 +749,7 @@ public class FusekiUtils {
             List<T> list = new ArrayList<T>();
             for (ResultObj resultObj : resultObjs) {
                 if (resultObj.getO().equals(KB_PREFIX_SHORT + clazz.getSimpleName())) {
+                    //some customizations for fragment class
                     list.add(EntryFactory.getInstance(clazz, fragmentId.replace(KB_PREFIX_SHORT, "")));
                 }
                 else if (resultObj.getO().equals(KB_PREFIX_SHORT + "CI") || resultObj.getO().equals(KB_PREFIX_SHORT +
@@ -680,6 +763,23 @@ public class FusekiUtils {
             fragmentList.add(list.get(0));
         }
         return fragmentList;
+    }
+
+    public static <T extends MyEntry> List<T> mapResultObjectListToEntry(Class<T> clazz, List<ResultObj> resultObjs) {
+        List<T> list = new ArrayList<T>();
+        for (ResultObj resultObj : resultObjs) {
+            if (resultObj.getO().equals(KB_PREFIX_SHORT + clazz.getSimpleName())) {
+                list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
+            }
+            else if (resultObj.getO().equals(KB_PREFIX_SHORT + "CI") || resultObj.getO().equals(KB_PREFIX_SHORT +
+                    "VMI")) {
+                list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
+            }
+
+
+            CommonUtils.mapResultObjectToEntry(list, resultObj);
+        }
+        return list;
     }
 }
 

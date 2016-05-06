@@ -18,7 +18,10 @@ import org.glassfish.jersey.client.ClientConfig;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -54,11 +57,12 @@ public class FusekiTest {
 
         ClientConfig config = new ClientConfig().register(JacksonFeatures.class);
         Client client = ClientBuilder.newClient(config);
-        WebTarget service = client.target("http://localhost:8080/JerseyREST/");
 
         user = new User(UUID.randomUUID().toString(), "sandokan@aa.com", "Sandokan G.", "pass1234", "090 000",
-                "sandigec");
-      //  Response resp = service.path("rest").path("service").path("register_user").request().post(Entity.entity(user,MediaType.APPLICATION_JSON_TYPE));
+                "testko");
+        WebTarget service = client.target("http://193.2.72.90:7070/JerseyREST/");
+        Response resp = service.path("rest").path("service").path("register_user").request().post(Entity.entity(user,
+                MediaType.APPLICATION_JSON_TYPE));
 
 
         String insertStatementStr = FusekiUtils.generateInsertObjectStatement(user);

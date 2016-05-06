@@ -8,6 +8,9 @@ public class EntryFactory {
         else if (clazz.getSimpleName().equals("DiskImage")) return (T) new DiskImage(id);
         else if (clazz.getSimpleName().equals("Fragment")) return (T) new Fragment(id);
         else if (clazz.getSimpleName().equals("Delivery")) return (T) new Delivery(id);
+        else if (clazz.getSimpleName().equals("HistoryData")) return (T) new HistoryData(id);
+        else if (clazz.getSimpleName().equals("FragmentHistoryDeliveryData")) return (T) new FragmentHistoryDeliveryData(id);
+        else if (clazz.getSimpleName().equals("Pareto")) return (T) new Pareto(id);
         return null;
     }
 }

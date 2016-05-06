@@ -84,9 +84,9 @@ public class UIBKDataGenerator {
                     DateTime dateTo = new DateTime(DateTime.now());
                     dateTo.minusDays(fragmentHistoryLength - j);
 
-                    HistoryData historyData = new HistoryData(UUID.randomUUID().toString(), dateFrom, dateTo, String
-                            .valueOf(1000 + Math.random() * 100000), repositories.get((int) (Math.random() *
-                            repositorySize)).getId());
+                    HistoryData historyData = new HistoryData(UUID.randomUUID().toString(), dateFrom.getMillis(),
+                            dateTo.getMillis(), String.valueOf(1000 + Math.random() * 100000), repositories.get((int)
+                            (Math.random() * repositorySize)).getId());
                     historyDataList.add(historyData);
 
                     //insert history data entity:

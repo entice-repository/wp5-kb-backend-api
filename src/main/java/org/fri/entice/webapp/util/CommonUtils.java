@@ -1,6 +1,7 @@
 package org.fri.entice.webapp.util;
 
 import org.fri.entice.webapp.entry.*;
+import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.util.List;
@@ -120,6 +121,32 @@ public class CommonUtils {
                     fragmentList.get(fragmentList.size() - 1).setDeliveryTime(Long.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Delivery_RequestTime"))
                     fragmentList.get(fragmentList.size() - 1).setRequestTime(Long.valueOf(resultObj.getO()));
+            }
+            else if (list.get(list.size() - 1) instanceof HistoryData) {
+                List<HistoryData> historyDataList = (List<HistoryData>) list;
+                if (resultObj.getP().endsWith("HistoryData_Location"))
+                    historyDataList.get(historyDataList.size() - 1).setLocation(resultObj.getO());
+                else if (resultObj.getP().endsWith("HistoryData_ValidFrom"))
+                    historyDataList.get(historyDataList.size() - 1).setValidFrom(new DateTime(resultObj.getO()).getMillis());
+                else if (resultObj.getP().endsWith("HistoryData_ValidTo"))
+                    historyDataList.get(historyDataList.size() - 1).setValidTo(new DateTime(resultObj.getO()).getMillis());
+                else if (resultObj.getP().endsWith("HistoryData_Value"))
+                    historyDataList.get(historyDataList.size() - 1).setValue(resultObj.getO());
+            }
+            else if (list.get(list.size() - 1) instanceof Pareto) {
+                List<Pareto> paretoList = (List<Pareto>) list;
+                resultObj.getO();
+                if (resultObj.getP().endsWith("Pareto_Objectives"))
+                    paretoList.get(paretoList.size() - 1).setObjectivesValue(Double.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Pareto_Variables"))
+                    paretoList.get(paretoList.size() - 1).setVariablesValue(Integer.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Pareto_Create_Date"))               {
+                    try{
+                    paretoList.get(paretoList.size() - 1).setSaveTime(new DateTime(resultObj.getO()).getMillis());
+                    }catch (Exception e){
+                        e.printStackTrace();    //remove after new reimport
+                    }
+                }
             }
             else {
                 throw new UnsupportedOperationException("The mapping is not implemented for this class! ! " + list.get(list.size() - 1).getClass());
