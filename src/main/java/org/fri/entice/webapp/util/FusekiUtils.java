@@ -220,15 +220,14 @@ public class FusekiUtils {
             else if (obj instanceof HistoryData) {
                 HistoryData historyData = (HistoryData) obj;
                 return String.format(Locale.US, "PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " +
-                                XSD_PREFIX + " " + " INSERT DATA {" +
-                                "knowledgebase:%s a knowledgebase:HistoryData, owl:NamedIndividual ;" +
-                                "knowledgebase:HistoryData_Location \"%s\"^^xsd:anyURI ;\n" +
-                                "knowledgebase:HistoryData_ValidFrom \"%s\"^^xsd:dateTime ;\n" +
-                                "knowledgebase:HistoryData_ValidTo \"%s\"^^xsd:dateTime ;\n" +
-                                "knowledgebase:HistoryData_Value %s ;\n" +
-                                "}", historyData.getId(), historyData.getLocation(), new DateTime(historyData
-                        .getValidTo()).toString(), new DateTime(historyData.getValidTo()).toString(), historyData
-                        .getValue());
+                        XSD_PREFIX + " " + " INSERT DATA {" +
+                        "knowledgebase:%s a knowledgebase:HistoryData, owl:NamedIndividual ;" +
+                        "knowledgebase:HistoryData_Location \"%s\"^^xsd:anyURI ;\n" +
+                        "knowledgebase:HistoryData_ValidFrom \"%s\"^^xsd:dateTime ;\n" +
+                        "knowledgebase:HistoryData_ValidTo \"%s\"^^xsd:dateTime ;\n" +
+                        "knowledgebase:HistoryData_Value %s ;\n" +
+                        "}", historyData.getId(), historyData.getLocation(), new DateTime(historyData.getValidTo())
+                        .toString(), new DateTime(historyData.getValidTo()).toString(), historyData.getValue());
             }
             // CREATE PARETO
             else if (obj instanceof Pareto) {
@@ -236,27 +235,26 @@ public class FusekiUtils {
 
                 if (pareto.getId() == null || pareto.getId().length() == 0) pareto.setId(UUID.randomUUID().toString());
 
-                String objectivesStr = new String();
-                for (int i = 0; i < pareto.getObjectives().length; i++) {
-                    objectivesStr += "\"" + pareto.getObjectives()[i][0] + "\",";
-                    objectivesStr += "\"" + pareto.getObjectives()[i][1] + "\",";
-                }
-                if (objectivesStr.length() > 0) objectivesStr = objectivesStr.substring(0, objectivesStr.length() - 1);
+                String objectivesStr = createRegixBasedTableString(pareto.getObjectives());
 
-                String variablesStr = new String();
-                for (int i = 0; i < pareto.getVariables().length; i++) {
-                    variablesStr += "\"" + pareto.getVariables()[i][0] + "\",";
-                    variablesStr += "\"" + pareto.getVariables()[i][1] + "\",";
-                }
-                if (variablesStr.length() > 0) variablesStr = variablesStr.substring(0, variablesStr.length() - 1);
+
+                String variablesStr = createRegixBasedTableString(pareto.getVariables());
+
+//                String variablesStr = new String();
+//                for (int i = 0; i < pareto.getVariables().length; i++) {
+//                    variablesStr += "\"" + pareto.getVariables()[i][0] + "\",";
+//                    variablesStr += "\"" + pareto.getVariables()[i][1] + "\",";
+//                }
+//                if (variablesStr.length() > 0) variablesStr = variablesStr.substring(0, variablesStr.length() - 1);
 
                 return String.format(Locale.US, "PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " +
                         XSD_PREFIX + " " + " INSERT DATA {" +
                         "knowledgebase:%s a knowledgebase:Pareto, owl:NamedIndividual ;" +
                         "knowledgebase:Pareto_Create_Date \"%s\"^^xsd:dateTime ;\n" +
-                        "knowledgebase:Pareto_Objectives %s ;\n" +
-                        "knowledgebase:Pareto_Variables %s ;\n" +
-                        "}", pareto.getId(), new DateTime(pareto.getSaveTime()).toString(),objectivesStr,variablesStr);
+                        "knowledgebase:Pareto_Objectives \"%s\" ;\n" +
+                        "knowledgebase:Pareto_Variables \"%s\" ;\n" +
+                        "}", pareto.getId(), new DateTime(pareto.getSaveTime()).toString(), objectivesStr,
+                        variablesStr);
             }
             //todo: add other objects
             else {
@@ -266,6 +264,20 @@ public class FusekiUtils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private static <T> String createRegixBasedTableString(T[][] objectives) {
+        String objectivesStr = new String();
+        for (int i = 0; i < objectives.length; i++) {
+            for (int j = 0; j < objectives[i].length; j++) {
+                objectivesStr += objectives[i][j] + ",";
+            }
+            objectivesStr = objectivesStr.substring(0, objectivesStr.length() - 1);
+            objectivesStr += "//";
+        }
+        if (objectivesStr.length() > 0) objectivesStr = objectivesStr.substring(0, objectivesStr.length() -2);
+
+        return objectivesStr;
     }
 
     public static String getPassword(String username) {
@@ -292,24 +304,24 @@ public class FusekiUtils {
                     ")  \n" +
                     "FILTER(?dateFrom >= \"" + new DateTime(Long.valueOf(queryFilterCondition[1])) +
                     "\"^^xsd:dateTime )  \n" +
-                    "} \n" +
-                    "LIMIT 200";
+                    "} \n";
+//                    "LIMIT 200";
         else if (entityClass.equals("HistoryData")) {
             return "prefix knowledgebase: <http://www.semanticweb" +
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                     "SELECT ?s ?p ?o\n" +
                     "WHERE { knowledgebase:" + queryFilterCondition[0] + " a knowledgebase:" + entityClass + " ; ?p " +
                     "?o " +
-                    "}\n" +
-                    "LIMIT 200";
+                    "}\n";
+//                    "LIMIT 200";
         }
         else if (queryFilterCondition.length > 0 && queryFilterCondition[0] != null) {
             return "prefix knowledgebase: <http://www.semanticweb" +
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                     "\n" +
                     "SELECT ?s ?p ?o\n" +
-                    "WHERE { ?s a knowledgebase:" + entityClass + " " + queryFilterCondition[0] + " ; ?p ?o }\n" +
-                    "LIMIT 200";
+                    "WHERE { ?s a knowledgebase:" + entityClass + " " + queryFilterCondition[0] + " ; ?p ?o }\n";
+//                    "LIMIT 200";
 //            return "prefix knowledgebase: <http://www.semanticweb" +
 //                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
 //                    "\n" +
@@ -324,8 +336,8 @@ public class FusekiUtils {
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                     "\n" +
                     "SELECT ?s ?p ?o\n" +
-                    "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o }\n" +
-                    "LIMIT 200";
+                    "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o }\n";
+//                    "LIMIT 200";
     }
 
     public static String getIdBasedEntitiesQuery(String clazz, String id) {
@@ -333,8 +345,8 @@ public class FusekiUtils {
                 ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                 "SELECT ?s\n" +
                 "WHERE { ?s a knowledgebase:Fragment ; knowledgebase:Fragment_hasReferenceImage ?o , " +
-                "knowledgebase:" + id + " }\n" +
-                "LIMIT 200";
+                "knowledgebase:" + id + " }\n";
+//                "LIMIT 200";
         else throw new UnsupportedOperationException("not implemented for this class");
     }
 

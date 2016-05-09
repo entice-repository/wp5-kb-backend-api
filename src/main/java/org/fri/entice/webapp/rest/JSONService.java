@@ -702,5 +702,4 @@ public class JSONService implements IUserService {
     public List<Pareto> getPareto() {
         return FusekiUtils.getAllEntityAttributes(Pareto.class);
     }
-
 }

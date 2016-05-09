@@ -1,18 +1,14 @@
 package org.fri.entice.webapp.entry;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
 
 @XmlRootElement
 public class Pareto extends MyEntry {
     long saveTime;
-    int[][] variables;
-    double[][] objectives;
-    List<Integer> variablesList;
-    List<Double> objectivesList;
+    Integer[][] variables;
+    Double[][] objectives;
 
-    public Pareto(String id, long saveTime, int[][] variables, double[][] objectives) {
+    public Pareto(String id, long saveTime, Integer[][] variables, Double[][] objectives) {
         super(id);
         this.saveTime = saveTime;
         this.variables = variables;
@@ -27,19 +23,19 @@ public class Pareto extends MyEntry {
         super(id);
     }
 
-    public int[][] getVariables() {
+    public Integer[][] getVariables() {
         return variables;
     }
 
-    public void setVariables(int[][] variables) {
+    public void setVariables(Integer[][] variables) {
         this.variables = variables;
     }
 
-    public double[][] getObjectives() {
+    public Double[][] getObjectives() {
         return objectives;
     }
 
-    public void setObjectives(double[][] objectives) {
+    public void setObjectives(Double[][] objectives) {
         this.objectives = objectives;
     }
 
@@ -51,27 +47,28 @@ public class Pareto extends MyEntry {
         this.saveTime = saveTime;
     }
 
-    public List<Integer> getVariablesList() {
-        return variablesList;
-    }
+    public void setTableValuesFromString(String stringValues, Class clazz) {
+        final String[] splited = stringValues.split("//");
+        Double[][] doubles = null;
+        Integer[][] integers = null;
 
-    public void setVariablesList(List<Integer> variablesList) {
-        this.variablesList = variablesList;
-    }
+        if (clazz.equals(Integer.class)) {
+            integers = new Integer[splited.length][splited[0].split(",").length];
+        }
+        else if (clazz.equals(Double.class)) {
+            doubles = new Double[splited.length][splited[0].split(",").length];
+        }
 
-    public void setVariablesValue(int val) {
-        if (variablesList == null) variablesList = new ArrayList<Integer>();
+        for (int i = 0; i < splited.length; i++) {
+            String[] split2 = splited[i].split(",");
+            for (int j = 0; j < split2.length; j++) {
+                if (doubles != null)                           //optimize
+                    doubles[i][j] = Double.valueOf(split2[j]);
+                else if (integers != null) integers[i][j] = Integer.valueOf(split2[j]);
+            }
+        }
 
-        variablesList.add(val);
-    }
-
-    public void setObjectivesValue(double val) {
-        if (objectivesList == null) objectivesList = new ArrayList<Double>();
-
-        objectivesList.add(val);
-    }
-
-    public List<Double> getObjectivesList() {
-        return objectivesList;
+        if (doubles != null) objectives = doubles;
+        else if (integers != null) variables = integers;
     }
 }
