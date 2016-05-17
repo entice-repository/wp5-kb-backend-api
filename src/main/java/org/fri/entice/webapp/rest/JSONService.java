@@ -357,6 +357,10 @@ public class JSONService implements IUserService {
 
     }
 
+
+    // http://193.2.72.90:7070/JerseyREST/rest/service/perform_user_login?username=sandi&password=lalala
+    // localhost:8080/JerseyREST/rest/service/perform_user_login?username=testko&password=pass1234
+
     @GET
     @Path("perform_user_login")
     @Produces(MediaType.APPLICATION_JSON)
@@ -618,13 +622,15 @@ public class JSONService implements IUserService {
                             selectQuery);
                     results = qe.execSelect();
                     List<ResultObj> tmpObj = FusekiUtils.getResultObjectListFromResultSet(results);
-                    if (tmpObj.size() > 0)
-                        fragmentHistoryDeliveryDatas.add(new FragmentHistoryDeliveryData(historyDataObj.getId(),
-                                fragment.getId(), fragment.getRefDiskImageId(), (deliveryIndex != -1 ? new DateTime
-                                (deliveryList.get(deliveryIndex).getRequestTime()) : null), new DateTime
-                                (historyDataObj.getValidFrom()), new DateTime(historyDataObj.getValidTo()),
-                                historyDataObj.getLocation(), (deliveryIndex != -1 ? deliveryList.get(deliveryIndex)
-                                .getRefTargetRepositoryId() : null)));
+                    if (tmpObj.size() > 0) {
+                        FragmentHistoryDeliveryData fragmentHistoryDeliveryData = new FragmentHistoryDeliveryData
+                                (historyDataObj.getId(), fragment.getId(), fragment.getRefDiskImageId(),
+                                        (deliveryIndex != -1 ? deliveryList.get(deliveryIndex).getRequestTime() :
+                                                null), historyDataObj.getValidFrom(), historyDataObj.getValidTo(),
+                                        historyDataObj.getLocation(), (deliveryIndex != -1 ? deliveryList.get
+                                        (deliveryIndex).getRefTargetRepositoryId() : null));
+                        fragmentHistoryDeliveryDatas.add(fragmentHistoryDeliveryData);
+                    }
                 }
 
                 // Collections.sort(historyDataList,HistoryData.HistoryDataComparator);
@@ -695,6 +701,15 @@ public class JSONService implements IUserService {
         }
         return true;
     }
+
+    // http://193.2.72.90:7070/JerseyREST/rest/service/get_fragment_history_delivery_data?show_history_data=true
+    // &disk_image_id=903fb2c9-48c1-4188-ac43-eba06e2bcf20&valid_date_from=1461937370535&valid_date_to=1461937370537
+    // http://localhost:8080/JerseyREST/rest/service/get_fragment_history_delivery_data?show_history_data=true
+    // &disk_image_id=903fb2c9-48c1-4188-ac43-eba06e2bcf20
+    // http://193.2.72.90:7070/JerseyREST/rest/service/get_fragment_history_delivery_data?disk_image_id=afda9d81-45ca
+    // -4168-83d4-e36aec2c83af
+    // http://193.2.72.90:7070/JerseyREST/rest/service/get_all_disk_images?deep=true
+    // http://localhost:8080/JerseyREST/rest/service/get_pareto
 
     @GET
     @Path("get_pareto")

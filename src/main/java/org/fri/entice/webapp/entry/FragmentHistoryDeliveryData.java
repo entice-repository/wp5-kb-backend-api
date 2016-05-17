@@ -1,7 +1,5 @@
 package org.fri.entice.webapp.entry;
 
-import org.joda.time.DateTime;
-
 /**
  * query:  start date ?  end date  -- deployment time
  */
@@ -17,9 +15,9 @@ public class FragmentHistoryDeliveryData extends MyEntry {
     // id == historyFragmentID
     private String fragmentId;
     private String refImageId;
-    private DateTime queryTime; //request time to be deployed
-    private DateTime deploymentTime;
-    private DateTime endDeploymentTime;
+    private Long queryTime; //request time to be deployed
+    private Long deploymentTime;
+    private Long endDeploymentTime;
     private String refRepositoryId;
     private String destinationCloudLocationURL;
 
@@ -27,7 +25,7 @@ public class FragmentHistoryDeliveryData extends MyEntry {
         super(id);
     }
 
-    public FragmentHistoryDeliveryData(String historyFragmentID, String fragmentId, String refImageId, DateTime queryTime, DateTime deploymentTime, DateTime
+    public FragmentHistoryDeliveryData(String historyFragmentID, String fragmentId, String refImageId, Long queryTime, Long deploymentTime, Long
             endDeploymentTime, String refRepositoryId, String destinationCloudLocationURL) {
         super(historyFragmentID);
         this.fragmentId = fragmentId;
@@ -39,20 +37,32 @@ public class FragmentHistoryDeliveryData extends MyEntry {
         this.destinationCloudLocationURL = destinationCloudLocationURL;
     }
 
-    public DateTime getQueryTime() {
+    public Long getQueryTime() {
         return queryTime;
     }
 
-    public void setQueryTime(DateTime queryTime) {
+    public void setQueryTime(Long queryTime) {
         this.queryTime = queryTime;
     }
 
-    public DateTime getDeploymentTime() {
+    public Long getDeploymentTime() {
         return deploymentTime;
     }
 
-    public void setDeploymentTime(DateTime deploymentTime) {
+    public void setDeploymentTime(Long deploymentTime) {
         this.deploymentTime = deploymentTime;
+    }
+
+    public Long getEndDeploymentTime() {
+        return endDeploymentTime;
+    }
+
+    public void setEndDeploymentTime(Long endDeploymentTime) {
+        this.endDeploymentTime = endDeploymentTime;
+    }
+
+    public void setEndDeploymentTime(long endDeploymentTime) {
+        this.endDeploymentTime = endDeploymentTime;
     }
 
     public String getRefRepositoryId() {
@@ -69,14 +79,6 @@ public class FragmentHistoryDeliveryData extends MyEntry {
 
     public void setDestinationCloudLocationURL(String destinationCloudLocationURL) {
         this.destinationCloudLocationURL = destinationCloudLocationURL;
-    }
-
-    public DateTime getEndDeploymentTime() {
-        return endDeploymentTime;
-    }
-
-    public void setEndDeploymentTime(DateTime endDeploymentTime) {
-        this.endDeploymentTime = endDeploymentTime;
     }
 
     public String getRefImageId() {

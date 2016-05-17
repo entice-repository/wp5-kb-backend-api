@@ -4,9 +4,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Pareto extends MyEntry {
-    long saveTime;
-    Integer[][] variables;
-    Double[][] objectives;
+    private long saveTime;
+    private Integer[][] variables;
+    private Double[][] objectives;
 
     public Pareto(String id, long saveTime, Integer[][] variables, Double[][] objectives) {
         super(id);
