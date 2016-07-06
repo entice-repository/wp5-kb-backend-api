@@ -80,3 +80,10 @@ WHERE {
 #FILTER(?dateFrom > "2016-05-29T15:42:50.537+02:00"^^xsd:dateTime )
 }
 LIMIT 200
+
+-------------------------------------------------------
+
+prefix knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>
+
+SELECT ?s ?p ?o
+WHERE { ?s a knowledgebase:Repository ; ?p ?o . ?s knowledgebase:Repository_Space ?space . FILTER (?space >= 130)   }

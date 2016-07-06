@@ -15,7 +15,7 @@
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
             <!--<param-value>org.fri.entice.webapp.rest</param-value>-->
-            <param-value>com.myorg.myproj.api;org.codehaus.jackson.jaxrs</param-value>
+            <param-value>com.myorg.myproj.api,org.codehaus.jackson.jaxrs</param-value>
         </init-param>
 
         <init-param>

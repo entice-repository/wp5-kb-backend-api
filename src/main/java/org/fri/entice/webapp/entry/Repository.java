@@ -19,16 +19,19 @@ public class Repository extends MyEntry {
     // ENTICE will research heuristics for multi-objective distribution and placement of VM images across a
     // decentralised ENTICE repository that optimises multiple conflicting objectives including performance-related
     // goals, operational costs, and storage space.
-    private double operationalCost;
+    private double operationalCost;         //USD per GB
 
     // As fast storage costs more and slow storage costs less, it is necessary to provide mechanisms for storing VM
     // images at three speed levels; namely: fast, medium and low-speed. Level1 means fast storage.
-    private double priorityLevel1Cost;
+    private double priorityLevel1Cost;  //OLD
+//    private double storageLevelCost;       // TODO: to be updated and aranged with UIBK
 
     private double priorityLevel2Cost;
 
     // Level1 means low-speed storage.
     private double priorityLevel3Cost;
+
+    private double theoreticalCommunicationalPerformance;   // MB
 
     // In the ENTICE environment, dynamic information about the underlying federated Cloud infrastructure resources
     // such as storage space is needed to be stored.
@@ -38,11 +41,11 @@ public class Repository extends MyEntry {
     // repository should be able to support the conversion into various kinds of VM/C images from one format for
     // portability into various environments. This property is a likely scenario with heterogeneous infrastructure
     // behind the Cloud-based Entice environment.
-    private List<String> supportedFormat;
+    private List<String> supportedFormat; // TODO: Should we add the speed value of each format
 
     public Repository(String id, String countryId, String geolocationId, String interfaceEndpoint, double
             operationalCost, double priorityLevel1Cost, double priorityLevel2Cost, double priorityLevel3Cost, double
-            space, List<String> supportedFormat) {
+            space, List<String> supportedFormat, double theoreticalCommunicationalPerformance) {
         super(id);
         this.countryId = countryId;
         this.geolocationId = geolocationId;
@@ -53,6 +56,7 @@ public class Repository extends MyEntry {
         this.priorityLevel3Cost = priorityLevel3Cost;
         this.space = space;
         this.supportedFormat = supportedFormat;
+        this.theoreticalCommunicationalPerformance = theoreticalCommunicationalPerformance;
     }
 
     public Repository(String id) {
@@ -141,5 +145,13 @@ public class Repository extends MyEntry {
         if (supportedFormat == null) supportedFormat = new ArrayList<String>();
 
         supportedFormat.add(supportedFormatVal);
+    }
+
+    public double getTheoreticalCommunicationalPerformance() {
+        return theoreticalCommunicationalPerformance;
+    }
+
+    public void setTheoreticalCommunicationalPerformance(double theoreticalCommunicationalPerformance) {
+        this.theoreticalCommunicationalPerformance = theoreticalCommunicationalPerformance;
     }
 }

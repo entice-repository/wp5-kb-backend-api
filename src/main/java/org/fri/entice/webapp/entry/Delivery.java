@@ -19,23 +19,32 @@ import javax.xml.bind.annotation.XmlRootElement;
     // Specifies the disk image which was delivered upon the request of the user or the Cloud application.
     private String refDiskImageId;
 
+    private String refFragmentId;
+
     // Specifies the target repository where according to the internal reasoning method of the ENTICE repository the
     // disk image must be delivered.
     private String refTargetRepositoryId;
+
+    private String targetCloud;
 
     // Specifies the time when the delivery request was received by the ENTICE environment.
     private long requestTime;
 
     private long deliveryTime;
 
+    private long deploymentTime;
+
     public Delivery(String id, String refUserId, String refFunctionalityId, long requestTime, String
-            refTargetRepositoryId, String refDiskImageId, long deliveryTime) {
+            refTargetRepositoryId, String refDiskImageId, String targetCloud, String refFragmentId,
+                    long deliveryTime, long deploymentTime) {
         super(id);
         this.refUserId = refUserId;
         this.refFunctionalityId = refFunctionalityId;
         this.requestTime = requestTime;
         this.refTargetRepositoryId = refTargetRepositoryId;
+        this.targetCloud = targetCloud;
         this.refDiskImageId = refDiskImageId;
+        this.refFragmentId = refFragmentId;
         this.deliveryTime = deliveryTime;
     }
 
@@ -89,5 +98,29 @@ import javax.xml.bind.annotation.XmlRootElement;
 
     public void setDeliveryTime(long deliveryTime) {
         this.deliveryTime = deliveryTime;
+    }
+
+    public long getDeploymentTime() {
+        return deploymentTime;
+    }
+
+    public void setDeploymentTime(long deploymentTime) {
+        this.deploymentTime = deploymentTime;
+    }
+
+    public String getRefFragmentId() {
+        return refFragmentId;
+    }
+
+    public void setRefFragmentId(String refFragmentId) {
+        this.refFragmentId = refFragmentId;
+    }
+
+    public String getTargetCloud() {
+        return targetCloud;
+    }
+
+    public void setTargetCloud(String targetCloud) {
+        this.targetCloud = targetCloud;
     }
 }

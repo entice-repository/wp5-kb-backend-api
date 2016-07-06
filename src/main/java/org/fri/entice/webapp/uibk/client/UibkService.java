@@ -77,7 +77,7 @@ public class UibkService implements IUibkService {
 
                     double readMb = 0;
                     while ((bytesRead = bin.read(vmImageBytes)) != -1) {
-                        service.receiveVMImage(vmImageBytes, vmImage.getName(), bytesRead);
+//                        service.receiveVMImage(vmImageBytes, vmImage.getName(), bytesRead);
                         readMb += bytesRead / (1024 * 1024);
                         System.out.println("MB read: " + readMb + " | " + (int) (readMb / fileSize * 100) + "%");
                     }

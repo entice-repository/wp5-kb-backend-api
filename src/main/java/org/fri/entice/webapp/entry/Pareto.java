@@ -5,13 +5,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Pareto extends MyEntry {
     private long saveTime;
-    private Integer[][] variables;
+    private int stage;
     private Double[][] objectives;
+    private Integer[][] variables;
 
-    public Pareto(String id, long saveTime, Integer[][] variables, Double[][] objectives) {
+    public Pareto(String id, long saveTime, Double[][] objectives) {
         super(id);
         this.saveTime = saveTime;
-        this.variables = variables;
         this.objectives = objectives;
     }
 
@@ -21,14 +21,6 @@ public class Pareto extends MyEntry {
 
     public Pareto(String id) {
         super(id);
-    }
-
-    public Integer[][] getVariables() {
-        return variables;
-    }
-
-    public void setVariables(Integer[][] variables) {
-        this.variables = variables;
     }
 
     public Double[][] getObjectives() {
@@ -45,6 +37,18 @@ public class Pareto extends MyEntry {
 
     public void setSaveTime(long saveTime) {
         this.saveTime = saveTime;
+    }
+
+    public int getStage() {
+        return stage;
+    }
+
+    public void setStage(int stage) {
+        this.stage = stage;
+    }
+
+    public Integer[][] getVariables() {
+        return variables;
     }
 
     public void setTableValuesFromString(String stringValues, Class clazz) {
@@ -68,7 +72,7 @@ public class Pareto extends MyEntry {
             }
         }
 
-        if (doubles != null) objectives = doubles;
+        if (doubles != null) setObjectives(doubles);
         else if (integers != null) variables = integers;
     }
 }

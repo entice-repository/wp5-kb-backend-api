@@ -96,7 +96,8 @@ public class CommonUtils {
             else if (list.get(list.size() - 1) instanceof Fragment) {
                 List<Fragment> fragmentList = (List<Fragment>) list;
                 if (resultObj.getP().endsWith("Fragment_hasReferenceImage"))
-                    fragmentList.get(fragmentList.size() - 1).setRefDiskImageId(resultObj.getO());
+                    fragmentList.get(fragmentList.size() - 1).setRefDiskImageId(resultObj.getO().replaceFirst
+                            (FusekiUtils.KB_PREFIX_SHORT, ""));
                 else if (resultObj.getP().endsWith("Fragment_hasRepository"))
                     fragmentList.get(fragmentList.size() - 1).setRefRepositoryId(resultObj.getO());
                 else if (resultObj.getP().endsWith("Fragment_Size"))
@@ -120,6 +121,8 @@ public class CommonUtils {
                     fragmentList.get(fragmentList.size() - 1).setDeliveryTime(Long.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Delivery_RequestTime"))
                     fragmentList.get(fragmentList.size() - 1).setRequestTime(Long.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Delivery_TargetCloud"))
+                    fragmentList.get(fragmentList.size() - 1).setTargetCloud(resultObj.getO());
             }
             else if (list.get(list.size() - 1) instanceof HistoryData) {
                 List<HistoryData> historyDataList = (List<HistoryData>) list;
@@ -137,10 +140,15 @@ public class CommonUtils {
             else if (list.get(list.size() - 1) instanceof Pareto) {
                 List<Pareto> paretoList = (List<Pareto>) list;
 
-                if (resultObj.getP().endsWith("Pareto_Objectives") && resultObj.getO().contains("//"))
+                if(resultObj.getS().equals("e12f2c32-efd7-48af-8c96-f0a4a179d9d8"))
+                    System.out.println();
+
+                if (resultObj.getP().endsWith("Pareto_Objectives"))
                     paretoList.get(paretoList.size() - 1).setTableValuesFromString(resultObj.getO(), Double.class);
-                else if (resultObj.getP().endsWith("Pareto_Variables") && resultObj.getO().contains("//"))
+                else if (resultObj.getP().endsWith("Pareto_Variables"))
                     paretoList.get(paretoList.size() - 1).setTableValuesFromString(resultObj.getO(), Integer.class);
+                else if (resultObj.getP().endsWith("Pareto_Stage"))
+                    paretoList.get(paretoList.size() - 1).setStage(Integer.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Pareto_Create_Date")) {
                     try {
                         paretoList.get(paretoList.size() - 1).setSaveTime(new DateTime(resultObj.getO()).getMillis());

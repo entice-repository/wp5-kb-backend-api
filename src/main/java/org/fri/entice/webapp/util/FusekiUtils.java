@@ -29,8 +29,7 @@ public class FusekiUtils {
 
     private static final String XSD_PREFIX = "xsd:<http://www.w3.org/2001/XMLSchema#>";
     private static final String RDF_PREFIX = "rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
-    private static String KB_PREFIX_SHORT = "http://www.semanticweb" + "" +
-            ".org/project-entice/ontologies/2015/7/knowledgebase#";
+    public static String KB_PREFIX_SHORT = "http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#";
     private static String KB_PREFIX = "knowledgebase:<http://www.semanticweb" + "" +
             ".org/project-entice/ontologies/2015/7/knowledgebase#>";
     private static String OWL_PREFIX = "owl:<http://www.w3.org/2002/07/owl#>";
@@ -168,9 +167,10 @@ public class FusekiUtils {
                                 "knowledgebase:Delivery_hasUser \"%s\" ;\n" +
                                 "knowledgebase:Delivery_DeliveryTime \"%s\" ;\n" +
                                 "knowledgebase:Delivery_RequestTime \"%s\" ;\n" +
+                                "knowledgebase:Delivery_TargetCloud \"%s\" ;\n" +
                                 "}", delivery.getId(), delivery.getRefDiskImageId(), delivery.getRefFunctionalityId()
                         , delivery.getRefTargetRepositoryId(), delivery.getRefUserId(), delivery.getDeliveryTime(),
-                        delivery.getRequestTime());
+                        delivery.getRequestTime(), delivery.getTargetCloud());
             }
             // CREATE FUNCTIONALITY
             else if (obj instanceof Functionality) {
@@ -226,7 +226,7 @@ public class FusekiUtils {
                         "knowledgebase:HistoryData_ValidFrom \"%s\"^^xsd:dateTime ;\n" +
                         "knowledgebase:HistoryData_ValidTo \"%s\"^^xsd:dateTime ;\n" +
                         "knowledgebase:HistoryData_Value %s ;\n" +
-                        "}", historyData.getId(), historyData.getLocation(), new DateTime(historyData.getValidTo())
+                        "}", historyData.getId(), historyData.getLocation(), new DateTime(historyData.getValidFrom())
                         .toString(), new DateTime(historyData.getValidTo()).toString(), historyData.getValue());
             }
             // CREATE PARETO
@@ -251,9 +251,10 @@ public class FusekiUtils {
                         XSD_PREFIX + " " + " INSERT DATA {" +
                         "knowledgebase:%s a knowledgebase:Pareto, owl:NamedIndividual ;" +
                         "knowledgebase:Pareto_Create_Date \"%s\"^^xsd:dateTime ;\n" +
+                        "knowledgebase:Pareto_Stage %d ;\n" +
                         "knowledgebase:Pareto_Objectives \"%s\" ;\n" +
                         "knowledgebase:Pareto_Variables \"%s\" ;\n" +
-                        "}", pareto.getId(), new DateTime(pareto.getSaveTime()).toString(), objectivesStr,
+                        "}", pareto.getId(), new DateTime(pareto.getSaveTime()).toString(), pareto.getStage(), objectivesStr,
                         variablesStr);
             }
             //todo: add other objects
@@ -275,7 +276,7 @@ public class FusekiUtils {
             objectivesStr = objectivesStr.substring(0, objectivesStr.length() - 1);
             objectivesStr += "//";
         }
-        if (objectivesStr.length() > 0) objectivesStr = objectivesStr.substring(0, objectivesStr.length() -2);
+        if (objectivesStr.length() > 0) objectivesStr = objectivesStr.substring(0, objectivesStr.length() - 2);
 
         return objectivesStr;
     }
@@ -315,6 +316,35 @@ public class FusekiUtils {
                     "}\n";
 //                    "LIMIT 200";
         }
+        else if (entityClass.equals("Pareto") && queryFilterCondition.length > 0) {
+            return "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "\n" +
+                    "SELECT ?s ?p ?o\n" +
+                    "WHERE { knowledgebase:" + queryFilterCondition[0] + " ?p ?o }\n";
+        }
+        else if (entityClass.equals("Repository") && queryFilterCondition.length > 0) {
+            return "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "\n" +
+                    "SELECT ?s ?p ?o\n" +
+                    "WHERE { ?s a knowledgebase:"+entityClass+" ; ?p ?o "+queryFilterCondition[0]+"} \n";
+        }
+        else if(entityClass.equals("DiskImage") && queryFilterCondition.length > 1 && queryFilterCondition[1] != null){
+            return "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "\n" +
+                    "SELECT ?s ?p ?o\n" +
+                    "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o "+queryFilterCondition[1]+" }\n";
+        }
+        else if(entityClass.equals("DiskImage") && queryFilterCondition.length > 0 && queryFilterCondition[0] != null){
+            return "prefix knowledgebase: <http://www.semanticweb" +
+                ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                "SELECT ?s ?p ?o\n" +
+                "WHERE { knowledgebase:" + queryFilterCondition[0] + " a " +
+                "knowledgebase:"+entityClass+"; ?p ?o }\n" +
+                "LIMIT 200";
+        }
         else if (queryFilterCondition.length > 0 && queryFilterCondition[0] != null) {
             return "prefix knowledgebase: <http://www.semanticweb" +
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
@@ -340,6 +370,15 @@ public class FusekiUtils {
 //                    "LIMIT 200";
     }
 
+    public static String getEntityQuery(String entityClass, String... postfixCondition) {
+        return "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
+                "prefix knowledgebase: <http://www.semanticweb" +
+                ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                "\n" +
+                "SELECT ?s ?p ?o\n" +
+                "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o }\n" + postfixCondition[0];
+    }
+
     public static String getIdBasedEntitiesQuery(String clazz, String id) {
         if (clazz.equals("Fragment")) return "prefix knowledgebase: <http://www.semanticweb" +
                 ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
@@ -358,6 +397,16 @@ public class FusekiUtils {
                 "select ?o\n" +
                 "where { knowledgebase:" + fragmentId + " knowledgebase:hasHistoryData ?o\n" +
                 "}";
+    }
+
+    public static String getDiskImageIDs() {
+        return "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
+                "prefix knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                "\n" +
+                "#SELECT count(*)\n" +
+                "SELECT DISTINCT ?s\n" +
+                "WHERE { ?s a knowledgebase:DiskImage . ?s a owl:NamedIndividual , ?o }\n" +
+                "#FILTER(?o IN knowledgebase:DiskImage )";
     }
 
     public static String getAllUploadedImages(Boolean optimizedOnly) {
@@ -696,15 +745,23 @@ public class FusekiUtils {
             String y = null;
             while (varIter.hasNext()) {
                 Var var = varIter.next();
-                if (var.getVarName().equals("s")) x = ((ResultBinding) qs).getBinding().get(var).toString();
+                if (var.getVarName().equals("s")) {
+                    x = ((ResultBinding) qs).getBinding().get(var).toString();
+                    if (x.contains(KB_PREFIX_SHORT)) x = x.replace(KB_PREFIX_SHORT, "");
+                }
                 else if (var.getVarName().equals("p")) r = ((ResultBinding) qs).getBinding().get(var).toString();
                 else if (var.getVarName().equals("o")) {
                     try {
                         String resStr = ((ResultBinding) qs).getBinding().get(var).toString();
                         if (resStr.contains("^^http://www.w3.org/2001/XMLSchema#dateTime"))
                             y = ((ResultBinding) qs).getBinding().get(var).getLiteral().getValue().toString();
+                        else if (resStr.contains("^^http://www.w3.org/2001/XMLSchema#anyURI"))
+                            y = resStr.replace("^^http://www.w3.org/2001/XMLSchema#anyURI", "").replaceAll("\"", "");
                         else if (resStr.contains("-")) y = resStr.replaceAll("\"", "");
                         else y = String.valueOf(((ResultBinding) qs).getBinding().get(var).getLiteral().getValue());
+
+                        //additional filter of prefixes cannot be done here!
+                        //if(resStr.startsWith(KB_PREFIX_SHORT)) y = resStr.replaceFirst(KB_PREFIX_SHORT,"");
                     } catch (Exception e) {
                         y = ((ResultBinding) qs).getBinding().get(var).toString();
                     }
@@ -727,7 +784,35 @@ public class FusekiUtils {
 
         List<ResultObj> resultObjs = FusekiUtils.getResultObjectListFromResultSet(results);
 
+        //exception!!
+        if (conditions.length > 0 && clazz.getSimpleName().equals("Pareto") && resultObjs.size() > 0) {
+//            resultObjs.add(0, new ResultObj(conditions[0], conditions[0], KB_PREFIX_SHORT + clazz.getSimpleName()));
+            for (ResultObj resultObj : resultObjs) {
+                resultObj.setS(conditions[0]);
+            }
+        }
+        else if (conditions.length > 0 && clazz.getSimpleName().equals("DiskImage") && resultObjs.size() > 0 &&
+                resultObjs.get(0).getS() == null) {
+            for (ResultObj resultObj : resultObjs) {
+                resultObj.setS(conditions[0]);
+            }
+        }
+
+
         return FusekiUtils.mapResultObjectListToEntry(clazz, resultObjs);
+    }
+
+    public static <T extends MyEntry> String getEntityID(Class<T> clazz, String... conditions) {
+        String selectQuery = FusekiUtils.getEntityQuery(clazz.getSimpleName(), conditions);
+
+        QueryExecution qe = QueryExecutionFactory.sparqlService(AppContextListener.prop.getProperty("fuseki.url" + ""
+                + ".query"), selectQuery);
+//        QueryExecution qe = QueryExecutionFactory.sparqlService("http://localhost:3030/entice/query", selectQuery);
+        ResultSet results = qe.execSelect();
+
+        List<ResultObj> resultObjs = FusekiUtils.getResultObjectListFromResultSet(results);
+
+        return resultObjs.get(0).getS();
     }
 
     public static <T extends MyEntry> List<T> getIdEntityAttributes(Class<T> clazz, String id) {
@@ -783,15 +868,58 @@ public class FusekiUtils {
             if (resultObj.getO().equals(KB_PREFIX_SHORT + clazz.getSimpleName())) {
                 list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
             }
-            else if (resultObj.getO().equals(KB_PREFIX_SHORT + "CI") || resultObj.getO().equals(KB_PREFIX_SHORT +
-                    "VMI")) {
-                list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
-            }
+//            else if (resultObj.getO().equals(KB_PREFIX_SHORT + "CI") || resultObj.getO().equals(KB_PREFIX_SHORT +
+//                    "VMI")) {
+//                list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
+//            }
 
 
             CommonUtils.mapResultObjectToEntry(list, resultObj);
         }
         return list;
+    }
+
+    public static List<Fragment> getFragmentDataOfDiskImage(String diskImageId, Boolean showHistoryData){
+        String queryCondition = null;
+        if (diskImageId != null)
+            queryCondition = ".?s knowledgebase:Fragment_hasReferenceImage knowledgebase:" + diskImageId + " ";
+
+        List<Fragment> fragmentList = FusekiUtils.getAllEntityAttributes(Fragment.class, queryCondition);
+
+        if (showHistoryData != null && showHistoryData == true) {
+            for (Fragment fragment : fragmentList) {
+                String selectQuery = FusekiUtils.getHistoryDataIDs(fragment.getId());
+
+                QueryExecution qe = QueryExecutionFactory.sparqlService(AppContextListener.prop.getProperty("fuseki" +
+                        ".url" + "" + ".query"), selectQuery);
+//        QueryExecution qe = QueryExecutionFactory.sparqlService("http://localhost:3030/entice/query", selectQuery);
+                ResultSet results = qe.execSelect();
+
+                List<ResultObj> resultIds = FusekiUtils.getResultObjectListFromResultSet(results);
+                for (ResultObj obj : resultIds) {
+                    selectQuery = FusekiUtils.getAllEntitiesQuery(HistoryData.class.getSimpleName(), obj.getO());
+                    qe = QueryExecutionFactory.sparqlService(AppContextListener.prop.getProperty("fuseki.url.query"),
+                            selectQuery);
+                    results = qe.execSelect();
+
+                    List<ResultObj> historyDataResultObj = FusekiUtils.getResultObjectListFromResultSet(results);
+
+                    // fill the subject to result list obj.   ; REMOVE when query is optimized
+                    for (ResultObj ro : historyDataResultObj) {
+                        ro.setS(obj.getO());
+                    }
+
+                    List<HistoryData> historyDataList = FusekiUtils.mapResultObjectListToEntry(HistoryData.class,
+                            historyDataResultObj);
+
+                    // Collections.sort(historyDataList,HistoryData.HistoryDataComparator);
+
+                    fragment.setHistoryDataList(historyDataList);
+                }
+            }
+        }
+
+        return fragmentList;
     }
 }
 

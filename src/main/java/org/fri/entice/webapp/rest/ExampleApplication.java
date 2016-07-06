@@ -17,8 +17,16 @@ public class ExampleApplication extends ResourceConfig {
 
         register(MultiPartFeature.class);
 
+        //String certificatesTrustStorePath = "/usr/lib/jvm/java-8-oracle/jre/lib/security/cacerts";
+        //System.setProperty("javax.net.ssl.trustStore", certificatesTrustStorePath);
+
+
+        JSONService jsonService = new JSONService();
         // register your REST service
         register(new JSONService());
+        register(new GUIService(jsonService));
+
+
 
         register(new SubjectAuthResource());
     }

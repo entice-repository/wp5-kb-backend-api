@@ -1,32 +1,30 @@
 package org.fri.entice.webapp.client;
 
-import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
+import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
+import com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory;
+import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.reasoner.ValidityReport;
-import org.apache.jena.update.UpdateExecutionFactory;
-import org.apache.jena.update.UpdateFactory;
-import org.apache.jena.update.UpdateProcessor;
 import org.apache.jena.util.FileManager;
-import org.fri.entice.webapp.entry.User;
+import org.apache.jena.vocabulary.RDFS;
 import org.fri.entice.webapp.util.FusekiUtils;
-import org.glassfish.jersey.client.ClientConfig;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.reasoner.InferenceType;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.UUID;
 
 /**
  * Example connection to FusekiUtils. For this to work, you need to start a local
@@ -41,7 +39,8 @@ public class FusekiTest {
             ".Other\" ." + "}   ";
 
     public static void main(String[] args) {
-        validateOntology();
+        //TODO: uncomment!!!
+        // validateOntology();
 
         //BasicConfigurator.configure();
 
@@ -52,6 +51,7 @@ public class FusekiTest {
         upp.execute();
         */
 
+        /*
         User user = new User(UUID.randomUUID().toString(), "sandi.gec@gmail.com", "Sandi Gec4", "444",
                 "+38631873088", "sandig4");
 
@@ -68,7 +68,7 @@ public class FusekiTest {
         String insertStatementStr = FusekiUtils.generateInsertObjectStatement(user);
         UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr),
                 "http://localhost:3030/entice/update");
-
+        */
         //   if (Boolean.valueOf(resp.readEntity(String.class)))
         //      System.out.println("User " + user.getFullName() + " added into the KB.");
 
@@ -171,10 +171,28 @@ public class FusekiTest {
 //        Iterator instances = Person.listInstances();
     }
 
+    private static String ns = "http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#";
+
+    public static void printIterator(Iterator<?> i, String header) {
+        System.out.println(header);
+        for(int c = 0; c < header.length(); c++)
+            System.out.print("=");
+        System.out.println();
+
+        if(i.hasNext()) {
+            while (i.hasNext())
+                System.out.println( i.next() );
+        }
+        else
+            System.out.println("<EMPTY>");
+
+        System.out.println();
+    }
+
     private static void reasonerTest() {
         try {
 //            String SOURCE = FusekiUtils.getFusekiDBSource("http://193.2.72.90:3030/switch/data");
-            String SOURCE = FusekiUtils.getFusekiDBSource("http://193.2.72.90:3030/test2");
+            String SOURCE = FusekiUtils.getFusekiDBSource("http://193.2.72.90:3030/entice");
 
             //create a model using TRANSITIVE reasoner (can identify transactional relationships)
             OntModel model1 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_TRANS_INF);
@@ -188,11 +206,31 @@ public class FusekiTest {
             model1.read(new FileInputStream(SOURCE), null, format);
             model2.read(new FileInputStream(SOURCE), null, format);
 
+            ////////////////
+            Resource res = model1.getResource(ns+"DiskImageSLA");
+            printIterator(model1.listObjectsOfProperty(res, RDFS.subClassOf), "All super classes of " + res
+                    .getLocalName());
+
             String queryString = "PREFIX tutorial: <http://acrab.ics.muni.cz/ontologies/tutorial.owl#>\n" +
                     "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
                     "select  ?uri\n" +
                     "where { ?uri rdfs:subClassOf tutorial:Person \n" +
                     "}";
+
+            OntClass c = model1.getOntClass( ns + "DiskImageSLA" );
+            printIterator(c.listSuperClasses(true), "Direct superclasses of " + c.getLocalName());
+            /////////////
+            OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+            // Loads the ontology
+            File file = new File("C:\\Users\\sandig\\Desktop\\entice-ontologies-owl-REVISION-9223372036854775807\\root-ontology.owl");
+            OWLOntology ontology = manager.loadOntologyFromOntologyDocument(file);
+
+            PelletReasoner reasoner = PelletReasonerFactory.getInstance().createNonBufferingReasoner(ontology);    reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
+            reasoner.getKB().realize();
+            reasoner.getKB().printClassTree();
+
+           // reasoner.getKB().getRules()
+            /////////////
 
             Query query = QueryFactory.create(queryString);
 
@@ -228,6 +266,8 @@ public class FusekiTest {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (OWLOntologyCreationException e) {
             e.printStackTrace();
         }
     }

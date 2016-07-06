@@ -16,8 +16,8 @@ public class FragmentHistoryDeliveryData extends MyEntry {
     private String fragmentId;
     private String refImageId;
     private Long queryTime; //request time to be deployed
-    private Long deploymentTime;
-    private Long endDeploymentTime;
+    private Long deploymentTime;    // time taken to be deployed (ms)
+//    private Long endDeploymentTime;
     private String refRepositoryId;
     private String destinationCloudLocationURL;
 
@@ -25,14 +25,13 @@ public class FragmentHistoryDeliveryData extends MyEntry {
         super(id);
     }
 
-    public FragmentHistoryDeliveryData(String historyFragmentID, String fragmentId, String refImageId, Long queryTime, Long deploymentTime, Long
-            endDeploymentTime, String refRepositoryId, String destinationCloudLocationURL) {
+    public FragmentHistoryDeliveryData(String historyFragmentID, String fragmentId, String refImageId, Long queryTime, Long deploymentTime, String refRepositoryId, String destinationCloudLocationURL) {
         super(historyFragmentID);
         this.fragmentId = fragmentId;
         this.refImageId = refImageId;
         this.queryTime = queryTime;
         this.deploymentTime = deploymentTime;
-        this.endDeploymentTime = endDeploymentTime;
+//        this.endDeploymentTime = endDeploymentTime;
         this.refRepositoryId = refRepositoryId;
         this.destinationCloudLocationURL = destinationCloudLocationURL;
     }
@@ -51,18 +50,6 @@ public class FragmentHistoryDeliveryData extends MyEntry {
 
     public void setDeploymentTime(Long deploymentTime) {
         this.deploymentTime = deploymentTime;
-    }
-
-    public Long getEndDeploymentTime() {
-        return endDeploymentTime;
-    }
-
-    public void setEndDeploymentTime(Long endDeploymentTime) {
-        this.endDeploymentTime = endDeploymentTime;
-    }
-
-    public void setEndDeploymentTime(long endDeploymentTime) {
-        this.endDeploymentTime = endDeploymentTime;
     }
 
     public String getRefRepositoryId() {
