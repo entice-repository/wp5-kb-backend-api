@@ -57,7 +57,7 @@ public interface IGUIService {
 
     // 1 to 4 constraints
     @POST
-    public ResponseSynthesisObj performImageSynthesis(int cloud, int imageId, String instanceType, @Nullable String
+    public ResponseSynthesisObj performImageSynthesis(String cloudID, String imageID, String instanceType, @Nullable String
             securityGroupID, @Nullable String subnetIDs, @Nullable String ssh, InputStream contextualisationStream,
                                                       InputStream functionalTestStream, int constraints, String
                                                                   notifyEmail, long startTime, @Nullable int avatarID);

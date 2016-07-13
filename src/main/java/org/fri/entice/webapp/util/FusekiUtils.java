@@ -211,10 +211,11 @@ public class FusekiUtils {
                                 "knowledgebase:Repository_PriorityLevel3Cost %f ;\n" +
                                 "knowledgebase:Repository_Space \"%f\"^^xsd:double ;\n" +
                                 "knowledgebase:Repository_SupportedFormat " + supportedFormats + " ;\n" +
+                                "knowledgebase:Repository_TheoreticalCommunicationalPerformance \"%f\"^^xsd:double ;\n" +
                                 //todo: interfaceEndpoint anyURI
                                 "}", repository.getId(), repository.getCountryId(), repository.getGeolocationId(),
                         repository.getOperationalCost(), repository.getPriorityLevel1Cost(), repository
-                                .getPriorityLevel2Cost(), repository.getPriorityLevel3Cost(), repository.getSpace());
+                                .getPriorityLevel2Cost(), repository.getPriorityLevel3Cost(), repository.getSpace(),repository.getTheoreticalCommunicationalPerformance());
             }
             // CREATE HISTORY DATA
             else if (obj instanceof HistoryData) {

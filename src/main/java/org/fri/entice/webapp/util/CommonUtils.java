@@ -4,6 +4,9 @@ import org.fri.entice.webapp.entry.*;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
@@ -45,6 +48,9 @@ public class CommonUtils {
                     repositoryList.get(repositoryList.size() - 1).setSpace(Double.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Repository_SupportedFormat"))
                     repositoryList.get(repositoryList.size() - 1).setSupportedFormat(resultObj.getO());
+                else if (resultObj.getP().endsWith("Repository_TheoreticalCommunicationalPerformance"))
+                    repositoryList.get(repositoryList.size() - 1).setTheoreticalCommunicationalPerformance(Double
+                            .valueOf(resultObj.getO()));
             }
             else if (list.get(list.size() - 1) instanceof DiskImage) {
                 List<DiskImage> repositoryList = (List<DiskImage>) list;
@@ -164,4 +170,10 @@ public class CommonUtils {
             e.printStackTrace();
         }
     }
+
+    public static String readFile(String path, Charset encoding) throws IOException {
+        byte[] encoded = Files.readAllBytes(Paths.get(path));
+        return new String(encoded, encoding);
+    }
+
 }

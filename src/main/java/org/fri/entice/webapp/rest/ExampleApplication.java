@@ -25,6 +25,7 @@ public class ExampleApplication extends ResourceConfig {
         // register your REST service
         register(new JSONService());
         register(new GUIService(jsonService));
+        register(new SZTAKIService(jsonService));
 
 
 

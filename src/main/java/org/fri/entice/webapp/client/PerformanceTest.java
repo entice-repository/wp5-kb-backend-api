@@ -49,7 +49,7 @@ public class PerformanceTest {
                 Repository repository = new Repository(UUID.randomUUID().toString(), "http://www.example" + "" +
                         ".org/country", "http://www.example.org/geolocationID", "http://www.example" +
                         ".org/interfaceEndpoint", Math.random() * 100, Math.random() * 20, 20 + Math.random() * 20,
-                        40 + Math.random() * 20, 50 + Math.random() * 100, supportedFormats,(int) (1 + Math.random() *10));
+                        40 + Math.random() * 20, 50 + Math.random() * 100, supportedFormats,1 + Math.random() *10);
                 repositories.add(repository);
                 String insertStatement = FusekiUtils.generateInsertObjectStatement(repository);
                 UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);

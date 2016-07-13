@@ -42,32 +42,32 @@ public class UIBKDataGenerator {
             User user = new User(UUID.randomUUID().toString(), "sandi.gec@gmail.com", "Sandi Gec", "444", "112", "sandi");
             String insertStatement = FusekiUtils.generateInsertObjectStatement(user);
             UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-            upp.execute();
-
-            user = new User(UUID.randomUUID().toString(), "some@email.com", "Dragi Kimovski", "pass", "112", "dragi");
-            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
-            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-            upp.execute();
-
-            user = new User(UUID.randomUUID().toString(), "some@email.com", "Polona Štefanič", "pass", "112", "polona");
-            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
-            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-            upp.execute();
-
-            user = new User(UUID.randomUUID().toString(), "some@email.com", "Nishant Saurabh", "pass", "112", "nishant");
-            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
-            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-            upp.execute();
-
-            user = new User(UUID.randomUUID().toString(), "some@email.com", "Uroš Paščinski", "pass", "112", "uros");
-            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
-            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-            upp.execute();
-
-            user = new User(UUID.randomUUID().toString(), "some@email.com", "Vlado Stankovski", "pass", "112", "vlado");
-            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
-            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-            upp.execute();
+//            upp.execute();
+//
+//            user = new User(UUID.randomUUID().toString(), "some@email.com", "Dragi Kimovski", "pass", "112", "dragi");
+//            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
+//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+//            upp.execute();
+//
+//            user = new User(UUID.randomUUID().toString(), "some@email.com", "Polona Štefanič", "pass", "112", "polona");
+//            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
+//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+//            upp.execute();
+//
+//            user = new User(UUID.randomUUID().toString(), "some@email.com", "Nishant Saurabh", "pass", "112", "nishant");
+//            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
+//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+//            upp.execute();
+//
+//            user = new User(UUID.randomUUID().toString(), "some@email.com", "Uroš Paščinski", "pass", "112", "uros");
+//            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
+//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+//            upp.execute();
+//
+//            user = new User(UUID.randomUUID().toString(), "some@email.com", "Vlado Stankovski", "pass", "112", "vlado");
+//            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
+//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+//            upp.execute();
 
 
             // insert dummy Repository data
@@ -88,7 +88,7 @@ public class UIBKDataGenerator {
                         ".org/country", "http://www.example.org/geolocationID", "http://www.example" + "" +
                         ".org/interfaceEndpoint", 0.0275 + Math.random() * 0.0133, 0.0374 + Math.random() * 0.0034,
                         0.0374 + Math.random() * 0.0034, 0.0374 + Math.random() * 0.0034, 50 + Math.random() * 100,
-                        supportedFormats,(int) (1 + Math.random() *10));
+                        supportedFormats,1 + Math.random() *10);
                 repositories.add(repository);
                 insertStatement = FusekiUtils.generateInsertObjectStatement(repository);
                 upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);

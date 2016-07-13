@@ -254,11 +254,19 @@ public class GUIService implements IGUIService {
         return null;
     }
 
+//    @Override
+//    public ResponseSynthesisObj performImageSynthesis(String cloudID, String imageID, String instanceType, @Nullable
+//    String securityGroupID, @Nullable String subnetIDs, @Nullable String ssh, InputStream contextualisationStream,
+//                                                      InputStream functionalTestStream, int constraints, String
+//                                                                  notifyEmail, long startTime, @Nullable int avatarID) {
+//        return null;
+//    }
+
     @POST
     @Path("perform_image_synthesis")
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-    public ResponseSynthesisObj performImageSynthesis(@QueryParam("cloud") int cloud, @QueryParam("image_id") int
+    public ResponseSynthesisObj performImageSynthesis(@QueryParam("cloud") String cloud, @QueryParam("image_id") String
             imageId, @QueryParam("instance_type") String instanceType, @Nullable @QueryParam("security_group_id")
     String securityGroupID, @Nullable @QueryParam("subnet_ids") String subnetIDs, @Nullable @QueryParam("ssh") String
             ssh, @FormDataParam("contextualisation_stream") InputStream contextualisationStream, @FormDataParam
