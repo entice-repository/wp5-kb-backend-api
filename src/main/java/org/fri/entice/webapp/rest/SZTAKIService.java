@@ -1,5 +1,6 @@
 package org.fri.entice.webapp.rest;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -7,20 +8,17 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import org.fri.entice.webapp.util.CommonUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.fri.entice.webapp.entry.client.SZTAKIExecuteObj;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.io.*;
+import java.net.URISyntaxException;
 
 @Path("/sztaki/")
 public class SZTAKIService implements ISZTAKIService {
@@ -29,54 +27,30 @@ public class SZTAKIService implements ISZTAKIService {
     public SZTAKIService(JSONService parent) {
         this.parent = parent;
     }
-    /*
-     public static final String IMAGE_URL = "imageURL";
- public static final String IMAGE_ID = "imageId";
- public static final String IMAGE_KEY_PAIR = "imageKeyPair";
- public static final String IMAGE_PRIVATE_KEY = "imagePrivateKey";
- public static final String IMAGE_USER_NAME = "imageUserName";
- public static final String IMAGE_CONTEXTUALIZATION = "imageContextualization"; // TODO
- public static final String IMAGE_CONTEXTUALIZATION_URL = "imageContextualizationURL"; // TODO
- public static final String VALIDATOR_SCRIPT = "validatorScript";
- public static final String VALIDATOR_SCRIPT_URL = "validatorScriptURL";
- public static final String VALIDATOR_SERVER_URL = "validatorServerURL"; // TODO
- public static final String CLOUD_ENDPOINT_URL = "cloudEndpointURL";
- public static final String CLOUD_ACCESS_KEY = "cloudAccessKey";
- public static final String CLOUD_SECRET_KEY = "cloudSecretKey";
- public static final String CLOUD_OPTIMIZER_VM_INSTANCE_TYPE = "cloudOptimizerVMInstanceType";
- public static final String CLOUD_WORKER_VM_INSTANCE_TYPE = "cloudWorkerVMInstanceType";
- public static final String NUMBER_OF_PARALLEL_WORKER_VMS = "numberOfParallelWorkerVMs";
-
- public static final String S3_ENDPOINT_URL = "s3EndpointURL";
- public static final String S3_ACCESS_KEY = "s3AccessKey";
- public static final String S3_SECRET_KEY = "s3SecretKey";
- public static final String S3_PATH = "s3Path";
- public static final String S3_REGION = "s3Region";
-
- public static final String MAX_ITERATIONS_NUM = "maxIterationsNum";
- public static final String MAX_NUMBER_OF_VMS = "maxNumberOfVMs";
- public static final String AIMED_REDUCTION_RATIO = "aimedReductionRatio";
- public static final String AIMED_SIZE = "aimedSize";
- public static final String MAX_RUNNING_TIME = "maxRunningTime";
-     */
 
     // POST: start new optimization procedure
-    @GET
+    @POST
     @Path("execute_optimizer")
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-    public String executeOptimizer(@QueryParam("image_url") String imageURL) {
+    public String executeOptimizer(@QueryParam("image_url") String imageURL ) {
         try {
-            String jsonContent = CommonUtils.readFile("D:\\projects\\lpt\\entice-ul-api\\internal_work\\input_test" +
-                    ".json", StandardCharsets.UTF_8);
+//            String jsonContent = CommonUtils.readFile("D:\\projects\\lpt\\entice-ul-api\\internal_work\\input_test.json", StandardCharsets.UTF_8);
 
             //TODO: use imageURL to update the url of the image
             //TODO: add additional attributes to this rest method
 
+            SZTAKIExecuteObj sztakiExecuteObj = new SZTAKIExecuteObj(  "ami-00001483","http://s3.lpds.sztaki.hu/atisu/entice/wp3/wordpress-centos7.0-20160627a.qcow","root","ahajnal_keypair", "LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQ0KTUlJRXBBSUJBQUtDQVFFQXpzY0xpcmpGNUlibEgwNWljUVFZa2VWRzdCeWFWcVhuVXZQSDcwOHV2OHV0Rk1nOA0KcTNmZ09xa2YvUkgvMUIwSHZjZkdEa2x6NkhRVksrWGgwN1J1Ykh6M0x2by9SMm5MVmI3YlJnY3oxYjEwR1I3Nw0KdWJGTEZ6Y3hsUFpKR3Z4OUxsYVd5UTUwL2VlU3R5VHQ3bGV3UWJacWtRZ0R4b2pYMm1iS3VrOGRscXRYeDZhZw0KU01hK2pUOGtXZWp4dnlGNDJqWVRNSk9DZ0FjYWxrdnpqYnNpRUxrWE5Xb0pvd3JQM1V3YUR1OHRFaW91UTY0dw0Kc2pJQnBSNmp5eHlqZW9uRVJGeU9mL2M3WkMvaW9nOU50cWRmcUo4YXVKLzRMYm8xYUpiemw1dkJCeTBnZ3BzVA0KejM3eGQzTWp5UEtNZm1SQXEvOEQ1TkJ4SUtodGZYU0FMZEIrTFFJREFRQUJBb0lCQUdEcWdDbGowelQ2V05law0KaUpWS0F5NFdsWGhESzcrakFOb3JjckZpbnBtOG9BSVduQUVPTGFXdzhWSlBKbVpIdVFJbGFWbjI2WUd4THQ4bA0KWHdRNEZHMTY0T3crMUh2blJTdUtTZ0gzakQ4SkRpcGNFRVlIcUJkWWdqKzhjNlZYWkdEY3FzM1BuZHdIdHdkcQ0KSXE3TW9Nc2I4YlRLV2VLcTd1anB0dWs5L2JOSkFYTThhN3ptaFNPMWNRTkZFeWxqRStLWjFyNTRkS0lVcUlLZg0KOTh2cFFvbmhDMHA4OExOVFBNMkthdk5uK1Y3Y3ArcnlNNHVRUnhkUjc5YVFaaGFuWXQxWllTQWYrRjN2bHppTg0KVUI2OXpSNGhhbzZEUUtWeE1yVWZxU1N5cHRPcW8vN1hXTlVYM1F5R3VsZ24wTHhORjdvdnI3aEtZQlpuZ0pQdg0KeERIWEt5MENnWUVBK2NhaG83MHErYlJBTzl3RHZPeHFuSHlFV2ZGQ2ZITk5lcmJaQ3MveVRHNmFNZGo5dVd0SA0KNnNmR2ltMGcwUWtoT1M1V0ZOV1ZYWVBkeDVaMk4yMTlhQ3hLdUlUd1pvdWx6WlREZW1hdkIzUXU5OE9aZi9TTA0KRU9HMS81d2xlY0JHK2dBRnVvMGNZRVlrZWFvby9EZXU2ejFuYmRXWHMzNGhjU21Kb1JQdlBtTUNnWUVBMCs0ZQ0KWTZMVlpqUUNFOVR0bUdFRWt3Ky9UQXorUmVTa3pRWmZxWDZZTTNVOGg5OVp3bzFBNWRQaFVPQ2M0ODdwbE1UYQ0KRys0dWhtRmVJd0FFbWRBMm9FK3NUaW5CWlVMQUJ5SDZJd2xRV0pKMW5WeUE3aVZSSElYK0F4S0tmaUV4QXJQYw0KUC82dVVzaUQvTXZGQTVoR3JEUnUyWUlHRXdkRCtyRE9sN2JNN2k4Q2dZRUF0bTJHL1VwYXF3b2xxQktuZ0VMRQ0KRXdzMnQySm9odkRIOUFxOE54TnVDcmoxVWRjRWFYcWJpalRqSTVOVTFwZnVkZzhMdkNmSzhnUXY1V2hWYTJKQw0KcCtWQnBjY2l0aUxrdEdRazZhODV3eDN1ZC9PYWwwUUtsZ2ZrbjQ1eUtKeHd1b050cTdVSXRxQkVYOEFTTXpTUQ0KUXl3VDhMcUNGQXpaYkFkRWlDdEJIN1VDZ1lFQXdYcDNaZkVIcjRtMWg5TnhvaGFZYllZSDErOVl5QWhJYUNEMA0KZnJIalU3OHBKc1pDbFBvT0VJUVNCSnM2d0VOclBmVkZSaEI1aXhjak1RTFlNSEJGSHEvK0YxSEpqSitXM2l3bg0KeDRxK1BrNWZiKzAraTZ1bjFFbURyOXhpY1dudDY1QzJkL29UdmVIdmxYK1dlb1N2cUpFcHpnc0ZicVBJYlBxeg0KY1JCaklPTUNnWUJBTnZoQWppb25Ya0l1NjYzUFZsekFKQ0REcTZ1empDKzlSTkpFdEhxbkZYd1B6RHRXV3NZSQ0KeDVNSW9hWjZOZ1dSSVZJek9mc3UzMU9QdVdqZ2lHTFJQY3ZBNi80UjJmWm5sc0tvbitHRXFmajlTQ0tLOUJGZg0KYVEra0xoOHVpbUVtYlBkcVFtVWtjYkl6QmdjMnVlY1pjNWlyVGJuS1RVVjdWTkhqQzViaEhRPT0NCi0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0t","https://images.s3.lpds.sztaki.hu/wordpress-centos7.0-20160627a_validator_script.sh","http://cfe2.lpds.sztaki.hu:4567","uros.pascinski@partners.sztaki.hu","e8cc564a5e9320d6c22647c5e6dab55005bf1e68","m1.medium","m1.small","https://s3.tnode.com:9869","WAU8PTCX8NSIL0RSG8K9","R16UWaOBfz44nvoGmCGXykHNjlKCVzpWc65KjiF6","optimizedimages/my_optimized_image.qcow2",1,20,0.8,1073741824,36000);
+
+            ObjectMapper mapper = new ObjectMapper();
+//            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+            String jsonInString = mapper.writeValueAsString(sztakiExecuteObj);
+            System.out.println(jsonInString);
+
             HttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost httppost = new HttpPost(AppContextListener.prop.getProperty("sztaki.service.url"));
             httppost.addHeader("Content-Type", "application/json");
-            httppost.setEntity(new StringEntity(jsonContent));
+            httppost.setEntity(new StringEntity(jsonInString));
             System.out.println("executing request " + httppost.getRequestLine());
             HttpResponse response = httpClient.execute(httppost);
             HttpEntity resEntity = response.getEntity();
@@ -92,6 +66,38 @@ public class SZTAKIService implements ISZTAKIService {
         return null;
     }
 
+    // read json string from file
+    private String readStringFromInputStream(InputStream inputStream) {
+        try {
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(inputStream, writer, "UTF-8");
+            inputStream.close();
+            return writer.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+//    private DefaultHttpClient createClientWithAllowedHostname() {
+//        HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+//
+//        DefaultHttpClient client = new DefaultHttpClient();
+//
+//        SchemeRegistry registry = new SchemeRegistry();
+//        SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
+//        socketFactory.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
+//        registry.register(new Scheme("https", socketFactory, 443));
+//        SingleClientConnManager mgr = new SingleClientConnManager(client.getParams(), registry);
+//        DefaultHttpClient httpClient = new DefaultHttpClient(mgr, client.getParams());
+//
+//        // Set verifier
+//        HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
+//        return httpClient;
+//    }
+
+
+
 
     // GET: get status of an optimization procedure
     @GET
@@ -100,16 +106,21 @@ public class SZTAKIService implements ISZTAKIService {
     @Override
     public String getStatus(@QueryParam("optimizer_id") String optimizerID) {
         try {
+            // todo: optimize query parameter
+            URIBuilder builder = new URIBuilder(AppContextListener.prop.getProperty("sztaki.service.url") + "/" + optimizerID);
+//            builder.setParameter("id", optimizerID);
+
             HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpGet httpGet = new HttpGet(AppContextListener.prop.getProperty("sztaki.service.url"));
+
+            HttpGet httpGet = new HttpGet(builder.build());
 //            httpGet.addHeader("Content-Type", "application/json");
-            httpGet.addHeader("optimizer_id", optimizerID);
+
 
             HttpResponse response = httpClient.execute(httpGet);
             HttpEntity resEntity = response.getEntity();
 
             System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
-
+            System.out.println(response.getStatusLine());
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             StringBuffer result = new StringBuffer();
             String line = "";
@@ -117,12 +128,14 @@ public class SZTAKIService implements ISZTAKIService {
                 result.append(line);
             }
 
-            System.out.println(result.toString());
+//            System.out.println(result.toString());
+            return result.toString();
         } catch (IOException e) {
             e.printStackTrace();
             return e.getMessage();
-        }
-        return null;
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } return null;
     }
 
     // PUT: stop optimization and save sub-optimal image

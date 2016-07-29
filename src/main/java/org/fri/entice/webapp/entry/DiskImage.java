@@ -35,7 +35,7 @@ public class DiskImage extends MyEntry {
     public DiskImage(String id, ImageType imageTypeC, String descriptionC, String titleC, String predecessorC,
                      FileFormat fileFormatC, String pictureUrlC, boolean encryption, String iriC, String refSlaId,
                      double priceC, String refOwnerId, String refFunctionalityId, String refQualityId, String
-                             refOperatingSystemId, boolean needsDataC, int generationTimeC, boolean obfuscationC,
+                             refOperatingSystemId, boolean needsDataC, long generationTimeC, boolean obfuscationC,
                      String version, int diskImageSize) {
         super(id);
         this.imageType = imageTypeC;

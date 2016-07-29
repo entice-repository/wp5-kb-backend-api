@@ -1,6 +1,7 @@
 package org.fri.entice.webapp.rest;
 
 import com.vmrepository.RepoGuardClientFunctionalities.MOEstart;
+import com.vmrepository.RepoGuardClientFunctionalities.UploadVMI;
 import com.vmrepository.repoguardwebserver.FileNotFoundException_Exception;
 import com.vmrepository.repoguardwebserver.IOException_Exception;
 import com.vmrepository.repoguardwebserver.URISyntaxException_Exception;
@@ -11,13 +12,15 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.sparql.core.ResultBinding;
 import org.apache.jena.sparql.core.Var;
+import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateProcessor;
 import org.fri.entice.webapp.entry.*;
 import org.fri.entice.webapp.entry.client.EnticeDetailedImage;
 import org.fri.entice.webapp.entry.client.EnticeImage;
 import org.fri.entice.webapp.entry.client.ResponseObj;
 import org.fri.entice.webapp.entry.client.ResponseSynthesisObj;
 import org.fri.entice.webapp.util.FusekiUtils;
-import org.fri.entice.webapp.util.PasswordUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -27,8 +30,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 
 @Path("/gui/")
@@ -71,12 +72,16 @@ public class GUIService implements IGUIService {
             }
             qe.close();
 
-            matched = PasswordUtils.validatePassword(password, x);
+//            matched = PasswordUtils.validatePassword(password, x);
+            matched = password.equals(x);
             return matched + " match. Time elapsed: " + (System.currentTimeMillis() - startTime) + "ms";
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return "false";
-        } catch (InvalidKeySpecException e) {
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//            return "false";
+//        } catch (InvalidKeySpecException e) {
+//            e.printStackTrace();
+//            return "false";
+        } catch (Exception e) {
             e.printStackTrace();
             return "false";
         }
@@ -190,10 +195,10 @@ public class GUIService implements IGUIService {
                                                ("image_name") String imageName, @QueryParam("pareto_point_x") int
                                                paretoPointIndexX, @QueryParam("pareto_point_y") int
                                                paretoPointIndexY, @QueryParam("pareto_point_id") String
-                                               paretoPointId, @Nullable @QueryParam("avatar_id") int avatarID) {
+                                               paretoPointId, @Nullable @QueryParam("avatar_id") int avatarID,
+                                   @QueryParam("user_id") String userID) {
         boolean areValuesSet = true;
         try {
-            System.out.println("Uploading image... !");
             String filePath = SERVER_UPLOAD_LOCATION_FOLDER + contentDispositionHeader.getFileName();
 
 
@@ -203,11 +208,29 @@ public class GUIService implements IGUIService {
             // save the file to the server
             saveFile(fileInputStream, filePath);
 
-            // Response.status(200).entity(output).build()
-            return new ResponseObj(200, "SUCCESS uploaded on LPT VMI | all attributes set: " + areValuesSet);
+            boolean success = UploadVMI.performUpload(filePath);
+
+            if (success) {
+                File file = new File(filePath);
+
+                // create DiskImage entity
+                DiskImage diskImage = new DiskImage(UUID.randomUUID().toString(), ImageType.VMI, imageDescription,
+                        imageName, "", FileFormat.IMG, avatarID != -1 ? avatarID + "" : "", false, "https://s3.tnode" +
+                        ".com:9869/flexiant-entice/" + contentDispositionHeader.getFileName(), "", 0, userID, "", "",
+                        "", false, System.currentTimeMillis(), false, "1.0", (int) (file.length() / 1024 / 1024));
+
+                String insertStatement = FusekiUtils.generateInsertObjectStatement(diskImage);
+                UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement),
+                        AppContextListener.prop.getProperty("fuseki.url.update"));
+                upp.execute();
+                file.delete();
+                return new ResponseObj(200, "SUCCESS uploaded on LPT VMI | all attributes set: " + areValuesSet);
+            }
+            else return new ResponseObj(404, "FAILED uploaded on LPT VMI | all attributes set: " + areValuesSet);
+
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseObj(200, "FAILED uploaded on LPT VMI | all attributes set: " + areValuesSet);
+            return new ResponseObj(404, "FAILED uploaded on LPT VMI | all attributes set: " + areValuesSet);
         }
     }
 
@@ -258,7 +281,8 @@ public class GUIService implements IGUIService {
 //    public ResponseSynthesisObj performImageSynthesis(String cloudID, String imageID, String instanceType, @Nullable
 //    String securityGroupID, @Nullable String subnetIDs, @Nullable String ssh, InputStream contextualisationStream,
 //                                                      InputStream functionalTestStream, int constraints, String
-//                                                                  notifyEmail, long startTime, @Nullable int avatarID) {
+//                                                                  notifyEmail, long startTime, @Nullable int
+// avatarID) {
 //        return null;
 //    }
 
@@ -266,8 +290,8 @@ public class GUIService implements IGUIService {
     @Path("perform_image_synthesis")
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-    public ResponseSynthesisObj performImageSynthesis(@QueryParam("cloud") String cloud, @QueryParam("image_id") String
-            imageId, @QueryParam("instance_type") String instanceType, @Nullable @QueryParam("security_group_id")
+    public ResponseSynthesisObj performImageSynthesis(@QueryParam("cloud") String cloud, @QueryParam("image_id")
+    String imageId, @QueryParam("instance_type") String instanceType, @Nullable @QueryParam("security_group_id")
     String securityGroupID, @Nullable @QueryParam("subnet_ids") String subnetIDs, @Nullable @QueryParam("ssh") String
             ssh, @FormDataParam("contextualisation_stream") InputStream contextualisationStream, @FormDataParam
             ("functional_test_stream") InputStream functionalTestStream, @QueryParam("constraints") int constraints,
@@ -293,8 +317,9 @@ public class GUIService implements IGUIService {
             categoryId, @QueryParam("pagination_page") int paginationPage, @QueryParam("hits_per_page") int
             hitsPerPage, @QueryParam("order") String order, @QueryParam("sort") boolean isDescendingSort) {
 
+        // todo: make case sensitive
         List<DiskImage> diskImages = FusekiUtils.getAllEntityAttributes(DiskImage.class, null, title != null ? ". ?s " +
-                "knowledgebase:DiskImage_Title ?title . FILTER regex(?title, \"" + title + "\")" : null);
+                "knowledgebase:DiskImage_Title ?title . FILTER regex(?title, \"" + title + "\", \"i\")" : null);
 
         ArrayList<EnticeImage> enticeImages = new ArrayList<>();
         int maxSize = diskImages.size() > (paginationPage + 1) * hitsPerPage ? (paginationPage + 1) * hitsPerPage :
@@ -321,7 +346,7 @@ public class GUIService implements IGUIService {
             enticeImages.add(new EnticeImage(diskImages.get(i).getId(), (int) (Math.random() * 15), diskImages.get(i)
                     .getTitle(), diskImages.get(i).getRefOwnerId() == null ? "User_" + (int) (1 + Math.random() * 10)
                     : diskImages.get(i).getRefOwnerId(), diskImages.get(i).getDiskImageSize(), (int) (Math.random() *
-                    50), categoryList, (int) (Math.random() * 5)));
+                    50), categoryList, (int) (Math.random() * 5),"some image description"));
             //   count++;
         }
         // System.out.println(count);
@@ -361,9 +386,8 @@ public class GUIService implements IGUIService {
         }
 
         List<Repository> matchingRepositories = new ArrayList<>();
-        for(Repository repository: repositoriesList){
-            if(listContainsId(setOfRepositoryIds, repository.getId()))
-                 matchingRepositories.add(repository);
+        for (Repository repository : repositoriesList) {
+            if (listContainsId(setOfRepositoryIds, repository.getId())) matchingRepositories.add(repository);
         }
 
         List<String> functionalTests = new ArrayList<>();
@@ -378,13 +402,12 @@ public class GUIService implements IGUIService {
         return new EnticeDetailedImage(diskImages.get(0).getId(), (int) (Math.random() * 15), diskImages.get(0)
                 .getTitle(), diskImages.get(0).getRefOwnerId() == null ? "User_" + (int) (1 + Math.random() * 10) :
                 diskImages.get(0).getRefOwnerId(), diskImages.get(0).getDiskImageSize(), (int) (Math.random() * 50),
-                categoryList, (int) (Math.random() * 5), matchingRepositories, functionalTests, optimizationHistory);
+                categoryList, (int) (Math.random() * 5), matchingRepositories, functionalTests, optimizationHistory, "some random description");
     }
 
     private boolean listContainsId(Set<String> setOfRepositoryIds, String id) {
-        for(String str: setOfRepositoryIds) {
-            if(str.trim().contains(id))
-                return true;
+        for (String str : setOfRepositoryIds) {
+            if (str.trim().contains(id)) return true;
         }
         return false;
     }

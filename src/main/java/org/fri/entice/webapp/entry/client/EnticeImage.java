@@ -13,6 +13,7 @@ public class EnticeImage {
     private int pulls;
     private List<String> categories;
     private int numberOfChilds;
+    private String description;
 
 //    - image_name (String)
 //    - image_avatar (Int)
@@ -23,7 +24,7 @@ public class EnticeImage {
 //    - image_tags (List<String>) (seznam tagov oz. kategorij, ki jih izbere uporabnik pri uploadu slike)
 
     public EnticeImage(String id, int avatarID, String imageName, String ownerID, int imageSize, int pulls, List<String>
-            categories, int numberOfChilds) {
+            categories, int numberOfChilds, String description) {
         this.id = id;
         this.avatarID = avatarID;
         this.imageName = imageName;
@@ -32,6 +33,7 @@ public class EnticeImage {
         this.pulls = pulls;
         this.categories = categories;
         this.numberOfChilds = numberOfChilds;
+        this.description = description;
     }
 
     public EnticeImage() {
@@ -99,5 +101,13 @@ public class EnticeImage {
 
     public void setNumberOfChilds(int numberOfChilds) {
         this.numberOfChilds = numberOfChilds;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

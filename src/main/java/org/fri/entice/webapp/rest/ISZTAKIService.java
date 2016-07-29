@@ -1,10 +1,11 @@
 package org.fri.entice.webapp.rest;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 
 public interface ISZTAKIService {
-    @GET
-    public String executeOptimizer(String methodType);
+    @POST
+    public String executeOptimizer(String imageURL );
 
     @GET
     public String getStatus(String optimizerID);

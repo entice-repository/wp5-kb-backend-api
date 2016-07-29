@@ -17,18 +17,26 @@ public class PerformanceTest {
     private static List<Repository> repositories = new ArrayList<Repository>();
 
     private static int BATCH_SIZE = 25;
-    private static CountDownLatch countDownLatch = new CountDownLatch(BATCH_SIZE);
+    private static CountDownLatch countDownLatch = new CountDownLatch(50);
 
     public static void main(String[] args) {
         try {
-            final String PATH = "http://193.2.72.90:3030/entice/update";
+            if(args.length < 1)
+                throw new Exception("First argument must specify dataset namespace!");
+
+//            final String PATH = "http://193.2.72.90:3030/entice/update";
+            final String PATH = args[0]+"/update";
             /**
              *  Insert repositories, fragments and disk images.
              */
             final int repositorySize = 10;
-            final int diskImageSize = 20;
+            final int diskImageSize = 50;
             final int fragmentMaxSize = 10;
 
+
+            final List<HistoryData> historyDataList = new ArrayList<>();
+            historyDataList.add(new HistoryData(UUID.randomUUID().toString()));
+            historyDataList.add(new HistoryData(UUID.randomUUID().toString()));
 
             System.out.println("Started insertion..");
             long startTime = System.currentTimeMillis();
@@ -60,11 +68,13 @@ public class PerformanceTest {
             for (int i = 0; i < diskImageSize; i++) {
                 if (i % 10000 == 0) System.out.println(i + " thousand disk images inserted");
 
+                /*
                 if (i % BATCH_SIZE == 0 && i > 0) {
                     countDownLatch.await();
                     countDownLatch = new CountDownLatch(BATCH_SIZE);
                     System.out.println("inserted images " + i);
-                }
+                }*/
+
 
                 new Thread(new Runnable() {
                     @Override
@@ -90,9 +100,10 @@ public class PerformanceTest {
                             if (Math.random() < 0.5) hashValue.add("b");
                             if (Math.random() < 0.5) hashValue.add("c");
                             if (Math.random() < 0.5) hashValue.add("d");
+
                             Fragment fragment = new Fragment(UUID.randomUUID().toString(), diskImage.getId(),
                                     repositories.get((int) (Math.random() * repositorySize)).getId(), "http://www" +
-                                    ".example.org/do", 1 + (int) (Math.random() * 10), hashValue,null);
+                                    ".example.org/do", 1 + (int) (Math.random() * 10), hashValue,historyDataList);
                             insertStatement = FusekiUtils.generateInsertObjectStatement(fragment);
                             upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
                             upp.execute();
@@ -103,6 +114,7 @@ public class PerformanceTest {
                 }).start();
             }
 
+            countDownLatch.await();
             System.out.println("..repositories inserted: " + repositorySize);
             System.out.println("..diskImages inserted: " + diskImageSize);
             System.out.println("..fragments inserted: " + fragments);

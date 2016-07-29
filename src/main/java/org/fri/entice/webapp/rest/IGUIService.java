@@ -39,7 +39,7 @@ public interface IGUIService {
                                    InputStream functionalTestInputStream, FormDataContentDisposition
                                                functionalTestDispositionHeader, List<String> categoryList, String
                                                imageDescription, String imageName, int paretoPointIndexX, int
-                                               paretoPointIndexY, String paretoPointId, int avatarID);
+                                               paretoPointIndexY, String paretoPointId, int avatarID, String userID);
 
     //
 //    // todo: verify!!!
