@@ -39,7 +39,7 @@ public class UIBKDataGenerator {
             long startTime = System.currentTimeMillis();
 
             // insert some dummy User data
-            User user = new User(UUID.randomUUID().toString(), "sandi.gec@gmail.com", "Sandi Gec", "444", "112", "sandi");
+            User user = new User(UUID.randomUUID().toString(), "sandi.gec@gmail.com", "Sandi Gec", "444", "112", "sandi",1);
             String insertStatement = FusekiUtils.generateInsertObjectStatement(user);
             UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
 //            upp.execute();

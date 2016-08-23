@@ -54,8 +54,9 @@ public class FusekiUtils {
                         "        knowledgebase:User_PhoneNumber  \"%s\" ;\n" +
                         "        knowledgebase:User_UserName     \"%s\" ;" +
                         "        knowledgebase:User_Password     \"%s\" ;" +
+                        "        knowledgebase:User_Privilege     \"%s\" ;" +
                         "}", user.getId(), user.getFullName(), user.getEmail(), user.getPhoneNumber(), user
-                        .getUsername(), user.getPassword());
+                        .getUsername(), user.getPassword(), user.getGroupID());
             }
             // CREATE DISK IMAGE
             else if (obj instanceof DiskImage) {
@@ -282,12 +283,23 @@ public class FusekiUtils {
         return objectivesStr;
     }
 
+    @Deprecated
     public static String getPassword(String username) {
         return "prefix knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                 "\n" +
                 "SELECT ?pass\n" +
                 "WHERE { ?s a knowledgebase:User ; knowledgebase:User_UserName \"" + username + "\" ; " +
                 "knowledgebase:User_Password ?pass }\n" +
+                "LIMIT 25\n";
+    }
+
+
+    public static String performUserLogin(String username,String password) {
+        return "prefix knowledgebase: <http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                "\n" +
+                "SELECT ?s ?privilege \n" +
+                "WHERE { ?s a knowledgebase:User ; knowledgebase:User_UserName \"" + username + "\" ; " +
+                "knowledgebase:User_Password \""+password+"\" ; knowledgebase:User_Privilege ?privilege }\n" +
                 "LIMIT 25\n";
     }
 

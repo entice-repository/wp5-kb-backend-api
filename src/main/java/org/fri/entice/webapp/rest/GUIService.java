@@ -49,32 +49,45 @@ public class GUIService implements IGUIService {
     @Path("perform_user_login")
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-    public String performUserLogin(@QueryParam("username") String username, @QueryParam("password") String password) {
+    public Map<String,String> performUserLogin(@QueryParam("username") String username, @QueryParam("password") String password) {
         boolean matched = false;
         try {
             long startTime = System.currentTimeMillis();
-            String query = FusekiUtils.getPassword(username);
+            String query = FusekiUtils.performUserLogin(username, password);
 
             //Query the collection, dump output
             QueryExecution qe = QueryExecutionFactory.sparqlService(AppContextListener.prop.getProperty("fuseki.url"
                     + ".query"), query);
             ResultSet results = qe.execSelect();
-            String x = null;
+            String id = null;
+            String groupId = null;
             while (results.hasNext()) {
                 QuerySolution qs = results.next();
                 Iterator<Var> varIter = ((ResultBinding) qs).getBinding().vars();
 
                 while (varIter.hasNext()) {
                     Var var = varIter.next();
-                    if (var.getVarName().equals("pass"))
-                        x = ((ResultBinding) qs).getBinding().get(var).getLiteralValue().toString();
+
+                    if (var.getVarName().equals("s")) id = ((ResultBinding) qs).getBinding().get(var).toString();
+                    if (var.getVarName().equals("privilege")) groupId = ((ResultBinding) qs).getBinding().get(var).toString();
+
+//                    if (var.getVarName().equals("pass"))
+//                        x = ((ResultBinding) qs).getBinding().get(var).getLiteralValue().toString();
                 }
             }
             qe.close();
 
-//            matched = PasswordUtils.validatePassword(password, x);
-            matched = password.equals(x);
-            return matched + " match. Time elapsed: " + (System.currentTimeMillis() - startTime) + "ms";
+//            return matched + " match. Time elapsed: " + (System.currentTimeMillis() - startTime) + "ms";
+            final boolean loginSuccess = id != null;
+
+            Map<String,String> resultMap = new HashMap<>();
+            resultMap.put("success",String.valueOf(loginSuccess));
+            if(loginSuccess)
+                resultMap.put("id", id.replaceFirst(FusekiUtils.KB_PREFIX_SHORT, ""));
+            if(groupId != null)
+                resultMap.put("group",groupId.replaceAll("\"",""));
+
+            return resultMap;
 //        } catch (NoSuchAlgorithmException e) {
 //            e.printStackTrace();
 //            return "false";
@@ -83,7 +96,7 @@ public class GUIService implements IGUIService {
 //            return "false";
         } catch (Exception e) {
             e.printStackTrace();
-            return "false";
+            return null;
         }
     }
 

@@ -10,18 +10,20 @@ public class User {
     private String password;
     private String phoneNumber;
     private String username;
+    private int groupID;
 
     public User(){
 
     }
 
-    public User(String id, String email, String fullName, String password, String phoneNumber, String username) {
+    public User(String id, String email, String fullName, String password, String phoneNumber, String username, int groupID) {
         this.id = id;
         this.email = email;
         this.fullName = fullName;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.username = username;
+        this.groupID = groupID;
     }
 
     public String getId() {
@@ -70,5 +72,13 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getGroupID() {
+        return groupID;
+    }
+
+    public void setGroupID(int groupID) {
+        this.groupID = groupID;
     }
 }

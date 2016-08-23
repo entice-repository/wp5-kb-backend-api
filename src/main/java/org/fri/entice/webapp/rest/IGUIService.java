@@ -13,10 +13,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 public interface IGUIService {
     @GET
-    public String performUserLogin(String username, String password);
+    public Map<String,String> performUserLogin(String username, String password);
 
     @GET
     public String performUserLogout(String sessionID);
