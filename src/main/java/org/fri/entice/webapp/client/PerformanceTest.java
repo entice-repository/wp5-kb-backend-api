@@ -1,5 +1,7 @@
 package org.fri.entice.webapp.client;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateProcessor;
@@ -20,6 +22,14 @@ public class PerformanceTest {
     private static CountDownLatch countDownLatch = new CountDownLatch(50);
 
     public static void main(String[] args) {
+
+        String mssg = "[{\"StorageNodeId\":\"4\",\"vmiName\":\"mini-ubuntu_12_04.iso\"," +
+                "\"bucketName\":\"flexiant-entice\",\"vmiURI\":https://s3.tnode" +
+                ".com:9869/flexiant-entice/mini-ubuntu_12_04.iso,\"UploadUnoptimizedTimeInSeconds\":3}]";
+
+        JsonObject jsonObject = new JsonParser().parse(mssg).getAsJsonObject();
+        jsonObject.toString();
+
         try {
             if(args.length < 1)
                 throw new Exception("First argument must specify dataset namespace!");
@@ -85,7 +95,7 @@ public class PerformanceTest {
                                 ".org/PictureURL", Math.random() < 0.5, "http://www.example.org/iri", "123", 50 + Math.random() * 100
                                 , "http://www.example.org/ownerID", "789", "100", "7", Math.random
                                 () < 0.5, (int) (Math.random() * 30), Math.random() < 0.5, "1.0", (int) (1000 + Math
-                                .random() * 100000));
+                                .random() * 100000),-1,-1,"paretoID",null);
                         diskImages.add(diskImage);
                         String insertStatement = FusekiUtils.generateInsertObjectStatement(diskImage);
                         UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create

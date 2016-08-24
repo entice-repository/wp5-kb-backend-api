@@ -61,6 +61,15 @@ public class FusekiUtils {
             // CREATE DISK IMAGE
             else if (obj instanceof DiskImage) {
                 DiskImage diskImage = (DiskImage) obj;
+
+                String categoriesStr = new String();
+                for (String val : diskImage.getCategoryList()) {
+                    categoriesStr += "\"" + val + "\",";
+                }
+                if (categoriesStr.length() > 0)
+                    categoriesStr = categoriesStr.substring(0, categoriesStr.length() - 1);
+                else categoriesStr = "\"\"";
+
                 return String.format(Locale.US, "PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " +
                                 XSD_PREFIX + " " +
                                 "INSERT DATA {" +
@@ -76,22 +85,27 @@ public class FusekiUtils {
                                 "knowledgebase:DiskImage_IRI  \"%s\"^^xsd:anyURI ;\n" +
                                 "knowledgebase:DiskImage_NeedsDataFile  %s ;\n" +
                                 "knowledgebase:DiskImage_Obfuscation  %s ;\n" +
-                                "knowledgebase:DiskImage_OperatingSystem  %s ;\n" +
+                                "knowledgebase:DiskImage_OperatingSystem  \"%s\" ;\n" +
                                 "knowledgebase:DiskImage_Picture  \"%s\"^^xsd:anyURI ;\n" +
                                 "knowledgebase:DiskImage_Predecessor  \"%s\" ;\n" +
                                 "knowledgebase:DiskImage_Price \"%f\"^^xsd:double ;\n" +
-                                "knowledgebase:DiskImage_Quality  %s ;\n" +
-                                "knowledgebase:DiskImage_SLA  %s ;\n" +
+                                "knowledgebase:DiskImage_Quality  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_SLA  \"%s\" ;\n" +
                                 "knowledgebase:DiskImage_Title  \"%s\" ;\n" +
                                 "knowledgebase:DiskImage_Version  \"%s\" ;\n" +
                                 "knowledgebase:DiskImage_Size  %d ;\n" +
+                                "knowledgebase:DiskImage_ParetoPointX  %d ;\n" +
+                                "knowledgebase:DiskImage_ParetoPointY  %d ;\n" +
+                                "knowledgebase:DiskImage_Pareto  \"%s\" ;\n" +
+                                "knowledgebase:DiskImage_Categories " + categoriesStr + " ;\n" +
                                 "}", diskImage.getId(), diskImage.getDescription(), diskImage.getEncryption(),
                         diskImage.getFileFormat().getValue(), diskImage.getRefOwnerId(), diskImage.getDataId(),
                         diskImage.getRefFunctionalityId(), diskImage.getGenerationTime(), diskImage.getIri(),
                         diskImage.isNeedsData(), diskImage.isObfuscation(), diskImage.getRefOperatingSystemId(),
                         diskImage.getPictureUrl(), diskImage.getPredecessor(), diskImage.getPrice(), diskImage
                                 .getRefQualityId(), diskImage.getRefSlaId(), diskImage.getTitle(), diskImage
-                                .getVersion(), diskImage.getDiskImageSize());
+                                .getVersion(), diskImage.getDiskImageSize(), diskImage.getParetoPointX(), diskImage
+                                .getParetoPointY(), diskImage.getParetoId());
             }
             // CREATE DISK IMAGE SLA
             else if (obj instanceof DiskImageSLA) {
@@ -593,7 +607,7 @@ public class FusekiUtils {
             DiskImage di = new DiskImage(UUID.randomUUID().toString(), imageTypeC, descriptionC, titleC,
                     predecessorC, fileFormatC, pictureUrlC, encriptionC, iriC, slaIdC, priceC, ownerIdC,
                     functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC,
-                    version, (int) (1000 + Math.random() * 100000));
+                    version, (int) (1000 + Math.random() * 100000),-1,-1,"paretoID",null);
             DiskImageResource dir = new DiskImageResource(resourceId, di);
             allImageResourcesWithThisType.add(dir);
         }
@@ -738,7 +752,7 @@ public class FusekiUtils {
             DiskImage di = new DiskImage(UUID.randomUUID().toString(), imageTypeC, descriptionC, titleC,
                     predecessorC, fileFormatC, pictureUrlC, encriptionC, iriC, slaIdC, priceC, ownerIdC,
                     functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC,
-                    version, (int) (1000 + Math.random() * 100000));
+                    version, (int) (1000 + Math.random() * 100000),-1,-1,"paretoID",null);
             DiskImageResource dir = new DiskImageResource(resourceId, di);
             allImages.add(dir);
         }

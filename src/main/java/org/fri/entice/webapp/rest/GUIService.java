@@ -196,20 +196,25 @@ public class GUIService implements IGUIService {
 // izbral enega in jaz ti vrnem Int tega em samo int
 
 
+
+    /*
+        http://localhost:8080/JerseyREST/upload_image.html
+     */
     @POST
     @Path("upload_image")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Override
     public ResponseObj uploadImage(@FormDataParam("file_upload") InputStream fileInputStream, @FormDataParam
             ("file_upload") FormDataContentDisposition contentDispositionHeader, @FormDataParam("functional_tests")
     InputStream functionalTestInputStream, @FormDataParam("functional_tests") FormDataContentDisposition
-            functionalTestDispositionHeader, @Nullable @QueryParam("category_list") List<String> categoryList,
-                                   @QueryParam("image_description") String imageDescription, @QueryParam
-                                               ("image_name") String imageName, @QueryParam("pareto_point_x") int
-                                               paretoPointIndexX, @QueryParam("pareto_point_y") int
-                                               paretoPointIndexY, @QueryParam("pareto_point_id") String
-                                               paretoPointId, @Nullable @QueryParam("avatar_id") int avatarID,
-                                   @QueryParam("user_id") String userID) {
+            functionalTestDispositionHeader, @Nullable @FormDataParam("category_list") List<String> categoryList,
+                                   @FormDataParam("image_description") String imageDescription, @FormDataParam
+                                               ("image_name") String imageName, @FormDataParam("pareto_point_x") int
+                                               paretoPointIndexX, @FormDataParam("pareto_point_y") int
+                                               paretoPointIndexY, @FormDataParam("pareto_point_id") String
+                                               paretoPointId, @Nullable @FormDataParam("avatar_id") int avatarID,
+                                   @FormDataParam("user_id") String userID) {
         boolean areValuesSet = true;
         try {
             String filePath = SERVER_UPLOAD_LOCATION_FOLDER + contentDispositionHeader.getFileName();
@@ -221,26 +226,40 @@ public class GUIService implements IGUIService {
             // save the file to the server
             saveFile(fileInputStream, filePath);
 
-            boolean success = UploadVMI.performUpload(filePath);
+            if(functionalTestDispositionHeader != null)
+                saveFile(functionalTestInputStream, SERVER_UPLOAD_LOCATION_FOLDER + functionalTestDispositionHeader.getName());
 
-            if (success) {
+            //upload VMI in the repository
+            String successMessage = UploadVMI.performUpload(filePath);
+
+            //upload functional test in the repository
+            String functionalityID = "";
+            if (functionalTestDispositionHeader != null) {
+                String successFunctionalTestMessage = UploadVMI.performUpload(filePath); //todo: get ID of the functional test
+                functionalityID = UUID.randomUUID().toString();
+           //     Functionality functionality = new Functionality(functionalityID,);
+
+            }
+
+            if (successMessage != null) {
                 File file = new File(filePath);
 
                 // create DiskImage entity
                 DiskImage diskImage = new DiskImage(UUID.randomUUID().toString(), ImageType.VMI, imageDescription,
                         imageName, "", FileFormat.IMG, avatarID != -1 ? avatarID + "" : "", false, "https://s3.tnode" +
-                        ".com:9869/flexiant-entice/" + contentDispositionHeader.getFileName(), "", 0, userID, "", "",
-                        "", false, System.currentTimeMillis(), false, "1.0", (int) (file.length() / 1024 / 1024));
+                        ".com:9869/flexiant-entice/" + contentDispositionHeader.getFileName(), "", 0, userID,
+                        functionalityID, "", "", false,
+                        System.currentTimeMillis(), false, "1.0", (int) (file.length() / 1024 / 1024),
+                        paretoPointIndexX, paretoPointIndexY, paretoPointId, categoryList);
 
                 String insertStatement = FusekiUtils.generateInsertObjectStatement(diskImage);
                 UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement),
                         AppContextListener.prop.getProperty("fuseki.url.update"));
                 upp.execute();
                 file.delete();
-                return new ResponseObj(200, "SUCCESS uploaded on LPT VMI | all attributes set: " + areValuesSet);
+                return new ResponseObj(200, "success upload");
             }
-            else return new ResponseObj(404, "FAILED uploaded on LPT VMI | all attributes set: " + areValuesSet);
-
+            else return new ResponseObj(404, "failed upload");
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseObj(404, "FAILED uploaded on LPT VMI | all attributes set: " + areValuesSet);
@@ -345,16 +364,16 @@ public class GUIService implements IGUIService {
 
             List<String> categoryList = new ArrayList<>();
 
-            if (Math.random() < 0.3) categoryList.add("Database");
-            if (Math.random() < 0.3) categoryList.add("Monitoring");
-            if (Math.random() < 0.3) categoryList.add("Application");
-            if (Math.random() < 0.3) categoryList.add("App-Server");
-            if (Math.random() < 0.3) categoryList.add("File-Server");
-            if (Math.random() < 0.3) categoryList.add("Openstack");
-            if (Math.random() < 0.3) categoryList.add("Docker");
-            if (Math.random() < 0.3) categoryList.add("Container");
-            if (Math.random() < 0.3) categoryList.add("Operating system");
-            if (Math.random() < 0.3) categoryList.add("Misc");
+//            if (Math.random() < 0.3) categoryList.add("Database");
+//            if (Math.random() < 0.3) categoryList.add("Monitoring");
+//            if (Math.random() < 0.3) categoryList.add("Application");
+//            if (Math.random() < 0.3) categoryList.add("App-Server");
+//            if (Math.random() < 0.3) categoryList.add("File-Server");
+//            if (Math.random() < 0.3) categoryList.add("Openstack");
+//            if (Math.random() < 0.3) categoryList.add("Docker");
+//            if (Math.random() < 0.3) categoryList.add("Container");
+//            if (Math.random() < 0.3) categoryList.add("Operating system");
+//            if (Math.random() < 0.3) categoryList.add("Misc");
 
             enticeImages.add(new EnticeImage(diskImages.get(i).getId(), (int) (Math.random() * 15), diskImages.get(i)
                     .getTitle(), diskImages.get(i).getRefOwnerId() == null ? "User_" + (int) (1 + Math.random() * 10)

@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>Upload image example</title>
+</head>
+<body>
+
+
+<!--accept=".raw,.vhd,.vmdk,.vdi,.iso,.qcow2,.aki,.ari,.ami,.bare,.ovf,.aki,.ari,.ami"-->
+
+<form action="rest/gui/upload_image" method="post" enctype="multipart/form-data">
+    <p>
+        Select VMI file: <input type="file" name="file_upload" size="300"/>
+    </p>
+    <p>
+        Select functional test file: <input type="file" name="functional_tests" size="300"/>
+    </p>
+
+    Image name: <input type="text" name="image_name" value="my jomla"><br>
+    Image description: <input type="text" name="image_description" value="my description of image"><br>
+    <!--Image name: <input type="text" name="category_list" value="category list?!"><br>-->
+    <input type="checkbox" name="category_list" value="el1" />category list element 1<br>
+    <input type="checkbox" name="category_list" value="el2" />category list element 2<br>
+    <input type="checkbox" name="category_list" value="el3" />category list element 3<br>
+    Pareto point x: <input type="number" name="pareto_point_x" value="2"><br>
+    Pareto point y: <input type="number" name="pareto_point_y" value="5"><br>
+    Avatar ID: <input type="number" name="avatar_id" value="3"><br>
+    Pareto ID: <input type="text" name="pareto_point_id" value="8bf17de6-ed0c-4ba0-adba-f94b7cac525a"><br>
+    user ID: <input type="text" name="user_id" value="ebe6e257-f019-473a-aaf9-165d9a18c7cb"><br>
+    <input type="submit" value="Pre upload"/>
+</form>
+
+</body>
+</html>

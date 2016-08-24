@@ -96,8 +96,14 @@ public class CommonUtils {
                     repositoryList.get(repositoryList.size() - 1).setVersion(resultObj.getO());
                 else if (resultObj.getP().endsWith("DiskImage_Size"))
                     repositoryList.get(repositoryList.size() - 1).setDiskImageSize(Integer.valueOf(resultObj.getO()));
-                else if (resultObj.getP().endsWith("DiskImage_Size"))
-                    repositoryList.get(repositoryList.size() - 1).setDiskImageSize(Integer.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("DiskImage_ParetoPointX"))
+                    repositoryList.get(repositoryList.size() - 1).setParetoPointX(Integer.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("DiskImage_ParetoPointY"))
+                    repositoryList.get(repositoryList.size() - 1).setParetoPointY(Integer.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("DiskImage_Pareto"))
+                    repositoryList.get(repositoryList.size() - 1).setParetoId(resultObj.getO());
+                else if (resultObj.getP().endsWith("DiskImage_Categories"))
+                    repositoryList.get(repositoryList.size() - 1).setCategoriesFromString(resultObj.getO());
             }
             else if (list.get(list.size() - 1) instanceof Fragment) {
                 List<Fragment> fragmentList = (List<Fragment>) list;
