@@ -17,10 +17,10 @@ public class EnticeDetailedImage extends EnticeImage {
 //        super(id, avatarID, imageName, ownerID, imageSize, pulls, categories, numberOfChilds);
 //    }
 
-    public EnticeDetailedImage(String id, int avatarID, String imageName, String ownerID, int imageSize, int pulls, List<String>
+    public EnticeDetailedImage(String id, String avatarURI, String imageName, String ownerID, int imageSize, int pulls, List<String>
             categories, int numberOfChilds, List<Repository> repositoriesList, List<String> functionalTests,
                                List<String> optimizationHistory,String description) {
-        super(id, avatarID, imageName, ownerID, imageSize, pulls, categories, numberOfChilds,description);
+        super(id, avatarURI, imageName, ownerID, imageSize, pulls, categories, numberOfChilds,description);
         this.repositoriesList = repositoriesList;
         this.functionalTests = functionalTests;
         this.optimizationHistory = optimizationHistory;

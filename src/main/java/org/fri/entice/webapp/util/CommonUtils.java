@@ -64,14 +64,14 @@ public class CommonUtils {
                     repositoryList.get(repositoryList.size() - 1).setEncryption(Boolean.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("DiskImage_FileFormat"))
                     repositoryList.get(repositoryList.size() - 1).setFileFormat(FileFormat.valueOf(resultObj.getO()));
-                else if (resultObj.getP().endsWith("DiskImage_Owner"))
+                else if (resultObj.getP().endsWith("DiskImage_hasOwner"))
                     repositoryList.get(repositoryList.size() - 1).setRefOwnerId(resultObj.getO());
                 else if (resultObj.getP().endsWith("DiskImage_DataId"))
                     repositoryList.get(repositoryList.size() - 1).setDataId(resultObj.getO());
                 else if (resultObj.getP().endsWith("DiskImage_refFunctionalityId"))
                     repositoryList.get(repositoryList.size() - 1).setRefFunctionalityId(resultObj.getO());
                 else if (resultObj.getP().endsWith("DiskImage_generationTime"))
-                    repositoryList.get(repositoryList.size() - 1).setGenerationTime(Integer.valueOf(resultObj.getO()));
+                    repositoryList.get(repositoryList.size() - 1).setGenerationTime(Long.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("DiskImage_IRI"))
                     repositoryList.get(repositoryList.size() - 1).setIri(resultObj.getO());
                 else if (resultObj.getP().endsWith("DiskImage_NeedsDataFile"))

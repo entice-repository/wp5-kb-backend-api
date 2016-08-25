@@ -6,7 +6,7 @@ import java.util.List;
 @XmlRootElement
 public class EnticeImage {
     private String id;
-    private int avatarID;
+    private String avatarURI;
     private String imageName;
     private String ownerID;
     private int imageSize;
@@ -23,10 +23,10 @@ public class EnticeImage {
 //            - number_of_optiminzed_variants (Int) - število optimizacij ene instance (slike)
 //    - image_tags (List<String>) (seznam tagov oz. kategorij, ki jih izbere uporabnik pri uploadu slike)
 
-    public EnticeImage(String id, int avatarID, String imageName, String ownerID, int imageSize, int pulls, List<String>
+    public EnticeImage(String id, String avatarURI, String imageName, String ownerID, int imageSize, int pulls, List<String>
             categories, int numberOfChilds, String description) {
         this.id = id;
-        this.avatarID = avatarID;
+        this.avatarURI = avatarURI;
         this.imageName = imageName;
         this.ownerID = ownerID;
         this.imageSize = imageSize;
@@ -47,12 +47,12 @@ public class EnticeImage {
         this.id = id;
     }
 
-    public int getAvatarID() {
-        return avatarID;
+    public String getAvatarURI() {
+        return avatarURI;
     }
 
-    public void setAvatarID(int avatarID) {
-        this.avatarID = avatarID;
+    public void setAvatarURI(String avatarURI) {
+        this.avatarURI = avatarURI;
     }
 
     public String getImageName() {

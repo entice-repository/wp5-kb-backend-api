@@ -249,7 +249,7 @@ public class GUIService implements IGUIService {
                         imageName, "", FileFormat.IMG, avatarID != -1 ? avatarID + "" : "", false, "https://s3.tnode" +
                         ".com:9869/flexiant-entice/" + contentDispositionHeader.getFileName(), "", 0, userID,
                         functionalityID, "", "", false,
-                        System.currentTimeMillis(), false, "1.0", (int) (file.length() / 1024 / 1024),
+                        System.currentTimeMillis(), false, "1.0", (int) (file.length() / 1024),
                         paretoPointIndexX, paretoPointIndexY, paretoPointId, categoryList);
 
                 String insertStatement = FusekiUtils.generateInsertObjectStatement(diskImage);
@@ -362,7 +362,7 @@ public class GUIService implements IGUIService {
 
         for (int i = paginationPage * hitsPerPage; i < maxSize; i++) {
 
-            List<String> categoryList = new ArrayList<>();
+//            List<String> categoryList = new ArrayList<>();
 
 //            if (Math.random() < 0.3) categoryList.add("Database");
 //            if (Math.random() < 0.3) categoryList.add("Monitoring");
@@ -375,15 +375,12 @@ public class GUIService implements IGUIService {
 //            if (Math.random() < 0.3) categoryList.add("Operating system");
 //            if (Math.random() < 0.3) categoryList.add("Misc");
 
-            enticeImages.add(new EnticeImage(diskImages.get(i).getId(), (int) (Math.random() * 15), diskImages.get(i)
-                    .getTitle(), diskImages.get(i).getRefOwnerId() == null ? "User_" + (int) (1 + Math.random() * 10)
-                    : diskImages.get(i).getRefOwnerId(), diskImages.get(i).getDiskImageSize(), (int) (Math.random() *
-                    50), categoryList, (int) (Math.random() * 5),"some image description"));
+            enticeImages.add(new EnticeImage(diskImages.get(i).getId(), diskImages.get(i).getPictureUrl(), diskImages
+                    .get(i).getTitle(), diskImages.get(i).getRefOwnerId() == null ? "unknown user" : diskImages.get
+                    (i).getRefOwnerId(), diskImages.get(i).getDiskImageSize(), 0, diskImages.get(i).getCategoryList()
+                    , 0,diskImages.get(i).getDescription() ));
             //   count++;
         }
-        // System.out.println(count);
-//        Map<ArrayList<EnticeImage>,Integer> resultMap = new HashMap<>();
-//        resultMap.put(enticeImages,diskImages.size());
 
         return new Object[]{enticeImages, diskImages.size()};
     }
@@ -398,17 +395,17 @@ public class GUIService implements IGUIService {
         if (diskImages.size() == 0) return null;
 
         //todo: temporary mock data
-        List<String> categoryList = new ArrayList<>();
-        if (Math.random() < 0.3) categoryList.add("Database");
-        if (Math.random() < 0.3) categoryList.add("Monitoring");
-        if (Math.random() < 0.3) categoryList.add("Application");
-        if (Math.random() < 0.3) categoryList.add("App-Server");
-        if (Math.random() < 0.3) categoryList.add("File-Server");
-        if (Math.random() < 0.3) categoryList.add("Openstack");
-        if (Math.random() < 0.3) categoryList.add("Docker");
-        if (Math.random() < 0.3) categoryList.add("Container");
-        if (Math.random() < 0.3) categoryList.add("Operating system");
-        if (Math.random() < 0.3) categoryList.add("Misc");
+//        List<String> categoryList = new ArrayList<>();
+//        if (Math.random() < 0.3) categoryList.add("Database");
+//        if (Math.random() < 0.3) categoryList.add("Monitoring");
+//        if (Math.random() < 0.3) categoryList.add("Application");
+//        if (Math.random() < 0.3) categoryList.add("App-Server");
+//        if (Math.random() < 0.3) categoryList.add("File-Server");
+//        if (Math.random() < 0.3) categoryList.add("Openstack");
+//        if (Math.random() < 0.3) categoryList.add("Docker");
+//        if (Math.random() < 0.3) categoryList.add("Container");
+//        if (Math.random() < 0.3) categoryList.add("Operating system");
+//        if (Math.random() < 0.3) categoryList.add("Misc");
 
         List<Fragment> fragmentList = FusekiUtils.getFragmentDataOfDiskImage(imageID, false);
         List<Repository> repositoriesList = FusekiUtils.getAllEntityAttributes(Repository.class);
@@ -422,19 +419,19 @@ public class GUIService implements IGUIService {
             if (listContainsId(setOfRepositoryIds, repository.getId())) matchingRepositories.add(repository);
         }
 
-        List<String> functionalTests = new ArrayList<>();
-        functionalTests.add("dummy functional test 1");
-        functionalTests.add("dummy functional test 2");
-        functionalTests.add("dummy functional test 3");
-        List<String> optimizationHistory = new ArrayList<>();
-        optimizationHistory.add("dummy URLS | SIZE | IMAGENAME1");
-        optimizationHistory.add("dummy URLS | SIZE | IMAGENAME2");
-        optimizationHistory.add("dummy URLS | SIZE | IMAGENAME3");
+//        List<String> functionalTests = new ArrayList<>();
+//        functionalTests.add("dummy functional test 1");
+//        functionalTests.add("dummy functional test 2");
+//        functionalTests.add("dummy functional test 3");
+//        List<String> optimizationHistory = new ArrayList<>();
+//        optimizationHistory.add("dummy URLS | SIZE | IMAGENAME1");
+//        optimizationHistory.add("dummy URLS | SIZE | IMAGENAME2");
+//        optimizationHistory.add("dummy URLS | SIZE | IMAGENAME3");
 
-        return new EnticeDetailedImage(diskImages.get(0).getId(), (int) (Math.random() * 15), diskImages.get(0)
-                .getTitle(), diskImages.get(0).getRefOwnerId() == null ? "User_" + (int) (1 + Math.random() * 10) :
-                diskImages.get(0).getRefOwnerId(), diskImages.get(0).getDiskImageSize(), (int) (Math.random() * 50),
-                categoryList, (int) (Math.random() * 5), matchingRepositories, functionalTests, optimizationHistory, "some random description");
+        return new EnticeDetailedImage(diskImages.get(0).getId(),diskImages.get(0).getPictureUrl(), diskImages.get(0)
+                .getTitle(), diskImages.get(0).getRefOwnerId() == null ? "unknown user" : diskImages.get
+                (0).getRefOwnerId(), diskImages.get(0).getDiskImageSize(), 0,
+                diskImages.get(0).getCategoryList(),0, matchingRepositories, null, null, diskImages.get(0).getDescription());
     }
 
     private boolean listContainsId(Set<String> setOfRepositoryIds, String id) {
