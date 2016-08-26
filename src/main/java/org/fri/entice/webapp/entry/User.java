@@ -3,8 +3,7 @@ package org.fri.entice.webapp.entry;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class User {
-    private String id;
+public class User extends MyEntry {
     private String email;
     private String fullName;
     private String password;
@@ -12,26 +11,18 @@ public class User {
     private String username;
     private int groupID;
 
-    public User(){
-
+    public User(String id){
+        super(id);
     }
 
     public User(String id, String email, String fullName, String password, String phoneNumber, String username, int groupID) {
-        this.id = id;
+        super(id);
         this.email = email;
         this.fullName = fullName;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.username = username;
         this.groupID = groupID;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getEmail() {

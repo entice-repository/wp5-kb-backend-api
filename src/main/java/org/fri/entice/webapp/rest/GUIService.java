@@ -49,7 +49,8 @@ public class GUIService implements IGUIService {
     @Path("perform_user_login")
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-    public Map<String,String> performUserLogin(@QueryParam("username") String username, @QueryParam("password") String password) {
+    public Map<String, String> performUserLogin(@QueryParam("username") String username, @QueryParam("password")
+    String password) {
         boolean matched = false;
         try {
             long startTime = System.currentTimeMillis();
@@ -69,7 +70,8 @@ public class GUIService implements IGUIService {
                     Var var = varIter.next();
 
                     if (var.getVarName().equals("s")) id = ((ResultBinding) qs).getBinding().get(var).toString();
-                    if (var.getVarName().equals("privilege")) groupId = ((ResultBinding) qs).getBinding().get(var).toString();
+                    if (var.getVarName().equals("privilege"))
+                        groupId = ((ResultBinding) qs).getBinding().get(var).toString();
 
 //                    if (var.getVarName().equals("pass"))
 //                        x = ((ResultBinding) qs).getBinding().get(var).getLiteralValue().toString();
@@ -80,12 +82,10 @@ public class GUIService implements IGUIService {
 //            return matched + " match. Time elapsed: " + (System.currentTimeMillis() - startTime) + "ms";
             final boolean loginSuccess = id != null;
 
-            Map<String,String> resultMap = new HashMap<>();
-            resultMap.put("success",String.valueOf(loginSuccess));
-            if(loginSuccess)
-                resultMap.put("id", id.replaceFirst(FusekiUtils.KB_PREFIX_SHORT, ""));
-            if(groupId != null)
-                resultMap.put("group",groupId.replaceAll("\"",""));
+            Map<String, String> resultMap = new HashMap<>();
+            resultMap.put("success", String.valueOf(loginSuccess));
+            if (loginSuccess) resultMap.put("id", id.replaceFirst(FusekiUtils.KB_PREFIX_SHORT, ""));
+            if (groupId != null) resultMap.put("group", groupId.replaceAll("\"", ""));
 
             return resultMap;
 //        } catch (NoSuchAlgorithmException e) {
@@ -196,7 +196,6 @@ public class GUIService implements IGUIService {
 // izbral enega in jaz ti vrnem Int tega em samo int
 
 
-
     /*
         http://localhost:8080/JerseyREST/upload_image.html
      */
@@ -218,6 +217,8 @@ public class GUIService implements IGUIService {
         boolean areValuesSet = true;
         try {
             String filePath = SERVER_UPLOAD_LOCATION_FOLDER + contentDispositionHeader.getFileName();
+            String functionalTestFilePath = SERVER_UPLOAD_LOCATION_FOLDER + functionalTestDispositionHeader
+                    .getFileName();
 
 
             if (imageDescription == null || imageName == null || paretoPointIndexX == 0 || paretoPointIndexY == 0 ||
@@ -226,19 +227,32 @@ public class GUIService implements IGUIService {
             // save the file to the server
             saveFile(fileInputStream, filePath);
 
-            if(functionalTestDispositionHeader != null)
-                saveFile(functionalTestInputStream, SERVER_UPLOAD_LOCATION_FOLDER + functionalTestDispositionHeader.getName());
+            if (functionalTestDispositionHeader != null) saveFile(functionalTestInputStream, functionalTestFilePath);
 
             //upload VMI in the repository
             String successMessage = UploadVMI.performUpload(filePath);
 
-            //upload functional test in the repository
-            String functionalityID = "";
-            if (functionalTestDispositionHeader != null) {
-                String successFunctionalTestMessage = UploadVMI.performUpload(filePath); //todo: get ID of the functional test
-                functionalityID = UUID.randomUUID().toString();
-           //     Functionality functionality = new Functionality(functionalityID,);
 
+            String functionalityID = "";
+            // if functionality test is selected
+            if (functionalTestDispositionHeader != null) {
+                File file = new File(functionalTestFilePath);
+
+                //upload functional test in the repository
+                String successFunctionalTestMessage = UploadVMI.performUpload(functionalTestFilePath); //todo: get ID
+                // of the functional test when Nishant fixes JSON
+                functionalityID = UUID.randomUUID().toString();
+
+                // TODO: fix UIBK message parsing when string will be fixed and parsable to JSON
+                String[] split = successFunctionalTestMessage.split(",");
+                Functionality functionality = new Functionality(functionalityID, 0, "tag",
+                        functionalTestDispositionHeader.getName(), "some description", split[3].substring(split[3]
+                        .indexOf(":") + 1), "optput description", null, "entice");
+                String insertStatement = FusekiUtils.generateInsertObjectStatement(functionality);
+                UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement),
+                        AppContextListener.prop.getProperty("fuseki.url.update"));
+                upp.execute();
+                file.delete();
             }
 
             if (successMessage != null) {
@@ -246,11 +260,11 @@ public class GUIService implements IGUIService {
 
                 // create DiskImage entity
                 DiskImage diskImage = new DiskImage(UUID.randomUUID().toString(), ImageType.VMI, imageDescription,
-                        imageName, "", FileFormat.IMG, avatarID != -1 ? avatarID + "" : "", false, "https://s3.tnode" +
+                        imageName, "", FileFormat.IMG, "http://193.2.72.90/src/images/avatars/" + (avatarID != -1 ?
+                        avatarID + "" : ""), false, "https://s3.tnode" +
                         ".com:9869/flexiant-entice/" + contentDispositionHeader.getFileName(), "", 0, userID,
-                        functionalityID, "", "", false,
-                        System.currentTimeMillis(), false, "1.0", (int) (file.length() / 1024),
-                        paretoPointIndexX, paretoPointIndexY, paretoPointId, categoryList);
+                        functionalityID, "", "", false, System.currentTimeMillis(), false, "1.0", (int) (file.length
+                        () / 1024), paretoPointIndexX, paretoPointIndexY, paretoPointId, categoryList);
 
                 String insertStatement = FusekiUtils.generateInsertObjectStatement(diskImage);
                 UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement),
@@ -374,11 +388,16 @@ public class GUIService implements IGUIService {
 //            if (Math.random() < 0.3) categoryList.add("Container");
 //            if (Math.random() < 0.3) categoryList.add("Operating system");
 //            if (Math.random() < 0.3) categoryList.add("Misc");
-
+            String userFullName = "dummy full name";
+            try {
+                userFullName = FusekiUtils.getAllEntityAttributes(User.class, diskImages.get(i).getRefOwnerId()).get(0).getFullName();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             enticeImages.add(new EnticeImage(diskImages.get(i).getId(), diskImages.get(i).getPictureUrl(), diskImages
                     .get(i).getTitle(), diskImages.get(i).getRefOwnerId() == null ? "unknown user" : diskImages.get
                     (i).getRefOwnerId(), diskImages.get(i).getDiskImageSize(), 0, diskImages.get(i).getCategoryList()
-                    , 0,diskImages.get(i).getDescription() ));
+                    , 0, diskImages.get(i).getDescription(),userFullName));
             //   count++;
         }
 
@@ -408,6 +427,10 @@ public class GUIService implements IGUIService {
 //        if (Math.random() < 0.3) categoryList.add("Misc");
 
         List<Fragment> fragmentList = FusekiUtils.getFragmentDataOfDiskImage(imageID, false);
+        List<Functionality> functionalityList = FusekiUtils.getFunctionalityOfDiskImage(diskImages.get(0)
+                .getRefFunctionalityId());
+        diskImages.get(0).setFunctionalityList(functionalityList);
+
         List<Repository> repositoriesList = FusekiUtils.getAllEntityAttributes(Repository.class);
         Set<String> setOfRepositoryIds = new HashSet<>();
         for (Fragment fragment : fragmentList) {
@@ -428,10 +451,11 @@ public class GUIService implements IGUIService {
 //        optimizationHistory.add("dummy URLS | SIZE | IMAGENAME2");
 //        optimizationHistory.add("dummy URLS | SIZE | IMAGENAME3");
 
-        return new EnticeDetailedImage(diskImages.get(0).getId(),diskImages.get(0).getPictureUrl(), diskImages.get(0)
-                .getTitle(), diskImages.get(0).getRefOwnerId() == null ? "unknown user" : diskImages.get
-                (0).getRefOwnerId(), diskImages.get(0).getDiskImageSize(), 0,
-                diskImages.get(0).getCategoryList(),0, matchingRepositories, null, null, diskImages.get(0).getDescription());
+        return new EnticeDetailedImage(diskImages.get(0).getId(), diskImages.get(0).getPictureUrl(), diskImages.get
+                (0).getTitle(), diskImages.get(0).getRefOwnerId() == null ? "unknown user" : diskImages.get(0)
+                .getRefOwnerId(), diskImages.get(0).getDiskImageSize(), 0, diskImages.get(0).getCategoryList(), 0,
+                matchingRepositories, diskImages.get(0).getFunctionalityList(), null, diskImages.get(0)
+                .getDescription(),"aaa");
     }
 
     private boolean listContainsId(Set<String> setOfRepositoryIds, String id) {
@@ -440,6 +464,26 @@ public class GUIService implements IGUIService {
         }
         return false;
     }
+
+    @GET
+    @Path("get_statistics_data")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String, Integer> getStatisticsData(@QueryParam("show_admin_data") boolean showAdminData, @QueryParam("user_id") String userID) {
+        Map<String, Integer> resultMap = new HashMap<>();
+
+        if(userID != null)
+            resultMap.put("number_of_user_images", FusekiUtils.getEntityCount(DiskImage.class.getSimpleName(),userID));
+        else
+        resultMap.put("number_of_all_images", FusekiUtils.getEntityCount(DiskImage.class.getSimpleName()));
+
+        resultMap.put("number_of_all_repositories", FusekiUtils.getEntityCount(Repository.class.getSimpleName()));
+        if (showAdminData) {
+            resultMap.put("number_of_all_users", FusekiUtils.getEntityCount(User.class.getSimpleName()));
+        }
+
+        return resultMap;
+    }
+
 
     @GET
     @Path("get_pareto_distribution")

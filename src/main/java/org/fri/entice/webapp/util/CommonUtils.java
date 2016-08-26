@@ -119,22 +119,71 @@ public class CommonUtils {
                 else if (resultObj.getP().endsWith("Fragment_HashValues"))
                     fragmentList.get(fragmentList.size() - 1).setHashValue(resultObj.getO());
             }
+//            "knowledgebase:Functionality_hasImplementation \"%s\" ;\n" +
+//                    "knowledgebase:Functionality_Classification \"%s\" ;\n" +
+//                    "knowledgebase:Functionality_Description \"%s\" ;\n" +
+//                    "knowledgebase:Functionality_Domain \"%s\" ;\n" +
+//                    "knowledgebase:Functionality_InputDescription \"%s\" ;\n" +
+//                    "knowledgebase:Functionality_Name \"%s\" ;\n" +
+//                    "knowledgebase:Functionality_OutputDescription \"%s\" ;\n" +
+//                    "knowledgebase:Functionality_Tag \"%s\" ;\n" +
+            else if (list.get(list.size() - 1) instanceof Functionality) {
+                List<Functionality> functionalityList = (List<Functionality>) list;
+                if (resultObj.getP().endsWith("Functionality_hasImplementation"))
+                    functionalityList.get(functionalityList.size() - 1).setRefImplementationId(resultObj.getO()
+                            .replaceFirst(FusekiUtils.KB_PREFIX_SHORT, ""));
+                else if (resultObj.getP().endsWith("Functionality_Classification"))
+                    functionalityList.get(functionalityList.size() - 1).setClassification(Integer.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Functionality_Description"))
+                    functionalityList.get(functionalityList.size() - 1).setDescription(resultObj.getO());
+                else if (resultObj.getP().endsWith("Functionality_Domain"))
+                    functionalityList.get(functionalityList.size() - 1).setDomain(resultObj.getO());
+                else if (resultObj.getP().endsWith("Functionality_InputDescription"))
+                    functionalityList.get(functionalityList.size() - 1).setInputDescription(resultObj.getO());
+                else if (resultObj.getP().endsWith("Functionality_Name"))
+                    functionalityList.get(functionalityList.size() - 1).setName(resultObj.getO());
+                else if (resultObj.getP().endsWith("Functionality_OutputDescription"))
+                    functionalityList.get(functionalityList.size() - 1).setOutputDescription(resultObj.getO());
+                else if (resultObj.getP().endsWith("Functionality_Tag"))
+                    functionalityList.get(functionalityList.size() - 1).setTag(resultObj.getO());
+            }
             else if (list.get(list.size() - 1) instanceof Delivery) {
-                List<Delivery> fragmentList = (List<Delivery>) list;
+                List<Delivery> deliveryList = (List<Delivery>) list;
                 if (resultObj.getP().endsWith("Delivery_hasDeliveredDiskImage"))
-                    fragmentList.get(fragmentList.size() - 1).setRefDiskImageId(resultObj.getO());
+                    deliveryList.get(deliveryList.size() - 1).setRefDiskImageId(resultObj.getO());
                 else if (resultObj.getP().endsWith("Delivery_hasFunctionality"))
-                    fragmentList.get(fragmentList.size() - 1).setRefFunctionalityId(resultObj.getO());
+                    deliveryList.get(deliveryList.size() - 1).setRefFunctionalityId(resultObj.getO());
                 else if (resultObj.getP().endsWith("Delivery_hasTargetRepository"))
-                    fragmentList.get(fragmentList.size() - 1).setRefTargetRepositoryId(resultObj.getO());
+                    deliveryList.get(deliveryList.size() - 1).setRefTargetRepositoryId(resultObj.getO());
                 else if (resultObj.getP().endsWith("Delivery_hasUser"))
-                    fragmentList.get(fragmentList.size() - 1).setRefUserId(resultObj.getO());
+                    deliveryList.get(deliveryList.size() - 1).setRefUserId(resultObj.getO());
                 else if (resultObj.getP().endsWith("Delivery_DeliveryTime"))
-                    fragmentList.get(fragmentList.size() - 1).setDeliveryTime(Long.valueOf(resultObj.getO()));
+                    deliveryList.get(deliveryList.size() - 1).setDeliveryTime(Long.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Delivery_RequestTime"))
-                    fragmentList.get(fragmentList.size() - 1).setRequestTime(Long.valueOf(resultObj.getO()));
+                    deliveryList.get(deliveryList.size() - 1).setRequestTime(Long.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Delivery_TargetCloud"))
-                    fragmentList.get(fragmentList.size() - 1).setTargetCloud(resultObj.getO());
+                    deliveryList.get(deliveryList.size() - 1).setTargetCloud(resultObj.getO());
+            }
+//            "     knowledgebase:User_Email        \"%s\" ;\n" +
+//                    "        knowledgebase:User_FullName     \"%s\" ;\n" +
+//                    "        knowledgebase:User_PhoneNumber  \"%s\" ;\n" +
+//                    "        knowledgebase:User_UserName     \"%s\" ;" +
+//                    "        knowledgebase:User_Password     \"%s\" ;" +
+//                    "        knowledgebase:User_Privilege     \"%s\" ;" +
+            else if (list.get(list.size() - 1) instanceof User) {
+                List<User> userList = (List<User>) list;
+                if (resultObj.getP().endsWith("User_Email"))
+                    userList.get(userList.size() - 1).setEmail(resultObj.getO());
+                else if (resultObj.getP().endsWith("User_FullName"))
+                    userList.get(userList.size() - 1).setFullName(resultObj.getO());
+                else if (resultObj.getP().endsWith("User_PhoneNumber"))
+                    userList.get(userList.size() - 1).setPhoneNumber(resultObj.getO());
+                else if (resultObj.getP().endsWith("User_UserName"))
+                    userList.get(userList.size() - 1).setUsername(resultObj.getO());
+                else if (resultObj.getP().endsWith("User_Password"))
+                    userList.get(userList.size() - 1).setPassword(resultObj.getO());
+                else if (resultObj.getP().endsWith("User_Privilege"))
+                    userList.get(userList.size() - 1).setGroupID(Integer.valueOf(resultObj.getO()));
             }
             else if (list.get(list.size() - 1) instanceof HistoryData) {
                 List<HistoryData> historyDataList = (List<HistoryData>) list;
@@ -151,9 +200,6 @@ public class CommonUtils {
             }
             else if (list.get(list.size() - 1) instanceof Pareto) {
                 List<Pareto> paretoList = (List<Pareto>) list;
-
-                if(resultObj.getS().equals("e12f2c32-efd7-48af-8c96-f0a4a179d9d8"))
-                    System.out.println();
 
                 if (resultObj.getP().endsWith("Pareto_Objectives"))
                     paretoList.get(paretoList.size() - 1).setTableValuesFromString(resultObj.getO(), Double.class);

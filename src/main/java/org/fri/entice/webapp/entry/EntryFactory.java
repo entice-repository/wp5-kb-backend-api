@@ -11,6 +11,8 @@ public class EntryFactory {
         else if (clazz.getSimpleName().equals("HistoryData")) return (T) new HistoryData(id);
         else if (clazz.getSimpleName().equals("FragmentHistoryDeliveryData")) return (T) new FragmentHistoryDeliveryData(id);
         else if (clazz.getSimpleName().equals("Pareto")) return (T) new Pareto(id);
+        else if (clazz.getSimpleName().equals("Functionality")) return (T) new Functionality(id);
+        else if (clazz.getSimpleName().equals("User")) return (T) new User(id);
         return null;
     }
 }

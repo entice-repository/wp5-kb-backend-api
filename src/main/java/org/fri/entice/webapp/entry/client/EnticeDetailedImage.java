@@ -1,5 +1,6 @@
 package org.fri.entice.webapp.entry.client;
 
+import org.fri.entice.webapp.entry.Functionality;
 import org.fri.entice.webapp.entry.Repository;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -9,7 +10,7 @@ import java.util.List;
 public class EnticeDetailedImage extends EnticeImage {
 
     private List<Repository> repositoriesList;
-    private List<String> functionalTests;
+    private List<Functionality> functionalTests;
     private List<String> optimizationHistory; //optimization history list: URLS||SIZE||IMAGENAME
 
 //    public EnticeDetailedImage(String id, int avatarID, String imageName, String ownerID, int imageSize, int pulls, List<String>
@@ -18,9 +19,9 @@ public class EnticeDetailedImage extends EnticeImage {
 //    }
 
     public EnticeDetailedImage(String id, String avatarURI, String imageName, String ownerID, int imageSize, int pulls, List<String>
-            categories, int numberOfChilds, List<Repository> repositoriesList, List<String> functionalTests,
-                               List<String> optimizationHistory,String description) {
-        super(id, avatarURI, imageName, ownerID, imageSize, pulls, categories, numberOfChilds,description);
+            categories, int numberOfChilds, List<Repository> repositoriesList, List<Functionality> functionalTests,
+                               List<String> optimizationHistory,String description, String ownerFullName) {
+        super(id, avatarURI, imageName, ownerID, imageSize, pulls, categories, numberOfChilds,description, ownerFullName);
         this.repositoriesList = repositoriesList;
         this.functionalTests = functionalTests;
         this.optimizationHistory = optimizationHistory;
@@ -34,11 +35,11 @@ public class EnticeDetailedImage extends EnticeImage {
         this.repositoriesList = repositoriesList;
     }
 
-    public List<String> getFunctionalTests() {
+    public List<Functionality> getFunctionalTests() {
         return functionalTests;
     }
 
-    public void setFunctionalTests(List<String> functionalTests) {
+    public void setFunctionalTests(List<Functionality> functionalTests) {
         this.functionalTests = functionalTests;
     }
 

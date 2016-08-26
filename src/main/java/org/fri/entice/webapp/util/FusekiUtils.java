@@ -55,7 +55,7 @@ public class FusekiUtils {
                         "        knowledgebase:User_UserName     \"%s\" ;" +
                         "        knowledgebase:User_Password     \"%s\" ;" +
                         "        knowledgebase:User_Privilege     \"%s\" ;" +
-                        "}", user.getId(), user.getFullName(), user.getEmail(), user.getPhoneNumber(), user
+                        "}", user.getId(), user.getEmail(), user.getFullName() , user.getPhoneNumber(), user
                         .getUsername(), user.getPassword(), user.getGroupID());
             }
             // CREATE DISK IMAGE
@@ -201,7 +201,7 @@ public class FusekiUtils {
                                 "knowledgebase:Functionality_OutputDescription \"%s\" ;\n" +
                                 "knowledgebase:Functionality_Tag \"%s\" ;\n" +
                                 "}", functionality.getId(), functionality.getRefImplementationId(), functionality
-                        .getClassification(), functionality.getInputDescription(), functionality.getDomain(),
+                        .getClassification(), functionality.getDescription(), functionality.getDomain(),
                         functionality.getInputDescription(), functionality.getName(), functionality
                                 .getOutputDescription(), functionality.getTag());
             }
@@ -343,6 +343,20 @@ public class FusekiUtils {
                     "}\n";
 //                    "LIMIT 200";
         }
+        else if (entityClass.equals("User") && queryFilterCondition.length > 0) {
+            return "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "\n" +
+                    "SELECT ?s ?p ?o\n" +
+                    "WHERE { knowledgebase:"+queryFilterCondition[0]+" a knowledgebase:User ; ?p ?o }";
+        }   else if (entityClass.equals("Functionality")) {
+            return "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "\n" +
+                    "SELECT ?s ?p ?o\n" +
+                    "WHERE { knowledgebase:"+queryFilterCondition[0]+" a knowledgebase:Functionality ; ?p ?o" +
+                    " }\n";
+        }
         else if (entityClass.equals("Pareto") && queryFilterCondition.length > 0) {
             return "prefix knowledgebase: <http://www.semanticweb" +
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
@@ -395,6 +409,22 @@ public class FusekiUtils {
                     "SELECT ?s ?p ?o\n" +
                     "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o }\n";
 //                    "LIMIT 200";
+    }
+
+    public static String getAllEntitiesCount(String entityClass, String... queryFilterCondition) {
+        if (entityClass.equals("DiskImage") && queryFilterCondition.length > 0)
+            return "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
+                    "\n" +
+                    "SELECT (COUNT(DISTINCT ?s) AS ?count)\n" +
+                    "WHERE { ?s a knowledgebase:" + entityClass + " ; knowledgebase:DiskImage_hasOwner " +
+                    "\"" + queryFilterCondition[0] + "\"^^xsd:anyURI }";
+        else
+            return "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "SELECT (COUNT(DISTINCT ?s) AS ?count)\n" +
+                    "WHERE { ?s a knowledgebase:" + entityClass + "}";
     }
 
     public static String getEntityQuery(String entityClass, String... postfixCondition) {
@@ -801,6 +831,20 @@ public class FusekiUtils {
         return resultObjs;
     }
 
+    public static int getCountResult(ResultSet results) {
+        // For each solution in the result set
+        while (results.hasNext()) {
+            QuerySolution qs = results.next();
+            Iterator<Var> varIter = ((ResultBinding) qs).getBinding().vars();
+            while (varIter.hasNext()) {
+                Var var = varIter.next();
+                if (var.getVarName().equals("count"))
+                    return (int)((ResultBinding) qs).getBinding().get(var).getLiteralValue();
+            }
+        }
+        return 0;
+    }
+
     public static <T extends MyEntry> List<T> getAllEntityAttributes(Class<T> clazz, String... conditions) {
         String selectQuery = FusekiUtils.getAllEntitiesQuery(clazz.getSimpleName(), conditions);
 
@@ -818,7 +862,8 @@ public class FusekiUtils {
                 resultObj.setS(conditions[0]);
             }
         }
-        else if (conditions.length > 0 && clazz.getSimpleName().equals("DiskImage") && resultObjs.size() > 0 &&
+        else if (conditions.length > 0 && (clazz.getSimpleName().equals("DiskImage") || clazz.getSimpleName().equals
+                ("Functionality") || clazz.getSimpleName().equals("User")) && resultObjs.size() > 0 &&
                 resultObjs.get(0).getS() == null) {
             for (ResultObj resultObj : resultObjs) {
                 resultObj.setS(conditions[0]);
@@ -827,6 +872,16 @@ public class FusekiUtils {
 
 
         return FusekiUtils.mapResultObjectListToEntry(clazz, resultObjs);
+    }
+
+    public static int getEntityCount(String classSimpleName, String ... conditions) {
+        String selectQuery = FusekiUtils.getAllEntitiesCount(classSimpleName, conditions);
+
+        QueryExecution qe = QueryExecutionFactory.sparqlService(AppContextListener.prop.getProperty("fuseki.url" + ""
+                + ".query"), selectQuery);
+        ResultSet results = qe.execSelect();
+
+        return FusekiUtils.getCountResult(results);
     }
 
     public static <T extends MyEntry> String getEntityID(Class<T> clazz, String... conditions) {
@@ -947,6 +1002,12 @@ public class FusekiUtils {
         }
 
         return fragmentList;
+    }
+
+    public static List<Functionality> getFunctionalityOfDiskImage(String functionalityID){
+        List<Functionality> functionalityList = FusekiUtils.getAllEntityAttributes(Functionality.class,functionalityID);
+
+        return functionalityList;
     }
 }
 

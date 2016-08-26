@@ -19,6 +19,7 @@ public class DiskImage extends MyEntry {
     private double price; //currency datatype?? I think that int would do it
     private String refOwnerId; //the ID of the user owning the image
     private String refFunctionalityId; //the ID of the functionallity this image supports
+    private List<Functionality> functionalityList; //the ID of the functionallity this image supports
     private String refQualityId; //the ID of the quality this image is associated with
     private String refOperatingSystemId; //the ID Of the operating system this image can run on
     private boolean needsData; //boolean true-false
@@ -285,6 +286,14 @@ public class DiskImage extends MyEntry {
            categoryList = new ArrayList<>();
 
         categoryList.add(stringValue);
+    }
+
+    public List<Functionality> getFunctionalityList() {
+        return functionalityList;
+    }
+
+    public void setFunctionalityList(List<Functionality> functionalityList) {
+        this.functionalityList = functionalityList;
     }
 }
 

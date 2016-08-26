@@ -3,8 +3,7 @@ package org.fri.entice.webapp.entry;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class Functionality {
-    private String id;
+public class Functionality extends MyEntry  {
 
     // A classification system, such as Universal Decimal Classification (UDC) or any other taxonomy
     // could be used to classify various functionalities. The users will then be able to search according
@@ -32,9 +31,13 @@ public class Functionality {
     // This is the application domain for the given functionality, e.g. used in civil engineering, medicine etc.
     private String domain;
 
+    public Functionality(String id) {
+        super(id);
+    }
+
     public Functionality(String id, int classification, String tag, String name, String description, String
             inputDescription, String outputDescription, String refImplementationId, String domain) {
-        this.id = id;
+        super(id);
         this.classification = classification;
         this.tag = tag;
         this.name = name;
@@ -43,14 +46,6 @@ public class Functionality {
         this.outputDescription = outputDescription;
         this.refImplementationId = refImplementationId;
         this.domain = domain;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public int getClassification() {
