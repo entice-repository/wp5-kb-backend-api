@@ -230,7 +230,7 @@ public class GUIService implements IGUIService {
             if (functionalTestDispositionHeader != null) saveFile(functionalTestInputStream, functionalTestFilePath);
 
             //upload VMI in the repository
-            String successMessage = UploadVMI.performUpload(filePath);
+            String successMessage = "";//UploadVMI.performUpload(filePath);
 
 
             String functionalityID = "";

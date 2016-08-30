@@ -13,6 +13,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.fri.entice.webapp.entry.client.MyJsonObject;
 import org.fri.entice.webapp.entry.client.SZTAKIExecuteObj;
 
 import javax.ws.rs.*;
@@ -67,7 +68,7 @@ public class SZTAKIService implements ISZTAKIService {
             System.out.println(jsonInString);
 
             HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpPost httppost = new HttpPost(AppContextListener.prop.getProperty("sztaki.service.url"));
+            HttpPost httppost = new HttpPost(AppContextListener.prop.getProperty("sztaki.optimizer.url"));
             httppost.addHeader("Content-Type", "application/json");
             httppost.setEntity(new StringEntity(jsonInString));
             System.out.println("executing request " + httppost.getRequestLine());
@@ -126,7 +127,7 @@ public class SZTAKIService implements ISZTAKIService {
     public String getStatus(@QueryParam("optimizer_id") String optimizerID) {
         try {
             // todo: optimize query parameter
-            URIBuilder builder = new URIBuilder(AppContextListener.prop.getProperty("sztaki.service.url") + "/" + optimizerID);
+            URIBuilder builder = new URIBuilder(AppContextListener.prop.getProperty("sztaki.optimizer.url") + "/" + optimizerID);
 //            builder.setParameter("id", optimizerID);
 
             HttpClient httpClient = HttpClientBuilder.create().build();
@@ -165,7 +166,7 @@ public class SZTAKIService implements ISZTAKIService {
     public String stopOptimization(@QueryParam("optimizer_id") String optimizerID) {
         try {
             HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpPut httpPut = new HttpPut(AppContextListener.prop.getProperty("sztaki.service.url"));
+            HttpPut httpPut = new HttpPut(AppContextListener.prop.getProperty("sztaki.optimizer.url"));
             httpPut.addHeader("optimizer_id", optimizerID);
 
             HttpResponse response = httpClient.execute(httpPut);
@@ -197,11 +198,101 @@ public class SZTAKIService implements ISZTAKIService {
     public String cancelOptimization(@QueryParam("optimizer_id") String optimizerID) {
         try {
             HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpDelete httpDelete = new HttpDelete(AppContextListener.prop.getProperty("sztaki.service.url"));
+            HttpDelete httpDelete = new HttpDelete(AppContextListener.prop.getProperty("sztaki.optimizer.url"));
             httpDelete.addHeader("optimizer_id", optimizerID);
 
             HttpResponse response = httpClient.execute(httpDelete);
             HttpEntity resEntity = response.getEntity();
+
+            System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+
+            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            StringBuffer result = new StringBuffer();
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+
+            System.out.println(result.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
+    @POST
+    @Path("execute_image_build")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    public String executeImageBuild(MyJsonObject jsonObject) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonInString = mapper.writeValueAsString(jsonObject);
+            System.out.println(jsonInString);
+
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            HttpPost httppost = new HttpPost(AppContextListener.prop.getProperty("sztaki.builder.url"));
+            httppost.addHeader("Content-Type", "application/json");
+            httppost.setEntity(new StringEntity(jsonInString));
+            System.out.println("executing request " + httppost.getRequestLine());
+            HttpResponse response = httpClient.execute(httppost);
+            HttpEntity resEntity = response.getEntity();
+
+            System.out.println(response.getStatusLine());
+            if (resEntity != null) {
+                return EntityUtils.toString(resEntity, "UTF-8");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
+    @GET
+    @Path("get_builder_status")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    public String getImageBuilderStatus(@QueryParam("builder_id") String builderID, @QueryParam("show_result") boolean showResult) {
+        try {
+            URIBuilder builder = new URIBuilder(AppContextListener.prop.getProperty("sztaki.builder.url") + "/" + builderID+ (showResult ? "/result" : ""));
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            HttpGet httpGet = new HttpGet(builder.build());
+            HttpResponse response = httpClient.execute(httpGet);
+
+            System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+            System.out.println(response.getStatusLine());
+            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            StringBuffer result = new StringBuffer();
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+
+//            System.out.println(result.toString());
+            return result.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } return null;
+    }
+
+    @GET
+    @Path("delete_builder")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    public String stopImageBuilder(@QueryParam("builder_id") String builderID) {
+        try {
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            HttpDelete httpDelete = new HttpDelete(AppContextListener.prop.getProperty("sztaki.builder.url") + "/" + builderID+ "/result");
+            httpDelete.addHeader("optimizer_id", builderID);
+            HttpResponse response = httpClient.execute(httpDelete);
 
             System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
 

@@ -1,5 +1,7 @@
 package org.fri.entice.webapp.rest;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fri.entice.webapp.cassandra.CassandraParamsObj;
 import org.fri.entice.webapp.cassandra.CassandraService;
 import org.fri.entice.webapp.util.CommonUtils;
@@ -30,6 +32,9 @@ public class AppContextListener implements ServletContextListener {
 //            String value = rb.getString(key);
 //            System.out.println(key + ": " + value);
 //        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
         try {
             // init logger

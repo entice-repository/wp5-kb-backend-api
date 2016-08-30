@@ -12,6 +12,7 @@ public class Repository extends MyEntry {
     // There could be more than one repository in a particular country and geolocation of repository may influence the
     // download time. Each GeoLocation has a unique GeoLocation_id.
     private String geolocationId;
+    private List<Geolocation> geolocationList;
 
     // Each repository can be easily accessed through its unique url.
     private String interfaceEndpoint;
@@ -153,5 +154,13 @@ public class Repository extends MyEntry {
 
     public void setTheoreticalCommunicationalPerformance(double theoreticalCommunicationalPerformance) {
         this.theoreticalCommunicationalPerformance = theoreticalCommunicationalPerformance;
+    }
+
+    public List<Geolocation> getGeolocationList() {
+        return geolocationList;
+    }
+
+    public void setGeolocationList(List<Geolocation> geolocationList) {
+        this.geolocationList = geolocationList;
     }
 }
