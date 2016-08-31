@@ -6,13 +6,11 @@ import java.util.List;
 
 @XmlRootElement
 public class Repository extends MyEntry {
-    // This property means a repository’s infrastructure is in which country. Each county has a unique Country_id.
-    private String countryId;
 
     // There could be more than one repository in a particular country and geolocation of repository may influence the
     // download time. Each GeoLocation has a unique GeoLocation_id.
     private String geolocationId;
-    private List<Geolocation> geolocationList;
+    private Geolocation geolocation;
 
     // Each repository can be easily accessed through its unique url.
     private String interfaceEndpoint;
@@ -24,13 +22,7 @@ public class Repository extends MyEntry {
 
     // As fast storage costs more and slow storage costs less, it is necessary to provide mechanisms for storing VM
     // images at three speed levels; namely: fast, medium and low-speed. Level1 means fast storage.
-    private double priorityLevel1Cost;  //OLD
-//    private double storageLevelCost;       // TODO: to be updated and aranged with UIBK
-
-    private double priorityLevel2Cost;
-
-    // Level1 means low-speed storage.
-    private double priorityLevel3Cost;
+    private double storageLevelCost;       // TODO: it will be used in future and presented as a list
 
     private double theoreticalCommunicationalPerformance;   // MB
 
@@ -44,38 +36,21 @@ public class Repository extends MyEntry {
     // behind the Cloud-based Entice environment.
     private List<String> supportedFormat; // TODO: Should we add the speed value of each format
 
-    public Repository(String id, String countryId, String geolocationId, String interfaceEndpoint, double
-            operationalCost, double priorityLevel1Cost, double priorityLevel2Cost, double priorityLevel3Cost, double
-            space, List<String> supportedFormat, double theoreticalCommunicationalPerformance) {
+    public Repository(String id, String geolocationId, String interfaceEndpoint, double
+            operationalCost, double storageLevelCost, double theoreticalCommunicationalPerformance, double space,
+                      List<String> supportedFormat) {
         super(id);
-        this.countryId = countryId;
         this.geolocationId = geolocationId;
         this.interfaceEndpoint = interfaceEndpoint;
         this.operationalCost = operationalCost;
-        this.priorityLevel1Cost = priorityLevel1Cost;
-        this.priorityLevel2Cost = priorityLevel2Cost;
-        this.priorityLevel3Cost = priorityLevel3Cost;
+        this.storageLevelCost = storageLevelCost;
+        this.theoreticalCommunicationalPerformance = theoreticalCommunicationalPerformance;
         this.space = space;
         this.supportedFormat = supportedFormat;
-        this.theoreticalCommunicationalPerformance = theoreticalCommunicationalPerformance;
     }
 
     public Repository(String id) {
-       super(id);
-    }
-
-//    @Override
-//    public void createInstanceWithId(String id) {
-//        this.i
-//        super(id);
-//    }
-
-    public String getCountryId() {
-        return countryId;
-    }
-
-    public void setCountryId(String countryId) {
-        this.countryId = countryId;
+        super(id);
     }
 
     public String getGeolocationId() {
@@ -100,30 +75,6 @@ public class Repository extends MyEntry {
 
     public void setOperationalCost(double operationalCost) {
         this.operationalCost = operationalCost;
-    }
-
-    public double getPriorityLevel1Cost() {
-        return priorityLevel1Cost;
-    }
-
-    public void setPriorityLevel1Cost(double priorityLevel1Cost) {
-        this.priorityLevel1Cost = priorityLevel1Cost;
-    }
-
-    public double getPriorityLevel2Cost() {
-        return priorityLevel2Cost;
-    }
-
-    public void setPriorityLevel2Cost(double priorityLevel2Cost) {
-        this.priorityLevel2Cost = priorityLevel2Cost;
-    }
-
-    public double getPriorityLevel3Cost() {
-        return priorityLevel3Cost;
-    }
-
-    public void setPriorityLevel3Cost(double priorityLevel3Cost) {
-        this.priorityLevel3Cost = priorityLevel3Cost;
     }
 
     public double getSpace() {
@@ -156,11 +107,19 @@ public class Repository extends MyEntry {
         this.theoreticalCommunicationalPerformance = theoreticalCommunicationalPerformance;
     }
 
-    public List<Geolocation> getGeolocationList() {
-        return geolocationList;
+    public double getStorageLevelCost() {
+        return storageLevelCost;
     }
 
-    public void setGeolocationList(List<Geolocation> geolocationList) {
-        this.geolocationList = geolocationList;
+    public void setStorageLevelCost(double storageLevelCost) {
+        this.storageLevelCost = storageLevelCost;
+    }
+
+    public Geolocation getGeolocation() {
+        return geolocation;
+    }
+
+    public void setGeolocation(Geolocation geolocation) {
+        this.geolocation = geolocation;
     }
 }

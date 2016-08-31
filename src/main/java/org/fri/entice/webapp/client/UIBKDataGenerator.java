@@ -84,11 +84,10 @@ public class UIBKDataGenerator {
 
                 // TODO: fill the data from amazon from cheaper to expensier (6 repos):
                 // https://aws.amazon.com/s3/pricing/
-                Repository repository = new Repository(UUID.randomUUID().toString(), "http://www.example" + "" +
-                        ".org/country", "http://www.example.org/geolocationID", "http://www.example" + "" +
+                Repository repository = new Repository(UUID.randomUUID().toString(), "geolocationID", "http://www" +
+                        ".example" + "" +
                         ".org/interfaceEndpoint", 0.0275 + Math.random() * 0.0133, 0.0374 + Math.random() * 0.0034,
-                        0.0374 + Math.random() * 0.0034, 0.0374 + Math.random() * 0.0034, 50 + Math.random() * 100,
-                        supportedFormats,1 + Math.random() *10);
+                        0.0374 + Math.random() * 0.0034, 50 + Math.random() * 100, supportedFormats);
                 repositories.add(repository);
                 insertStatement = FusekiUtils.generateInsertObjectStatement(repository);
                 upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);

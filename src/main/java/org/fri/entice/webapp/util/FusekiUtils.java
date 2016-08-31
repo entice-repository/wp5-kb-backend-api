@@ -111,7 +111,7 @@ public class FusekiUtils {
             else if (obj instanceof DiskImageSLA) {
                 DiskImageSLA diskImageSLA = (DiskImageSLA) obj;
                 return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
-                        "knowledgebase:%s a knowledgebase:DiskImage, owl:NamedIndividual, knowledgebase:" +
+                        "knowledgebase:%s a knowledgebase:DiskImageSLA, owl:NamedIndividual, knowledgebase:" +
                         "knowledgebase:DiskImageSLA_hasAgreedAvailabilityCountry  \"%s\" ;\n" +
                         "knowledgebase:DiskImageSLA_hasAgreedAvailabilityRepository  \"%s\" ;\n" +
                         "knowledgebase:DiskImageSLA_hasAgreedRestriction  \"%s\" ;\n" +
@@ -205,6 +205,21 @@ public class FusekiUtils {
                         functionality.getInputDescription(), functionality.getName(), functionality
                                 .getOutputDescription(), functionality.getTag());
             }
+            // CREATE GEOLOCATION
+            else if (obj instanceof Geolocation) {
+                Geolocation geolocation = (Geolocation) obj;
+                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                        "knowledgebase:%s a knowledgebase:Geolocation, owl:NamedIndividual ;" +
+                        "knowledgebase:GeoLocation_CountryName \"%s\" ;\n" +
+                        "knowledgebase:Geolocation_Continent \"%s\" ;\n" +
+                        "knowledgebase:Geolocation_Latitude %f ;\n" +
+                        "knowledgebase:Geolocation_Longitude %f ;\n" +
+                        "knowledgebase:GeoLocation_Altitude %f ;\n" +
+                        "knowledgebase:GeoLocation_Timezone \"%s\" ;\n" +
+                        "}", geolocation.getId(), geolocation.getCountryName(), geolocation.getContinent(),
+                        geolocation.getLatitude(), geolocation.getLongitude(), geolocation.getAltitude(), geolocation
+                                .getTimezone());
+            }
             // CREATE REPOSITORY
             else if (obj instanceof Repository) {
                 Repository repository = (Repository) obj;
@@ -218,19 +233,34 @@ public class FusekiUtils {
                 return String.format(Locale.US, "PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " +
                                 XSD_PREFIX + " " + " INSERT DATA {" +
                                 "knowledgebase:%s a knowledgebase:Repository, owl:NamedIndividual ;" +
-                                "knowledgebase:Repository_hasCountry \"%s\"^^xsd:anyURI ;\n" +
-                                "knowledgebase:Repository_hasGeoLocation \"%s\"^^xsd:anyURI ;\n" +
+                                "knowledgebase:Repository_InterfaceEndPoint \"%s\"^^xsd:anyURI ;\n" +
+                                "knowledgebase:Repository_GeoLocation \"%s\"^^xsd:anyURI ;\n" +
                                 "knowledgebase:Repository_OperationalCost %f ;\n" +
-                                "knowledgebase:Repository_PriorityLevel1Cost %f ;\n" +
-                                "knowledgebase:Repository_PriorityLevel2Cost %f ;\n" +
-                                "knowledgebase:Repository_PriorityLevel3Cost %f ;\n" +
-                                "knowledgebase:Repository_Space \"%f\"^^xsd:double ;\n" +
+                                "knowledgebase:Repository_StorageLevelCost %f ;\n" +
+                                "knowledgebase:Repository_Space %f ;\n" +
+                                "knowledgebase:Repository_TheoreticalCommunicationalPerformance %f ;\n" +
                                 "knowledgebase:Repository_SupportedFormat " + supportedFormats + " ;\n" +
-                                "knowledgebase:Repository_TheoreticalCommunicationalPerformance \"%f\"^^xsd:double ;\n" +
-                                //todo: interfaceEndpoint anyURI
-                                "}", repository.getId(), repository.getCountryId(), repository.getGeolocationId(),
-                        repository.getOperationalCost(), repository.getPriorityLevel1Cost(), repository
-                                .getPriorityLevel2Cost(), repository.getPriorityLevel3Cost(), repository.getSpace(),repository.getTheoreticalCommunicationalPerformance());
+                                "}", repository.getId(), repository.getInterfaceEndpoint(), repository
+                        .getGeolocationId(), repository.getOperationalCost(), repository.getStorageLevelCost(),
+                        repository.getSpace(), repository.getTheoreticalCommunicationalPerformance(), repository
+                                .getSupportedFormat());
+
+//                return String.format(Locale.US, "PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " PREFIX " +
+//                                XSD_PREFIX + " " + " INSERT DATA {" +
+//                                "knowledgebase:%s a knowledgebase:Repository, owl:NamedIndividual ;" +
+//                                "knowledgebase:Repository_hasCountry \"%s\"^^xsd:anyURI ;\n" +
+//                                "knowledgebase:Repository_hasGeoLocation \"%s\"^^xsd:anyURI ;\n" +
+//                                "knowledgebase:Repository_OperationalCost %f ;\n" +
+//                                "knowledgebase:Repository_PriorityLevel1Cost %f ;\n" +
+//                                "knowledgebase:Repository_PriorityLevel2Cost %f ;\n" +
+//                                "knowledgebase:Repository_PriorityLevel3Cost %f ;\n" +
+//                                "knowledgebase:Repository_Space \"%f\"^^xsd:double ;\n" +
+//                                "knowledgebase:Repository_SupportedFormat " + supportedFormats + " ;\n" +
+//                                "knowledgebase:Repository_TheoreticalCommunicationalPerformance \"%f\"^^xsd:double ;\n" +
+//                                //todo: interfaceEndpoint anyURI
+//                                "}", repository.getId(), repository.getCountryId(), repository.getGeolocationId(),
+//                        repository.getOperationalCost(), repository.getPriorityLevel1Cost(), repository
+//                                .getPriorityLevel2Cost(), repository.getPriorityLevel3Cost(), repository.getSpace(),repository.getTheoreticalCommunicationalPerformance());
             }
             // CREATE HISTORY DATA
             else if (obj instanceof HistoryData) {

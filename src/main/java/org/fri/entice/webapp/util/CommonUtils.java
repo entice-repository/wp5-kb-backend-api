@@ -27,23 +27,14 @@ public class CommonUtils {
 
             if (list.get(list.size() - 1) instanceof Repository) {
                 List<Repository> repositoryList = (List<Repository>) list;
-                if (resultObj.getP().endsWith("Repository_Country"))
-                    repositoryList.get(repositoryList.size() - 1).setCountryId(resultObj.getO());
-                else if (resultObj.getP().endsWith("Repository_GeoLocation"))
+                if (resultObj.getP().endsWith("Repository_GeoLocation"))
                     repositoryList.get(repositoryList.size() - 1).setGeolocationId(resultObj.getO());
-                else if (resultObj.getP().endsWith("Repository_OperationalCost"))
+                else if (resultObj.getP().endsWith("Repository_InterfaceEndPoint"))
                     repositoryList.get(repositoryList.size() - 1).setInterfaceEndpoint(resultObj.getO());
                 else if (resultObj.getP().endsWith("Repository_OperationalCost"))
                     repositoryList.get(repositoryList.size() - 1).setOperationalCost(Double.valueOf(resultObj.getO()));
-                else if (resultObj.getP().endsWith("Repository_PriorityLevel1Cost"))
-                    repositoryList.get(repositoryList.size() - 1).setPriorityLevel1Cost(Double.valueOf(resultObj.getO
-                            ()));
-                else if (resultObj.getP().endsWith("Repository_PriorityLevel2Cost"))
-                    repositoryList.get(repositoryList.size() - 1).setPriorityLevel2Cost(Double.valueOf(resultObj.getO
-                            ()));
-                else if (resultObj.getP().endsWith("Repository_PriorityLevel3Cost"))
-                    repositoryList.get(repositoryList.size() - 1).setPriorityLevel3Cost(Double.valueOf(resultObj.getO
-                            ()));
+                else if (resultObj.getP().endsWith("Repository_StorageLevelCost"))
+                    repositoryList.get(repositoryList.size() - 1).setStorageLevelCost(Double.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Repository_Space"))
                     repositoryList.get(repositoryList.size() - 1).setSpace(Double.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Repository_SupportedFormat"))

@@ -64,10 +64,10 @@ public class PerformanceTest {
                 if (Math.random() < 0.5) supportedFormats.add("CUE");
 
 
-                Repository repository = new Repository(UUID.randomUUID().toString(), "http://www.example" + "" +
-                        ".org/country", "http://www.example.org/geolocationID", "http://www.example" +
-                        ".org/interfaceEndpoint", Math.random() * 100, Math.random() * 20, 20 + Math.random() * 20,
-                        40 + Math.random() * 20, 50 + Math.random() * 100, supportedFormats,1 + Math.random() *10);
+                Repository repository = new Repository(UUID.randomUUID().toString(), "geolocationID", "http://www" +
+                        ".example" + "" +
+                        ".org/interfaceEndpoint", 0.0275 + Math.random() * 0.0133, 0.0374 + Math.random() * 0.0034,
+                        0.0374 + Math.random() * 0.0034, 50 + Math.random() * 100, supportedFormats);
                 repositories.add(repository);
                 String insertStatement = FusekiUtils.generateInsertObjectStatement(repository);
                 UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);

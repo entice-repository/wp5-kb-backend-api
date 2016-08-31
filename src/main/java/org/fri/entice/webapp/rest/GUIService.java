@@ -1,6 +1,7 @@
 package org.fri.entice.webapp.rest;
 
 import com.vmrepository.RepoGuardClientFunctionalities.MOEstart;
+import com.vmrepository.RepoGuardClientFunctionalities.UploadImageAsInstanceFromS3;
 import com.vmrepository.RepoGuardClientFunctionalities.UploadVMI;
 import com.vmrepository.repoguardwebserver.FileNotFoundException_Exception;
 import com.vmrepository.repoguardwebserver.IOException_Exception;
@@ -390,14 +391,15 @@ public class GUIService implements IGUIService {
 //            if (Math.random() < 0.3) categoryList.add("Misc");
             String userFullName = "dummy full name";
             try {
-                userFullName = FusekiUtils.getAllEntityAttributes(User.class, diskImages.get(i).getRefOwnerId()).get(0).getFullName();
+                userFullName = FusekiUtils.getAllEntityAttributes(User.class, diskImages.get(i).getRefOwnerId()).get
+                        (0).getFullName();
             } catch (Exception e) {
                 e.printStackTrace();
             }
             enticeImages.add(new EnticeImage(diskImages.get(i).getId(), diskImages.get(i).getPictureUrl(), diskImages
                     .get(i).getTitle(), diskImages.get(i).getRefOwnerId() == null ? "unknown user" : diskImages.get
                     (i).getRefOwnerId(), diskImages.get(i).getDiskImageSize(), 0, diskImages.get(i).getCategoryList()
-                    , 0, diskImages.get(i).getDescription(),userFullName));
+                    , 0, diskImages.get(i).getDescription(), userFullName));
             //   count++;
         }
 
@@ -455,7 +457,7 @@ public class GUIService implements IGUIService {
                 (0).getTitle(), diskImages.get(0).getRefOwnerId() == null ? "unknown user" : diskImages.get(0)
                 .getRefOwnerId(), diskImages.get(0).getDiskImageSize(), 0, diskImages.get(0).getCategoryList(), 0,
                 matchingRepositories, diskImages.get(0).getFunctionalityList(), null, diskImages.get(0)
-                .getDescription(),"aaa");
+                .getDescription(), "aaa");
     }
 
     private boolean listContainsId(Set<String> setOfRepositoryIds, String id) {
@@ -468,13 +470,13 @@ public class GUIService implements IGUIService {
     @GET
     @Path("get_statistics_data")
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, Integer> getStatisticsData(@QueryParam("show_admin_data") boolean showAdminData, @QueryParam("user_id") String userID) {
+    public Map<String, Integer> getStatisticsData(@QueryParam("show_admin_data") boolean showAdminData, @QueryParam
+            ("user_id") String userID) {
         Map<String, Integer> resultMap = new HashMap<>();
 
-        if(userID != null)
-            resultMap.put("number_of_user_images", FusekiUtils.getEntityCount(DiskImage.class.getSimpleName(),userID));
-        else
-        resultMap.put("number_of_all_images", FusekiUtils.getEntityCount(DiskImage.class.getSimpleName()));
+        if (userID != null)
+            resultMap.put("number_of_user_images", FusekiUtils.getEntityCount(DiskImage.class.getSimpleName(), userID));
+        else resultMap.put("number_of_all_images", FusekiUtils.getEntityCount(DiskImage.class.getSimpleName()));
 
         resultMap.put("number_of_all_repositories", FusekiUtils.getEntityCount(Repository.class.getSimpleName()));
         if (showAdminData) {
@@ -511,4 +513,30 @@ public class GUIService implements IGUIService {
         return null;
     }
 
+//    UploadImageAsInstanceFromS3
+
+
+    //  a8169e97-59a0-4478-a0fc-db41a6d99dd9
+    @GET
+    @Path("deyloy_vmi_on_cloud")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    public String deployDiskImageOnTheCloud(@QueryParam("image_id") String imageID, @QueryParam("cloud_id")
+    String cloudID, @QueryParam("cloud_access_key") String cloudAccesseKey, @QueryParam("cloud_secret_key")
+    String cloudSecretKey) {
+        List<DiskImage> diskImages = FusekiUtils.getAllEntityAttributes(DiskImage.class, imageID);
+        try {
+            return UploadImageAsInstanceFromS3.uploadImageAsInstanceFromS3(cloudAccesseKey, cloudSecretKey,
+                    diskImages.get(0).getTitle(), cloudID, diskImages.get(0).getIri());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException_Exception e) {
+            e.printStackTrace();
+        } catch (IOException_Exception e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -16,6 +16,17 @@ public class Geolocation extends MyEntry {
         super(id);
     }
 
+    public Geolocation(String id, String countryName, String continent, double latitude, double longitude, double
+            altitude, String timezone) {
+        super(id);
+        this.countryName = countryName;
+        this.continent = continent;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.altitude = altitude;
+        this.timezone = timezone;
+    }
+
     public String getCountryName() {
         return countryName;
     }

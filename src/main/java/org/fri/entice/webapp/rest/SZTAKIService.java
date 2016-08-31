@@ -310,5 +310,10 @@ public class SZTAKIService implements ISZTAKIService {
         }
         return null;
     }
+
+    @Override
+    public String showLast10ValuesofOptimization(@QueryParam("optimizer_id") String optimizerID) {
+        return null;
+    }
 }
 

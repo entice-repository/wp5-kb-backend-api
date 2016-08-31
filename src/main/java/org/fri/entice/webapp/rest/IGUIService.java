@@ -88,4 +88,7 @@ public interface IGUIService {
     // later it will be used with sockets
     @GET
     public ResponseObj periodicallyCheckRedistribution(String jobID);
+
+    @GET
+    public String deployDiskImageOnTheCloud(String imageID, String cloudLocationURL, String cloudAccesseKey, String cloudSecretKey);
 }

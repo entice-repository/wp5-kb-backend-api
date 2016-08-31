@@ -13,6 +13,7 @@ public class EntryFactory {
         else if (clazz.getSimpleName().equals("Pareto")) return (T) new Pareto(id);
         else if (clazz.getSimpleName().equals("Functionality")) return (T) new Functionality(id);
         else if (clazz.getSimpleName().equals("User")) return (T) new User(id);
+        else if (clazz.getSimpleName().equals("Geolocation")) return (T) new Geolocation(id);
         return null;
     }
 }

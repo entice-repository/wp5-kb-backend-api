@@ -29,4 +29,7 @@ public interface ISZTAKIService {
     // aka delete
     @GET
     public String stopImageBuilder(String builderID);
+
+    @GET
+    public String showLast10ValuesofOptimization(String optimizerID);
 }

@@ -366,6 +366,13 @@ public class JSONService implements IUserService{
     }
 
     @GET
+    @Path("get_all_geolocations")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Geolocation> getAllGeolocations() {
+        return FusekiUtils.getAllEntityAttributes(Geolocation.class);
+    }
+
+    @GET
     @Path("get_all_disk_images")
     @Produces(MediaType.APPLICATION_JSON)
     public List<DiskImage> getAllDiskImages(@QueryParam("deep") Boolean deep) {
