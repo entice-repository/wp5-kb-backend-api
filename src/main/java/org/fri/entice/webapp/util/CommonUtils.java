@@ -27,14 +27,22 @@ public class CommonUtils {
 
             if (list.get(list.size() - 1) instanceof Repository) {
                 List<Repository> repositoryList = (List<Repository>) list;
-                if (resultObj.getP().endsWith("Repository_GeoLocation"))
+                if (resultObj.getP().endsWith("Repository_GeoLocation")){
+                    final String geolocationID = resultObj.getO();
                     repositoryList.get(repositoryList.size() - 1).setGeolocationId(resultObj.getO());
+                    if(geolocationID != null && geolocationID.length() > 0){
+                        repositoryList.get(repositoryList.size() - 1).setGeolocation(FusekiUtils.getAllEntityAttributes(Geolocation.class,geolocationID).get(0));
+                    }
+                }
                 else if (resultObj.getP().endsWith("Repository_InterfaceEndPoint"))
                     repositoryList.get(repositoryList.size() - 1).setInterfaceEndpoint(resultObj.getO());
                 else if (resultObj.getP().endsWith("Repository_OperationalCost"))
                     repositoryList.get(repositoryList.size() - 1).setOperationalCost(Double.valueOf(resultObj.getO()));
-                else if (resultObj.getP().endsWith("Repository_StorageLevelCost"))
+                else if (resultObj.getP().endsWith("Repository_StorageLevelCost") || resultObj.getP().endsWith("Repository_PriorityLevel1Cost")){
                     repositoryList.get(repositoryList.size() - 1).setStorageLevelCost(Double.valueOf(resultObj.getO()));
+                    repositoryList.get(repositoryList.size() - 1).setPriorityLevel1Cost(Double.valueOf(resultObj.getO
+                            ()));
+                }
                 else if (resultObj.getP().endsWith("Repository_Space"))
                     repositoryList.get(repositoryList.size() - 1).setSpace(Double.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Repository_SupportedFormat"))
@@ -124,7 +132,8 @@ public class CommonUtils {
                     functionalityList.get(functionalityList.size() - 1).setRefImplementationId(resultObj.getO()
                             .replaceFirst(FusekiUtils.KB_PREFIX_SHORT, ""));
                 else if (resultObj.getP().endsWith("Functionality_Classification"))
-                    functionalityList.get(functionalityList.size() - 1).setClassification(Integer.valueOf(resultObj.getO()));
+                    functionalityList.get(functionalityList.size() - 1).setClassification(Integer.valueOf(resultObj
+                            .getO()));
                 else if (resultObj.getP().endsWith("Functionality_Description"))
                     functionalityList.get(functionalityList.size() - 1).setDescription(resultObj.getO());
                 else if (resultObj.getP().endsWith("Functionality_Domain"))
@@ -154,6 +163,21 @@ public class CommonUtils {
                     deliveryList.get(deliveryList.size() - 1).setRequestTime(Long.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Delivery_TargetCloud"))
                     deliveryList.get(deliveryList.size() - 1).setTargetCloud(resultObj.getO());
+            }
+            else if (list.get(list.size() - 1) instanceof Geolocation) {
+                List<Geolocation> geolocationList = (List<Geolocation>) list;
+                if (resultObj.getP().endsWith("GeoLocation_CountryName"))
+                    geolocationList.get(geolocationList.size() - 1).setCountryName(resultObj.getO());
+                else if (resultObj.getP().endsWith("Geolocation_Continent"))
+                    geolocationList.get(geolocationList.size() - 1).setContinent(resultObj.getO());
+                else if (resultObj.getP().endsWith("Geolocation_Latitude"))
+                    geolocationList.get(geolocationList.size() - 1).setLatitude(Long.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Geolocation_Longitude"))
+                    geolocationList.get(geolocationList.size() - 1).setLongitude(Long.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("GeoLocation_Altitude"))
+                    geolocationList.get(geolocationList.size() - 1).setAltitude(Long.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("GeoLocation_Timezone"))
+                    geolocationList.get(geolocationList.size() - 1).setTimezone(resultObj.getO());
             }
 //            "     knowledgebase:User_Email        \"%s\" ;\n" +
 //                    "        knowledgebase:User_FullName     \"%s\" ;\n" +

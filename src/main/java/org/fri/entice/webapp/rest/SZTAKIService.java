@@ -13,13 +13,20 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.fri.entice.webapp.entry.DiskImage;
 import org.fri.entice.webapp.entry.client.MyJsonObject;
 import org.fri.entice.webapp.entry.client.SZTAKIExecuteObj;
+import org.fri.entice.webapp.util.FusekiUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/sztaki/")
 public class SZTAKIService implements ISZTAKIService {
@@ -37,6 +44,7 @@ public class SZTAKIService implements ISZTAKIService {
     @Override
     public String executeOptimizer(SZTAKIExecuteObj sztakiExecuteObj ) {
         try {
+            List<DiskImage> diskImages = FusekiUtils.getAllEntityAttributes(DiskImage.class, sztakiExecuteObj.getImageId());
 //            String jsonContent = CommonUtils.readFile("D:\\projects\\lpt\\entice-ul-api\\internal_work\\input_test.json", StandardCharsets.UTF_8);
 //            sztakiExecuteObj = new SZTAKIExecuteObj("ami-00001483",
 //                    "http://s3.lpds.sztaki.hu/atisu/entice/wp3/wordpress-centos7.0-20160627a.qcow",
@@ -62,6 +70,83 @@ public class SZTAKIService implements ISZTAKIService {
 //                    "R16UWaOBfz44nvoGmCGXykHNjlKCVzpWc65KjiF6",
 //                    "images/optimized-image.qcow2");
 
+            List<String> urosImageList = getSZTAKIOpenNebulaImageList("/usr/local/bin/econe-describe-images -U http://cfe2.lpds.sztaki.hu:4567 -K uros.pascinski@partners.sztaki.hu -S e8cc564a5e9320d6c22647c5e6dab55005bf1e68","uros.pascins");
+
+
+
+            URL website = new URL("https://s3.tnode.com:9869/flexiant-entice/mini-ubuntu_12_04.iso");
+            String[] fileNameTab = "https://s3.tnode.com:9869/flexiant-entice/mini-ubuntu_12_04.iso".split("/");
+            String fileName = fileNameTab[fileNameTab.length-1];
+            ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+
+            //File.createTempFile(fileName,"")
+            String filePath = "/tmp/"+fileName;
+            FileOutputStream fos = new FileOutputStream(filePath);
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            StringBuffer sb = new StringBuffer();
+            try {
+                Process p = Runtime.getRuntime().exec("/usr/local/bin/econe-upload -U http://cfe2.lpds.sztaki.hu:4567 -K uros.pascinski@partners.sztaki.hu -S e8cc564a5e9320d6c22647c5e6dab55005bf1e68 "+filePath);
+
+
+                p.waitFor();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    //if(line.startsWith("uros.pascins"))   {
+                        sb.append(line);
+                      //  urosImageList.add(line);
+                    //}
+                }
+
+                new File(filePath).delete();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "catched error";
+            }
+
+            String result = sb.toString();
+            if(result.startsWith("Success: ImageId ")){
+                result = result.replace("Success: ImageId ","");
+            }
+            //todo: delete after
+            //return "successfully saved file";
+
+            // UPLOAD TO SZTAKI
+
+
+            List<String> urosImageList2 = getSZTAKIOpenNebulaImageList("/usr/local/bin/econe-describe-images -U http://cfe2.lpds.sztaki.hu:4567 -K uros.pascinski@partners.sztaki.hu -S e8cc564a5e9320d6c22647c5e6dab55005bf1e68","uros.pascins");
+            urosImageList2.removeAll(urosImageList);
+            //return "|| "+ urosImageList.size() + " | "+urosImageList2.size() + "\n" + result + "\n" + urosImageList2.get(0).substring(14,27);
+
+
+            //before upload
+            // pwd: /usr/local/bin
+            // ./econe-describe-images -U "http://cfe2.lpds.sztaki.hu:4567" -K "uros.pascinski@partners.sztaki.hu" -S "e8cc564a5e9320d6c22647c5e6dab55005bf1e68"
+
+            // ./econe-upload -U "http://cfe2.lpds.sztaki.hu:4567" -K "uros.pascinski@partners.sztaki.hu" -S "e8cc564a5e9320d6c22647c5e6dab55005bf1e68" econe-upload
+            // Success: ImageId ami-00001546
+
+
+            sztakiExecuteObj.setCloudOptimizerVMInstanceType("m1.medium");
+            sztakiExecuteObj.setImageURL(diskImages.get(0).getIri());
+
+            // URL of SZTAKI cloud
+            //http://cfe2.lpds.sztaki.hu:4567
+
+            // set image ID with new generated one on SZTAKI cloud
+            sztakiExecuteObj.setImageId(urosImageList2.get(0).substring(14,27));
+
+            sztakiExecuteObj.setNumberOfParallelWorkerVMs(8);
+
+            sztakiExecuteObj.setS3EndpointURL(AppContextListener.prop.getProperty("s3.endpoint.url"));
+            sztakiExecuteObj.setS3AccessKey(AppContextListener.prop.getProperty("s3.access.key"));
+            sztakiExecuteObj.setS3SecretKey(AppContextListener.prop.getProperty("s3.secret.key"));
+            sztakiExecuteObj.setS3Path(AppContextListener.prop.getProperty("s3.path"));
+
             ObjectMapper mapper = new ObjectMapper();
 //            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
             String jsonInString = mapper.writeValueAsString(sztakiExecuteObj);
@@ -84,6 +169,33 @@ public class SZTAKIService implements ISZTAKIService {
             return e.getMessage();
         }
         return null;
+    }
+
+    private List<String> getSZTAKIOpenNebulaImageList(String command, String user) {
+        List<String> urosImageList = new ArrayList<>();
+        try {
+            Process p = Runtime.getRuntime().exec(command);
+            StringBuffer sb = new StringBuffer();
+
+            p.waitFor();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith(user)) {
+                    sb.append(line + "\n");
+                    urosImageList.add(line);
+                }
+            }
+            return urosImageList;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return urosImageList;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return urosImageList;
+        }
     }
 
     // read json string from file

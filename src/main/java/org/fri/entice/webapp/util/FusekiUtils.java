@@ -364,6 +364,12 @@ public class FusekiUtils {
                     "\"^^xsd:dateTime )  \n" +
                     "} \n";
 //                    "LIMIT 200";
+        else if (entityClass.equals("Geolocation") && queryFilterCondition.length > 0)
+            return "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "SELECT ?s ?p ?o\n" +
+                    "WHERE { knowledgebase:" + queryFilterCondition[0] + " a knowledgebase:" + entityClass + " ; ?p " +
+                    "?o }";
         else if (entityClass.equals("HistoryData")) {
             return "prefix knowledgebase: <http://www.semanticweb" +
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
@@ -378,13 +384,14 @@ public class FusekiUtils {
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                     "\n" +
                     "SELECT ?s ?p ?o\n" +
-                    "WHERE { knowledgebase:"+queryFilterCondition[0]+" a knowledgebase:User ; ?p ?o }";
-        }   else if (entityClass.equals("Functionality")) {
+                    "WHERE { knowledgebase:" + queryFilterCondition[0] + " a knowledgebase:User ; ?p ?o }";
+        }
+        else if (entityClass.equals("Functionality")) {
             return "prefix knowledgebase: <http://www.semanticweb" +
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                     "\n" +
                     "SELECT ?s ?p ?o\n" +
-                    "WHERE { knowledgebase:"+queryFilterCondition[0]+" a knowledgebase:Functionality ; ?p ?o" +
+                    "WHERE { knowledgebase:" + queryFilterCondition[0] + " a knowledgebase:Functionality ; ?p ?o" +
                     " }\n";
         }
         else if (entityClass.equals("Pareto") && queryFilterCondition.length > 0) {
@@ -399,22 +406,24 @@ public class FusekiUtils {
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                     "\n" +
                     "SELECT ?s ?p ?o\n" +
-                    "WHERE { ?s a knowledgebase:"+entityClass+" ; ?p ?o "+queryFilterCondition[0]+"} \n";
+                    "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o " + queryFilterCondition[0] + "} \n";
         }
-        else if(entityClass.equals("DiskImage") && queryFilterCondition.length > 1 && queryFilterCondition[1] != null){
+        else if (entityClass.equals("DiskImage") && queryFilterCondition.length > 1 && queryFilterCondition[1] !=
+                null) {
             return "prefix knowledgebase: <http://www.semanticweb" +
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                     "\n" +
                     "SELECT ?s ?p ?o\n" +
-                    "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o "+queryFilterCondition[1]+" }\n";
+                    "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o " + queryFilterCondition[1] + " }\n";
         }
-        else if(entityClass.equals("DiskImage") && queryFilterCondition.length > 0 && queryFilterCondition[0] != null){
+        else if (entityClass.equals("DiskImage") && queryFilterCondition.length > 0 && queryFilterCondition[0] !=
+                null) {
             return "prefix knowledgebase: <http://www.semanticweb" +
-                ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
-                "SELECT ?s ?p ?o\n" +
-                "WHERE { knowledgebase:" + queryFilterCondition[0] + " a " +
-                "knowledgebase:"+entityClass+"; ?p ?o }\n" +
-                "LIMIT 200";
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "SELECT ?s ?p ?o\n" +
+                    "WHERE { knowledgebase:" + queryFilterCondition[0] + " a " +
+                    "knowledgebase:" + entityClass + "; ?p ?o }\n" +
+                    "LIMIT 200";
         }
         else if (queryFilterCondition.length > 0 && queryFilterCondition[0] != null) {
             return "prefix knowledgebase: <http://www.semanticweb" +
@@ -893,7 +902,7 @@ public class FusekiUtils {
             }
         }
         else if (conditions.length > 0 && (clazz.getSimpleName().equals("DiskImage") || clazz.getSimpleName().equals
-                ("Functionality") || clazz.getSimpleName().equals("User")) && resultObjs.size() > 0 &&
+                ("Functionality") || clazz.getSimpleName().equals("User") || clazz.getSimpleName().equals("Geolocation")) && resultObjs.size() > 0 &&
                 resultObjs.get(0).getS() == null) {
             for (ResultObj resultObj : resultObjs) {
                 resultObj.setS(conditions[0]);

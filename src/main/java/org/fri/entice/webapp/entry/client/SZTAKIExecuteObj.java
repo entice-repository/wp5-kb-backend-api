@@ -1,6 +1,6 @@
 package org.fri.entice.webapp.entry.client;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -9,26 +9,43 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class SZTAKIExecuteObj {
 
+    // ImageId (Int) REQ !! interni id za ENTICE, ne id, kot ga zahteva SZTAKI
     private String imageId;
+    // it will be generated on SZTAKI cloud deploy
     private String imageURL;
+    // ValidatorScript (String) REQ
     private String validatorScriptURL;
+    // ImageLoginName (String) REQ
     private String imageUserName;
+    // FSPartition (String) OPT
     private String fsPartition;
+    // ImageKeyPair (String) REQ
     private String imageKeyPair;
+    // ImagePrivateKey (String) REQ
     private String imagePrivateKey;
 
+    // CloudLocation (Sting) REQ
     private String cloudEndpointURL;
+    // CloudAccessKey (String) REQ
     private String cloudAccessKey;
+    // CloudSecretKey (String) REQ
     private String cloudSecretKey;
     private String cloudOptimizerVMInstanceType;
+    // WorkerVMInstanceType (String) REQ
     private String cloudWorkerVMInstanceType;
 
+    // FreeDiskSpace (Int) OPT.
     private int freeDiskSpace;
     private int numberOfParallelWorkerVMs;
+    // MaxNumberOfIteration (String) REQ
     private int maxIterationsNum;
+    // MaxNumberOfVMIs (UInt) OPT.
     private int XmaxNumberOfVMs;
+    // Aimed Reduction Ratio (Float) OPT.
     private double XaimedReductionRatio;
+    // Aimed Size (UInt) OPT.
     private long XaimedSize;
+    // MaxRunningTime (Float) OPT. ?? Komentar: to mora biti int ali long, saj je enota milliseconds ali seconds
     private int XmaxRunningTime;
 
     private String s3EndpointURL;
@@ -173,9 +190,8 @@ public class SZTAKIExecuteObj {
         return XmaxNumberOfVMs;
     }
 
-    @JsonProperty("XmaxNumberOfVMs")
-    public void setXmaxNumberOfVMs(int xmaxNumberOfVMs) {
-        XmaxNumberOfVMs = xmaxNumberOfVMs;
+    public void setXmaxNumberOfVMs(int XmaxNumberOfVMs) {
+        this.XmaxNumberOfVMs = XmaxNumberOfVMs;
     }
 
     @JsonProperty("XaimedReductionRatio")
@@ -183,7 +199,6 @@ public class SZTAKIExecuteObj {
         return XaimedReductionRatio;
     }
 
-    @JsonProperty("XaimedReductionRatio")
     public void setXaimedReductionRatio(double xaimedReductionRatio) {
         XaimedReductionRatio = xaimedReductionRatio;
     }
@@ -193,7 +208,6 @@ public class SZTAKIExecuteObj {
         return XaimedSize;
     }
 
-    @JsonProperty("XaimedSize")
     public void setXaimedSize(long xaimedSize) {
         XaimedSize = xaimedSize;
     }
@@ -203,7 +217,6 @@ public class SZTAKIExecuteObj {
         return XmaxRunningTime;
     }
 
-    @JsonProperty("XmaxRunningTime")
     public void setXmaxRunningTime(int xmaxRunningTime) {
         XmaxRunningTime = xmaxRunningTime;
     }

@@ -22,6 +22,7 @@ public class Repository extends MyEntry {
 
     // As fast storage costs more and slow storage costs less, it is necessary to provide mechanisms for storing VM
     // images at three speed levels; namely: fast, medium and low-speed. Level1 means fast storage.
+    private double priorityLevel1Cost;  //OLD
     private double storageLevelCost;       // TODO: it will be used in future and presented as a list
 
     private double theoreticalCommunicationalPerformance;   // MB
@@ -43,6 +44,7 @@ public class Repository extends MyEntry {
         this.geolocationId = geolocationId;
         this.interfaceEndpoint = interfaceEndpoint;
         this.operationalCost = operationalCost;
+        this.priorityLevel1Cost = storageLevelCost;
         this.storageLevelCost = storageLevelCost;
         this.theoreticalCommunicationalPerformance = theoreticalCommunicationalPerformance;
         this.space = space;
@@ -121,5 +123,13 @@ public class Repository extends MyEntry {
 
     public void setGeolocation(Geolocation geolocation) {
         this.geolocation = geolocation;
+    }
+
+    public double getPriorityLevel1Cost() {
+        return priorityLevel1Cost;
+    }
+
+    public void setPriorityLevel1Cost(double priorityLevel1Cost) {
+        this.priorityLevel1Cost = priorityLevel1Cost;
     }
 }

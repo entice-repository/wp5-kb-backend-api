@@ -215,28 +215,35 @@ public class GUIService implements IGUIService {
                                                paretoPointIndexY, @FormDataParam("pareto_point_id") String
                                                paretoPointId, @Nullable @FormDataParam("avatar_id") int avatarID,
                                    @FormDataParam("user_id") String userID) {
-        boolean areValuesSet = true;
         try {
+            if (contentDispositionHeader == null && contentDispositionHeader.getFileName().length() <= 0)
+                return new ResponseObj(204, "file name is null! File name: " + contentDispositionHeader.getFileName());
+            else if (imageDescription == null || imageDescription.length() == 0)
+                return new ResponseObj(204, "image description is not set! image_description");
+            else if (imageName == null || imageName.length() == 0)
+                return new ResponseObj(204, "image name is not set! image_name");
+            else if (paretoPointIndexX < 0) return new ResponseObj(204, "pareto point x is not set! pareto_point_x");
+            else if (paretoPointIndexY < 0) return new ResponseObj(204, "pareto point y is not set! pareto_point_y");
+            else if (paretoPointId == null || paretoPointId.length() == 0)
+                return new ResponseObj(204, "pareto ID is not set!\npareto_point_id");
+            else if (userID == null || userID.length() == 0)
+                return new ResponseObj(204, "user ID is not set!\nuser_id");
+
             String filePath = SERVER_UPLOAD_LOCATION_FOLDER + contentDispositionHeader.getFileName();
-            String functionalTestFilePath = SERVER_UPLOAD_LOCATION_FOLDER + functionalTestDispositionHeader
-                    .getFileName();
-
-
-            if (imageDescription == null || imageName == null || paretoPointIndexX == 0 || paretoPointIndexY == 0 ||
-                    paretoPointIndexX == 0 || paretoPointId == null) areValuesSet = false;
 
             // save the file to the server
             saveFile(fileInputStream, filePath);
 
-            if (functionalTestDispositionHeader != null) saveFile(functionalTestInputStream, functionalTestFilePath);
-
             //upload VMI in the repository
-            String successMessage = "";//UploadVMI.performUpload(filePath);
-
+            String successMessage = UploadVMI.performUpload(filePath);
 
             String functionalityID = "";
             // if functionality test is selected
-            if (functionalTestDispositionHeader != null) {
+            if (functionalTestDispositionHeader != null && functionalTestDispositionHeader.getFileName().length() > 0) {
+                String functionalTestFilePath = SERVER_UPLOAD_LOCATION_FOLDER + functionalTestDispositionHeader
+                        .getFileName();
+                if (functionalTestDispositionHeader != null) saveFile(functionalTestInputStream, functionalTestFilePath);
+
                 File file = new File(functionalTestFilePath);
 
                 //upload functional test in the repository
@@ -248,7 +255,7 @@ public class GUIService implements IGUIService {
                 String[] split = successFunctionalTestMessage.split(",");
                 Functionality functionality = new Functionality(functionalityID, 0, "tag",
                         functionalTestDispositionHeader.getName(), "some description", split[3].substring(split[3]
-                        .indexOf(":") + 1), "optput description", null, "entice");
+                        .indexOf(":") + 1), "output description", null, "entice");
                 String insertStatement = FusekiUtils.generateInsertObjectStatement(functionality);
                 UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement),
                         AppContextListener.prop.getProperty("fuseki.url.update"));
@@ -277,7 +284,7 @@ public class GUIService implements IGUIService {
             else return new ResponseObj(404, "failed upload");
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseObj(404, "FAILED uploaded on LPT VMI | all attributes set: " + areValuesSet);
+            return new ResponseObj(404, "FAILED uploaded on LPT VMI | stacktrace"+e.getMessage() );
         }
     }
 
@@ -362,11 +369,13 @@ public class GUIService implements IGUIService {
     @Override
     public Object[] getEnticeImages(@QueryParam("image_title") String title, @QueryParam("category_id") String
             categoryId, @QueryParam("pagination_page") int paginationPage, @QueryParam("hits_per_page") int
-            hitsPerPage, @QueryParam("order") String order, @QueryParam("sort") boolean isDescendingSort) {
+            hitsPerPage, @QueryParam("order") String order, @QueryParam("sort") final boolean isDescendingSort) {
 
-        // todo: make case sensitive
-        List<DiskImage> diskImages = FusekiUtils.getAllEntityAttributes(DiskImage.class, null, title != null ? ". ?s " +
-                "knowledgebase:DiskImage_Title ?title . FILTER regex(?title, \"" + title + "\", \"i\")" : null);
+        List<DiskImage> diskImages = FusekiUtils.getAllEntityAttributes(DiskImage.class, null, (title != null ? ". ?s" +
+                " " +
+                "knowledgebase:DiskImage_Title ?title . FILTER regex(?title, \"" + title + "\", \"i\") ." : "") +
+                (categoryId != null ? "?s knowledgebase:DiskImage_Categories ?cat . FILTER regex(?cat, " +
+                        "\""+categoryId+"\", \"i\")" : ""));
 
         ArrayList<EnticeImage> enticeImages = new ArrayList<>();
         int maxSize = diskImages.size() > (paginationPage + 1) * hitsPerPage ? (paginationPage + 1) * hitsPerPage :
@@ -375,31 +384,61 @@ public class GUIService implements IGUIService {
 
         if (maxSize == 0) maxSize = diskImages.size();
 
+        List<Repository> repositoriesList = FusekiUtils.getAllEntityAttributes(Repository.class);
+
         for (int i = paginationPage * hitsPerPage; i < maxSize; i++) {
 
-//            List<String> categoryList = new ArrayList<>();
+            List<Fragment> fragmentList = FusekiUtils.getFragmentDataOfDiskImage(diskImages.get(i).getId(), false);
+            List<Functionality> functionalityList = FusekiUtils.getFunctionalityOfDiskImage(diskImages.get(0)
+                    .getRefFunctionalityId());
+            diskImages.get(0).setFunctionalityList(functionalityList);
 
-//            if (Math.random() < 0.3) categoryList.add("Database");
-//            if (Math.random() < 0.3) categoryList.add("Monitoring");
-//            if (Math.random() < 0.3) categoryList.add("Application");
-//            if (Math.random() < 0.3) categoryList.add("App-Server");
-//            if (Math.random() < 0.3) categoryList.add("File-Server");
-//            if (Math.random() < 0.3) categoryList.add("Openstack");
-//            if (Math.random() < 0.3) categoryList.add("Docker");
-//            if (Math.random() < 0.3) categoryList.add("Container");
-//            if (Math.random() < 0.3) categoryList.add("Operating system");
-//            if (Math.random() < 0.3) categoryList.add("Misc");
+            Set<String> setOfRepositoryIds = new HashSet<>();
+            for (Fragment fragment : fragmentList) {
+                setOfRepositoryIds.add(fragment.getRefRepositoryId());
+            }
+            List<Repository> matchingRepositories = new ArrayList<>();
+            for (Repository repository : repositoriesList) {
+                if (listContainsId(setOfRepositoryIds, repository.getId())) matchingRepositories.add(repository);
+            }
+
             String userFullName = "dummy full name";
             try {
                 userFullName = FusekiUtils.getAllEntityAttributes(User.class, diskImages.get(i).getRefOwnerId()).get
                         (0).getFullName();
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
-            enticeImages.add(new EnticeImage(diskImages.get(i).getId(), diskImages.get(i).getPictureUrl(), diskImages
-                    .get(i).getTitle(), diskImages.get(i).getRefOwnerId() == null ? "unknown user" : diskImages.get
-                    (i).getRefOwnerId(), diskImages.get(i).getDiskImageSize(), 0, diskImages.get(i).getCategoryList()
-                    , 0, diskImages.get(i).getDescription(), userFullName));
+//            enticeImages.add(new EnticeImage(diskImages.get(i).getId(), diskImages.get(i).getPictureUrl(), diskImages
+//                    .get(i).getTitle(), diskImages.get(i).getRefOwnerId() == null ? "unknown user" : diskImages.get
+//                    (i).getRefOwnerId(), diskImages.get(i).getDiskImageSize(), 0, diskImages.get(i).getCategoryList()
+//                    , 0, diskImages.get(i).getDescription(), userFullName));
+            enticeImages.add(new EnticeDetailedImage(diskImages.get(i).getId(), diskImages.get(i).getPictureUrl(), diskImages.get
+                    (i).getTitle(), diskImages.get(i).getRefOwnerId() == null ? "unknown user" : diskImages.get(i)
+                    .getRefOwnerId(), diskImages.get(i).getDiskImageSize(), 0, diskImages.get(i).getCategoryList(), 0,
+                    matchingRepositories, diskImages.get(i).getFunctionalityList(), null, diskImages.get(i)
+                    .getDescription(), userFullName));
+
+            if(order != null && order.length() > 0){
+                if(order.equals("name"))
+                Collections.sort(enticeImages, new Comparator<EnticeImage>() {
+                    @Override
+                    public int compare(EnticeImage o1, EnticeImage o2) {
+                        String o1lower = o1.getImageName().toLowerCase();
+                        String o2lower = o2.getImageName().toLowerCase();
+                        return isDescendingSort ? o2lower.compareTo(o1lower) : o1lower.compareTo(o2lower);
+                    }
+                });
+                else if(order.equals("size"))
+                    Collections.sort(enticeImages, new Comparator<EnticeImage>() {
+                        @Override
+                        public int compare(EnticeImage o1, EnticeImage o2) {
+                            return isDescendingSort ? o2.getImageSize() - o1.getImageSize() :
+                                    o1.getImageSize() - o2.getImageSize();
+                        }
+                    });
+
+            }
             //   count++;
         }
 
@@ -412,6 +451,7 @@ public class GUIService implements IGUIService {
     @Override
     public EnticeDetailedImage getEnticeDetailedImage(@QueryParam("id") String imageID) {
         List<DiskImage> diskImages = FusekiUtils.getAllEntityAttributes(DiskImage.class, imageID);
+
 
         if (diskImages.size() == 0) return null;
 
