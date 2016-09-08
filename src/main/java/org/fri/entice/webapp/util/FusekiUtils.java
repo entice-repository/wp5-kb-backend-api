@@ -64,7 +64,8 @@ public class FusekiUtils {
 
                 String categoriesStr = new String();
                 for (String val : diskImage.getCategoryList()) {
-                    categoriesStr += "\"" + val + "\",";
+                    if(val.length() > 0)
+                        categoriesStr += "\"" + val + "\",";
                 }
                 if (categoriesStr.length() > 0)
                     categoriesStr = categoriesStr.substring(0, categoriesStr.length() - 1);
@@ -208,17 +209,19 @@ public class FusekiUtils {
             // CREATE GEOLOCATION
             else if (obj instanceof Geolocation) {
                 Geolocation geolocation = (Geolocation) obj;
-                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                return String.format(Locale.US, "PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + "PREFIX " +
+                        XSD_PREFIX + " INSERT DATA {" +
                         "knowledgebase:%s a knowledgebase:Geolocation, owl:NamedIndividual ;" +
                         "knowledgebase:GeoLocation_CountryName \"%s\" ;\n" +
+                        "knowledgebase:GeoLocation_CountryNameShort \"%s\" ;\n" +
                         "knowledgebase:Geolocation_Continent \"%s\" ;\n" +
-                        "knowledgebase:Geolocation_Latitude %f ;\n" +
-                        "knowledgebase:Geolocation_Longitude %f ;\n" +
-                        "knowledgebase:GeoLocation_Altitude %f ;\n" +
+                        "knowledgebase:Geolocation_Latitude \"%f\"^^xsd:double ;\n" +
+                        "knowledgebase:Geolocation_Longitude \"%f\"^^xsd:double ;\n" +
+                        "knowledgebase:GeoLocation_Altitude \"%f\"^^xsd:double ;\n" +
                         "knowledgebase:GeoLocation_Timezone \"%s\" ;\n" +
-                        "}", geolocation.getId(), geolocation.getCountryName(), geolocation.getContinent(),
-                        geolocation.getLatitude(), geolocation.getLongitude(), geolocation.getAltitude(), geolocation
-                                .getTimezone());
+                        "}", geolocation.getId(), geolocation.getCountryName(), geolocation.getCountryNameShort(),
+                        geolocation.getContinent(), geolocation.getLatitude(), geolocation.getLongitude(),
+                        geolocation.getAltitude(), geolocation.getTimezone());
             }
             // CREATE REPOSITORY
             else if (obj instanceof Repository) {

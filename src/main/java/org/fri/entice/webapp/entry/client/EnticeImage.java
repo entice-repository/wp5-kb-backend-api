@@ -7,6 +7,7 @@ import java.util.List;
 public class EnticeImage {
     private String id;
     private String avatarURI;
+    private int avatarId;
     private String imageName;
     private String ownerID;
     private String ownerFullName;
@@ -36,6 +37,14 @@ public class EnticeImage {
         this.numberOfChilds = numberOfChilds;
         this.description = description;
         this.ownerFullName = ownerFullName;
+
+        try{
+            String[] avatarTab = avatarURI.split("/");
+            avatarId = Integer.valueOf(avatarTab[avatarTab.length-1]);
+        } catch(Exception e){
+            avatarId = -1;
+           // e.printStackTrace();
+        }
     }
 
     public EnticeImage() {
@@ -119,5 +128,13 @@ public class EnticeImage {
 
     public void setOwnerFullName(String ownerFullName) {
         this.ownerFullName = ownerFullName;
+    }
+
+    public int getAvatarId() {
+        return avatarId;
+    }
+
+    public void setAvatarId(int avatarId) {
+        this.avatarId = avatarId;
     }
 }

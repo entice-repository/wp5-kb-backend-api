@@ -282,10 +282,14 @@ public class DiskImage extends MyEntry {
     }
 
     public void setCategoriesFromString(String stringValue) {
-       if(categoryList == null)
+        if(stringValue.length() == 0) return;
+
+        if(categoryList == null)
            categoryList = new ArrayList<>();
 
-        categoryList.add(stringValue);
+        String[] categoryTab = stringValue.split(",");
+        for(String val : categoryTab)
+            categoryList.add(val);
     }
 
     public List<Functionality> getFunctionalityList() {

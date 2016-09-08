@@ -5,13 +5,17 @@ import org.fri.entice.webapp.entry.client.SZTAKIExecuteObj;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import java.util.Map;
 
 public interface ISZTAKIService {
     @POST
-    public String executeOptimizer(SZTAKIExecuteObj sztakiExecuteObj);
+    public Map<String, String> executeOptimizer(SZTAKIExecuteObj sztakiExecuteObj);
 
     @GET
     public String getStatus(String optimizerID);
+
+    @GET
+    public String getOptimizationStatusList(String optimizerID);
 
     @GET
     public String stopOptimization(String optimizerID);

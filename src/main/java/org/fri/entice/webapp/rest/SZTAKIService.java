@@ -1,8 +1,11 @@
 package org.fri.entice.webapp.rest;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -26,11 +29,14 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Path("/sztaki/")
 public class SZTAKIService implements ISZTAKIService {
-    JSONService parent;
+    private JSONService parent;
+    private Map<String,List<String>> optimizerMap = new HashMap<>();
 
     public SZTAKIService(JSONService parent) {
         this.parent = parent;
@@ -42,7 +48,8 @@ public class SZTAKIService implements ISZTAKIService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-    public String executeOptimizer(SZTAKIExecuteObj sztakiExecuteObj ) {
+    public Map<String, String> executeOptimizer(SZTAKIExecuteObj sztakiExecuteObj ) {
+        Map<String, String> resultMap = new HashMap<>();
         try {
             List<DiskImage> diskImages = FusekiUtils.getAllEntityAttributes(DiskImage.class, sztakiExecuteObj.getImageId());
 //            String jsonContent = CommonUtils.readFile("D:\\projects\\lpt\\entice-ul-api\\internal_work\\input_test.json", StandardCharsets.UTF_8);
@@ -73,13 +80,21 @@ public class SZTAKIService implements ISZTAKIService {
             List<String> urosImageList = getSZTAKIOpenNebulaImageList("/usr/local/bin/econe-describe-images -U http://cfe2.lpds.sztaki.hu:4567 -K uros.pascinski@partners.sztaki.hu -S e8cc564a5e9320d6c22647c5e6dab55005bf1e68","uros.pascins");
 
 
+//            TODO: uncomment this!!
+//            sztakiExecuteObj.setImageURL(diskImages.get(0).getIri());
+//            URL website = new URL(sztakiExecuteObj.getImageURL());
+//            String[] fileNameTab = sztakiExecuteObj.getImageURL().split("/");
 
-            URL website = new URL("https://s3.tnode.com:9869/flexiant-entice/mini-ubuntu_12_04.iso");
-            String[] fileNameTab = "https://s3.tnode.com:9869/flexiant-entice/mini-ubuntu_12_04.iso".split("/");
+            //TODO: REMOVE THIS!!
+            sztakiExecuteObj.setImageURL("https://images.s3.lpds.sztaki.hu/wordpress-centos7.0-20160627a.qcow2");
+            URL website = new URL("https://images.s3.lpds.sztaki.hu/wordpress-centos7.0-20160627a.qcow2");
+            String[] fileNameTab = "https://images.s3.lpds.sztaki.hu/wordpress-centos7.0-20160627a.qcow2".split("/");
+            //////////////
+
             String fileName = fileNameTab[fileNameTab.length-1];
             ReadableByteChannel rbc = Channels.newChannel(website.openStream());
 
-            //File.createTempFile(fileName,"")
+            // UPLOAD TO SZTAKI
             String filePath = "/tmp/"+fileName;
             FileOutputStream fos = new FileOutputStream(filePath);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
@@ -94,51 +109,50 @@ public class SZTAKIService implements ISZTAKIService {
 
                 String line = "";
                 while ((line = reader.readLine()) != null) {
-                    //if(line.startsWith("uros.pascins"))   {
                         sb.append(line);
-                      //  urosImageList.add(line);
-                    //}
                 }
 
                 new File(filePath).delete();
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "catched error";
+                resultMap.put("catched error",e.getMessage());
+                return resultMap;
             }
 
             String result = sb.toString();
+            //             set image ID with new generated one on SZTAKI cloud
             if(result.startsWith("Success: ImageId ")){
                 result = result.replace("Success: ImageId ","");
+                sztakiExecuteObj.setImageId(result.trim());
             }
-            //todo: delete after
-            //return "successfully saved file";
+            else{
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-            // UPLOAD TO SZTAKI
+                List<String> urosImageList2 = getSZTAKIOpenNebulaImageList("/usr/local/bin/econe-describe-images -U http://cfe2.lpds.sztaki.hu:4567 -K uros.pascinski@partners.sztaki.hu -S e8cc564a5e9320d6c22647c5e6dab55005bf1e68","uros.pascins");
+                urosImageList2.removeAll(urosImageList);
+
+                if(urosImageList2.size() < 1)   {
+                    resultMap.put("ImageId cannot be established!",urosImageList2.size() + " is the size of the econe-describe-images");
+                    return resultMap;
+                }
+
+                if(urosImageList2.get(0).length() < 27){
+                    resultMap.put("Result list is too short: ",urosImageList2.get(0));
+                    return resultMap;
+                }
 
 
-            List<String> urosImageList2 = getSZTAKIOpenNebulaImageList("/usr/local/bin/econe-describe-images -U http://cfe2.lpds.sztaki.hu:4567 -K uros.pascinski@partners.sztaki.hu -S e8cc564a5e9320d6c22647c5e6dab55005bf1e68","uros.pascins");
-            urosImageList2.removeAll(urosImageList);
-            //return "|| "+ urosImageList.size() + " | "+urosImageList2.size() + "\n" + result + "\n" + urosImageList2.get(0).substring(14,27);
-
-
-            //before upload
-            // pwd: /usr/local/bin
-            // ./econe-describe-images -U "http://cfe2.lpds.sztaki.hu:4567" -K "uros.pascinski@partners.sztaki.hu" -S "e8cc564a5e9320d6c22647c5e6dab55005bf1e68"
-
-            // ./econe-upload -U "http://cfe2.lpds.sztaki.hu:4567" -K "uros.pascinski@partners.sztaki.hu" -S "e8cc564a5e9320d6c22647c5e6dab55005bf1e68" econe-upload
-            // Success: ImageId ami-00001546
-
+                sztakiExecuteObj.setImageId(urosImageList2.get(0).substring(14,27).trim());
+            }
 
             sztakiExecuteObj.setCloudOptimizerVMInstanceType("m1.medium");
-            sztakiExecuteObj.setImageURL(diskImages.get(0).getIri());
 
-            // URL of SZTAKI cloud
-            //http://cfe2.lpds.sztaki.hu:4567
-
-            // set image ID with new generated one on SZTAKI cloud
-            sztakiExecuteObj.setImageId(urosImageList2.get(0).substring(14,27));
+//             URL of SZTAKI cloud
+//            http://cfe2.lpds.sztaki.hu:4567
 
             sztakiExecuteObj.setNumberOfParallelWorkerVMs(8);
 
@@ -146,6 +160,7 @@ public class SZTAKIService implements ISZTAKIService {
             sztakiExecuteObj.setS3AccessKey(AppContextListener.prop.getProperty("s3.access.key"));
             sztakiExecuteObj.setS3SecretKey(AppContextListener.prop.getProperty("s3.secret.key"));
             sztakiExecuteObj.setS3Path(AppContextListener.prop.getProperty("s3.path"));
+            sztakiExecuteObj.setCloudEndpointURL(AppContextListener.prop.getProperty("sztaki.cloud.endpoint.url"));
 
             ObjectMapper mapper = new ObjectMapper();
 //            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -162,11 +177,43 @@ public class SZTAKIService implements ISZTAKIService {
 
             System.out.println(response.getStatusLine());
             if (resEntity != null) {
-                return EntityUtils.toString(resEntity, "UTF-8");
+                final String optimizerID = EntityUtils.toString(resEntity, "UTF-8");
+                optimizerMap.put(optimizerID, new ArrayList<String>());
+                try{
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final String currentOptimizationID = optimizerID;
+                        System.out.println("current optimization ID: "+ currentOptimizationID);
+                        JsonObject optimizationStatusResult = new JsonParser().parse(getOptimizationStatusLocal(currentOptimizationID)).getAsJsonObject();
+                        String status = optimizationStatusResult.get("optimizerVMStatus").getAsString();
+                        System.out.println(status);
+                        while (status.equals("running") || status.equals("pending")) {
+                            System.out.println("running...");
+                            optimizerMap.get(currentOptimizationID).add(optimizationStatusResult.toString());
+                            if (optimizerMap.get(currentOptimizationID).size() > 30)
+                                optimizerMap.get(currentOptimizationID).remove(0);
+
+                            try {
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            status = optimizationStatusResult.get("optimizerVMStatus").getAsString();
+                        }
+                        System.out.println("terminated");
+                    }
+                }).start();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                resultMap.put(optimizerID,sztakiExecuteObj.getImageId());
+                return resultMap;
             }
-        } catch (IOException e) {
+        } catch (IOException|IndexOutOfBoundsException|NullPointerException|ParseException e) {
             e.printStackTrace();
-            return e.getMessage();
+            resultMap.put("IOException",e.getMessage());
+            return resultMap;
         }
         return null;
     }
@@ -237,6 +284,10 @@ public class SZTAKIService implements ISZTAKIService {
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public String getStatus(@QueryParam("optimizer_id") String optimizerID) {
+        return getOptimizationStatusLocal(optimizerID);
+    }
+
+    private String getOptimizationStatusLocal(String optimizerID) {
         try {
             // todo: optimize query parameter
             URIBuilder builder = new URIBuilder(AppContextListener.prop.getProperty("sztaki.optimizer.url") + "/" + optimizerID);
@@ -268,6 +319,15 @@ public class SZTAKIService implements ISZTAKIService {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         } return null;
+    }
+
+    // GET: get status of an optimization procedure
+    @GET
+    @Path("get_optimization_status_list")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    public String getOptimizationStatusList(@QueryParam("optimizer_id")final String optimizerID) {
+        return optimizerMap.get(optimizerID) != null ? optimizerMap.get(optimizerID).toString() : null;
     }
 
     // PUT: stop optimization and save sub-optimal image

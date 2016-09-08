@@ -268,7 +268,7 @@ public class GUIService implements IGUIService {
 
                 // create DiskImage entity
                 DiskImage diskImage = new DiskImage(UUID.randomUUID().toString(), ImageType.VMI, imageDescription,
-                        imageName, "", FileFormat.IMG, "http://193.2.72.90/src/images/avatars/" + (avatarID != -1 ?
+                        imageName, "", FileFormat.IMG, "http://193.2.72.90/images/avatars/" + (avatarID != -1 ?
                         avatarID + "" : ""), false, "https://s3.tnode" +
                         ".com:9869/flexiant-entice/" + contentDispositionHeader.getFileName(), "", 0, userID,
                         functionalityID, "", "", false, System.currentTimeMillis(), false, "1.0", (int) (file.length

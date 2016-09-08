@@ -31,7 +31,7 @@ public class CommonUtils {
                     final String geolocationID = resultObj.getO();
                     repositoryList.get(repositoryList.size() - 1).setGeolocationId(resultObj.getO());
                     if(geolocationID != null && geolocationID.length() > 0){
-                        repositoryList.get(repositoryList.size() - 1).setGeolocation(FusekiUtils.getAllEntityAttributes(Geolocation.class,geolocationID).get(0));
+                        repositoryList.get(repositoryList.size() - 1).setGeolocation(FusekiUtils.getAllEntityAttributes(Geolocation.class, geolocationID).get(0));
                     }
                 }
                 else if (resultObj.getP().endsWith("Repository_InterfaceEndPoint"))
@@ -168,14 +168,16 @@ public class CommonUtils {
                 List<Geolocation> geolocationList = (List<Geolocation>) list;
                 if (resultObj.getP().endsWith("GeoLocation_CountryName"))
                     geolocationList.get(geolocationList.size() - 1).setCountryName(resultObj.getO());
+                if (resultObj.getP().endsWith("GeoLocation_CountryNameShort"))
+                    geolocationList.get(geolocationList.size() - 1).setCountryNameShort(resultObj.getO());
                 else if (resultObj.getP().endsWith("Geolocation_Continent"))
                     geolocationList.get(geolocationList.size() - 1).setContinent(resultObj.getO());
                 else if (resultObj.getP().endsWith("Geolocation_Latitude"))
-                    geolocationList.get(geolocationList.size() - 1).setLatitude(Long.valueOf(resultObj.getO()));
+                    geolocationList.get(geolocationList.size() - 1).setLatitude(Double.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Geolocation_Longitude"))
-                    geolocationList.get(geolocationList.size() - 1).setLongitude(Long.valueOf(resultObj.getO()));
+                    geolocationList.get(geolocationList.size() - 1).setLongitude(Double.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("GeoLocation_Altitude"))
-                    geolocationList.get(geolocationList.size() - 1).setAltitude(Long.valueOf(resultObj.getO()));
+                    geolocationList.get(geolocationList.size() - 1).setAltitude(Double.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("GeoLocation_Timezone"))
                     geolocationList.get(geolocationList.size() - 1).setTimezone(resultObj.getO());
             }

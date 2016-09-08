@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Geolocation extends MyEntry {
 
     private String countryName;
+    private String countryNameShort;
     private String continent;
     private double latitude;
     private double longitude;
@@ -16,10 +17,11 @@ public class Geolocation extends MyEntry {
         super(id);
     }
 
-    public Geolocation(String id, String countryName, String continent, double latitude, double longitude, double
+    public Geolocation(String id, String countryName,String countryNameShort, String continent, double latitude, double longitude, double
             altitude, String timezone) {
         super(id);
         this.countryName = countryName;
+        this.countryNameShort = countryNameShort;
         this.continent = continent;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -33,6 +35,14 @@ public class Geolocation extends MyEntry {
 
     public void setCountryName(String countryName) {
         this.countryName = countryName;
+    }
+
+    public String getCountryNameShort() {
+        return countryNameShort;
+    }
+
+    public void setCountryNameShort(String countryNameShort) {
+        this.countryNameShort = countryNameShort;
     }
 
     public String getContinent() {
