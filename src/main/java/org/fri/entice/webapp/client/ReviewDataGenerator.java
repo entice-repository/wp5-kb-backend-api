@@ -24,8 +24,13 @@ public class ReviewDataGenerator {
             UpdateProcessor upp;
             String insertStatement;
 
+//            User user = new User(UUID.randomUUID().toString(), "test@gmail.com2", "Test user2", "test2", "12345632424", "test2",1);
+//            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
+//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+//            upp.execute();
+
             // insert USER data:
-            User user = new User(UUID.randomUUID().toString(), "guest@gmail.com", "Guest user", "pass", "12345632424", "guest",1);
+            User user = new User(UUID.randomUUID().toString(), "guest@gmail.com", "Guest", "pass", "12345632424", "guest",1);
             insertStatement = FusekiUtils.generateInsertObjectStatement(user);
             upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
             upp.execute();
@@ -82,6 +87,10 @@ public class ReviewDataGenerator {
             if (Math.random() < 0.5) supportedFormats.add("CSO");
             if (Math.random() < 0.5) supportedFormats.add("CUE");
 
+//            1       | SZTAKI
+//            2       | UIBK
+//            3       | Amazon - Virginia East
+//            4       | LJ
 
             // insert REPOSITORY data:
             Repository repository = new Repository(UUID.randomUUID().toString(), geolocationSlovenia.getId(),

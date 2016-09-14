@@ -26,6 +26,12 @@ public class UploadOptimizedVMI {
 
 	public static void main(String[] args)
 			throws MalformedURLException, IOException, FileNotFoundException, IOException, FileNotFoundException_Exception, IOException_Exception, URISyntaxException_Exception{
+		executeUpload("https://s3.amazonaws.com/flexiant-entice/Fedora-Workstation-netinst-x86_64-24-1.2.iso",1);
+	}
+
+	public static String executeUpload(String url, int nodeIdNew)
+			throws MalformedURLException, IOException, FileNotFoundException, IOException, FileNotFoundException_Exception, IOException_Exception, URISyntaxException_Exception{
+		nodeIdNew = nodeIdNew + 1;
 
 		AddVMIImplementationService client = new AddVMIImplementationService();
 		AddVMIImplementation service = client.getAddVMIImplementationPort(new MTOMFeature(10240));
@@ -57,33 +63,36 @@ public class UploadOptimizedVMI {
              * vmImagename : name of VMI to be uploaded - Should be same name as unoptimized version.
              * vmImageSourcePath : Path to VMI
              */
-			String vmImageNameOld = "Fedora-Workstation-netinst-x86_64-24-1.2.iso";
-			String vmImageNameNew = "Fedora-Workstation3-netinst-x86_64-24-1.2.iso";
-
-			String  url = "https://s3.amazonaws.com/flexiant-entice/Fedora-Workstation-netinst-x86_64-24-1.2.iso";
+//			String vmImageNameNew = "Fedora-Workstation3-netinst-x86_64-24-1.2.iso";
 
             /*
              * nodeIdOld - the storage where the Unoptimized VMI was stored : for the deletion of Unoptimized VMI
              * nodeIdNew - the storage location at which optimized VMI has to be stored.
              */
 
-			String nodeIdOld = "3";
-			String nodeIdNew = "2";
-
-			List list = null;//service.receiveOptimizedVMImage(url, vmImageNameOld, vmImageNameNew, nodeIdOld, nodeIdNew);
-
-
-			System.out.println(list);
-
-
-			System.out.println("The VM Image: " + vmImageNameNew
+			// https://entice.lpds.sztaki.hu:5443/api/imagebuilder/build/99b5f56b-75ba-4a02-ad37-52ecfbeb1afa/result/image
+			long startTime = System.currentTimeMillis();
+			StringBuffer sb = new StringBuffer();
+			sb.append("Before upload starts.. " + startTime +  "ms");
+			sb.append("\n");
+//			System.out.println();
+			final long currTime = System.currentTimeMillis();
+			List list = service.receiveOptimizedVMImage(url, "anything", "image_"+currTime, "1", nodeIdNew + "");
+			long endTime = System.currentTimeMillis();
+//			System.out.println("Upload from URL finished" + (endTime - startTime) +  "ms");
+			sb.append("Upload from URL finished" + (endTime - startTime) +  "ms");
+			sb.append("\n");
+//			System.out.println(list);
+			sb.append(list);
+			System.out.println("The VM Image: " + "image"
 					+ " has finished uploading. Thanks for being PATIENT! We hope to see you again for future UPLOAD.");
 
+			return list.toString();
+//			return sb.toString();
 		} else {
-
 			System.out.println("Check your authetication credentials");
+			return "Check your authetication credentials";
 		}
 
 	}
-
 } 

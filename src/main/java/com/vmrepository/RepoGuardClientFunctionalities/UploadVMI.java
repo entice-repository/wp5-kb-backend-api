@@ -28,15 +28,14 @@ package com.vmrepository.RepoGuardClientFunctionalities;
 */
 
 
-import com.vmrepository.repoguardwebserver.AddVMIImplementation;
-import com.vmrepository.repoguardwebserver.AddVMIImplementationService;
-import com.vmrepository.repoguardwebserver.FileNotFoundException_Exception;
-import com.vmrepository.repoguardwebserver.IOException_Exception;
+import com.vmrepository.repoguardwebserver.*;
 
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.MTOMFeature;
 import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -56,7 +55,7 @@ public class UploadVMI {
     public static void main(String[] args) {
         try {
             String vmImageName = "mini-ubuntu_12_04.iso";
-            performUpload("C:\\Users\\sandig\\Downloads\\" + vmImageName);
+            performUpload("C:\\Users\\sandig\\Downloads\\" + vmImageName,1);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (FileNotFoundException_Exception e) {
@@ -66,10 +65,12 @@ public class UploadVMI {
         }
     }
 
-    public static String performUpload(String vmImageSourcePath) throws MalformedURLException, IOException, FileNotFoundException, IOException,
+    public static String performUpload(String vmImageSourcePath, int nodeId) throws MalformedURLException, IOException, FileNotFoundException, IOException,
             FileNotFoundException_Exception, IOException_Exception {
         AddVMIImplementationService client = new AddVMIImplementationService();
         AddVMIImplementation service = client.getAddVMIImplementationPort(new MTOMFeature(10240));
+
+        nodeId = nodeId + 1;
 
         BindingProvider provider = (BindingProvider) service;
         Map<String, Object> req_ctx = provider.getRequestContext();
@@ -119,12 +120,19 @@ public class UploadVMI {
                 byte[] vmImageBytes = new byte[1024 * 1024 * 32];
                 int bytesRead;
 
-                String nodeId = "4";
+                /*
+                node ID | Matching repository
+                ------------------------------
+                1       | SZTAKI
+                2       | UIBK
+                3       | Amazon - Virginia East
+                4       | LJ
+                */
                 //String vmibucketName = "flexiant-entice";
                 String message = null;
                 while ((bytesRead = bin.read(vmImageBytes)) != -1) {
                     List list = service.receiveVMImage(vmImageBytes, vmImage.getName(), bytesRead, vmImage.length(),
-                            nodeId);
+                            nodeId + "");
                     System.out.println(list);
                     message = list.toString();
 
@@ -135,6 +143,8 @@ public class UploadVMI {
             } catch (IOException e) {
                 System.err.println(e);
                 return null;
+            } catch (URISyntaxException_Exception e) {
+                e.printStackTrace();
             } finally {
 
                 if (bin != null) {
@@ -154,6 +164,8 @@ public class UploadVMI {
             System.out.println("Check your authetication credentials");
             return null;
         }
+
+        return null;
     }
 
 }

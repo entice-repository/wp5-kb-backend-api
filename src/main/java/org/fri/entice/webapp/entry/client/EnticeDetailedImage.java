@@ -20,8 +20,8 @@ public class EnticeDetailedImage extends EnticeImage {
 
     public EnticeDetailedImage(String id, String avatarURI, String imageName, String ownerID, int imageSize, int pulls, List<String>
             categories, int numberOfChilds, List<Repository> repositoriesList, List<Functionality> functionalTests,
-                               List<String> optimizationHistory,String description, String ownerFullName) {
-        super(id, avatarURI, imageName, ownerID, imageSize, pulls, categories, numberOfChilds,description, ownerFullName);
+                               List<String> optimizationHistory,String description, String ownerFullName, String vmiURL) {
+        super(id, avatarURI, imageName, ownerID, imageSize, pulls, categories, numberOfChilds,description, ownerFullName, vmiURL);
         this.repositoriesList = repositoriesList;
         this.functionalTests = functionalTests;
         this.optimizationHistory = optimizationHistory;

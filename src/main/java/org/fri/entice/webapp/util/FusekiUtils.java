@@ -99,6 +99,7 @@ public class FusekiUtils {
                                 "knowledgebase:DiskImage_ParetoPointY  %d ;\n" +
                                 "knowledgebase:DiskImage_Pareto  \"%s\" ;\n" +
                                 "knowledgebase:DiskImage_Categories " + categoriesStr + " ;\n" +
+                                "knowledgebase:DiskImage_Repository  \"%s\" ;\n" +
                                 "}", diskImage.getId(), diskImage.getDescription(), diskImage.getEncryption(),
                         diskImage.getFileFormat().getValue(), diskImage.getRefOwnerId(), diskImage.getDataId(),
                         diskImage.getRefFunctionalityId(), diskImage.getGenerationTime(), diskImage.getIri(),
@@ -106,7 +107,7 @@ public class FusekiUtils {
                         diskImage.getPictureUrl(), diskImage.getPredecessor(), diskImage.getPrice(), diskImage
                                 .getRefQualityId(), diskImage.getRefSlaId(), diskImage.getTitle(), diskImage
                                 .getVersion(), diskImage.getDiskImageSize(), diskImage.getParetoPointX(), diskImage
-                                .getParetoPointY(), diskImage.getParetoId());
+                                .getParetoPointY(), diskImage.getParetoId(),diskImage.getRepositoryID());
             }
             // CREATE DISK IMAGE SLA
             else if (obj instanceof DiskImageSLA) {
@@ -204,6 +205,37 @@ public class FusekiUtils {
                                 "}", functionality.getId(), functionality.getRefImplementationId(), functionality
                         .getClassification(), functionality.getDescription(), functionality.getDomain(),
                         functionality.getInputDescription(), functionality.getName(), functionality
+                                .getOutputDescription(), functionality.getTag());
+            }
+//                    Quality_AimedSize
+//            Quality_OptimizedSize
+//                    Quality_PercentStorageOptimised
+//            Quality_FunctionalityTested
+//                    Quality_UserRating
+//            Quality_IsUpdateNecessary
+//                    Quality_IsOptimizationNecessary
+//            Quality_NumberOfDownloads
+//                    Quality_maxIterationsNum
+//            Quality_actualIterationsNum
+//                    Quality_AimedReductionRatio
+//            Quality_maxRunningTime
+//                    Quality_actualRunningTime
+//            Quality_MaxNumberOfVMs
+            // Quality_UserComments
+            //     private String jobID;
+
+            // CREATE QUALITY - for optimization
+            else if (obj instanceof Quality) {
+                Functionality functionality = (Functionality) obj;
+                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                                "knowledgebase:%s a knowledgebase:Quality, owl:NamedIndividual ;" +
+                                "knowledgebase:Quality_ \"%s\" ;\n" +
+                                "knowledgebase:Quality_ \"%s\" ;\n" +
+                                "knowledgebase:Quality_ \"%s\" ;\n" +
+                                "knowledgebase:Quality_ \"%s\" ;\n" +
+                                "knowledgebase:Quality_ \"%s\" ;\n" +
+                                "}", functionality.getId(), functionality.getRefImplementationId(), functionality
+                        .getClassification(), functionality.getDescription(), functionality.getDomain(), functionality.getInputDescription(), functionality.getName(), functionality
                                 .getOutputDescription(), functionality.getTag());
             }
             // CREATE GEOLOCATION
@@ -409,7 +441,8 @@ public class FusekiUtils {
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                     "\n" +
                     "SELECT ?s ?p ?o\n" +
-                    "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o " + queryFilterCondition[0] + "} \n";
+                    "WHERE { knowledgebase:" + queryFilterCondition[0] + " a knowledgebase:"+entityClass+" ; ?p ?o }";
+//                    "WHERE { ?s a knowledgebase:" + entityClass + " ; ?p ?o " + queryFilterCondition[0] + "} \n";
         }
         else if (entityClass.equals("DiskImage") && queryFilterCondition.length > 1 && queryFilterCondition[1] !=
                 null) {
@@ -425,8 +458,8 @@ public class FusekiUtils {
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                     "SELECT ?s ?p ?o\n" +
                     "WHERE { knowledgebase:" + queryFilterCondition[0] + " a " +
-                    "knowledgebase:" + entityClass + "; ?p ?o }\n" +
-                    "LIMIT 200";
+                    "knowledgebase:" + entityClass + "; ?p ?o }\n";
+//                    "LIMIT 200";
         }
         else if (queryFilterCondition.length > 0 && queryFilterCondition[0] != null) {
             return "prefix knowledgebase: <http://www.semanticweb" +
@@ -679,7 +712,7 @@ public class FusekiUtils {
             DiskImage di = new DiskImage(UUID.randomUUID().toString(), imageTypeC, descriptionC, titleC,
                     predecessorC, fileFormatC, pictureUrlC, encriptionC, iriC, slaIdC, priceC, ownerIdC,
                     functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC,
-                    version, (int) (1000 + Math.random() * 100000),-1,-1,"paretoID",null);
+                    version, (int) (1000 + Math.random() * 100000),-1,-1,"paretoID",null,null);
             DiskImageResource dir = new DiskImageResource(resourceId, di);
             allImageResourcesWithThisType.add(dir);
         }
@@ -824,7 +857,7 @@ public class FusekiUtils {
             DiskImage di = new DiskImage(UUID.randomUUID().toString(), imageTypeC, descriptionC, titleC,
                     predecessorC, fileFormatC, pictureUrlC, encriptionC, iriC, slaIdC, priceC, ownerIdC,
                     functionallityIdC, qualityIdC, operatingSystemIdC, needsDataC, generationTimeC, obfuscationC,
-                    version, (int) (1000 + Math.random() * 100000),-1,-1,"paretoID",null);
+                    version, (int) (1000 + Math.random() * 100000),-1,-1,"paretoID",null,null);
             DiskImageResource dir = new DiskImageResource(resourceId, di);
             allImages.add(dir);
         }
@@ -857,6 +890,8 @@ public class FusekiUtils {
                         else if (resStr.contains("^^http://www.w3.org/2001/XMLSchema#anyURI"))
                             y = resStr.replace("^^http://www.w3.org/2001/XMLSchema#anyURI", "").replaceAll("\"", "");
                         else if (resStr.contains("-")) y = resStr.replaceAll("\"", "");
+                        else if (resStr.contains("^^http://www.w3.org/2001/XMLSchema#double"))
+                            y = resStr.replace("^^http://www.w3.org/2001/XMLSchema#double", "").replaceAll("\"", "");
                         else y = String.valueOf(((ResultBinding) qs).getBinding().get(var).getLiteral().getValue());
 
                         //additional filter of prefixes cannot be done here!
@@ -904,7 +939,7 @@ public class FusekiUtils {
                 resultObj.setS(conditions[0]);
             }
         }
-        else if (conditions.length > 0 && (clazz.getSimpleName().equals("DiskImage") || clazz.getSimpleName().equals
+        else if (conditions.length > 0 && (clazz.getSimpleName().equals("DiskImage") || clazz.getSimpleName().equals("Repository") || clazz.getSimpleName().equals
                 ("Functionality") || clazz.getSimpleName().equals("User") || clazz.getSimpleName().equals("Geolocation")) && resultObjs.size() > 0 &&
                 resultObjs.get(0).getS() == null) {
             for (ResultObj resultObj : resultObjs) {
@@ -958,8 +993,8 @@ public class FusekiUtils {
                     "\n" +
                     "SELECT ?s ?p ?o\n" +
                     "WHERE { knowledgebase:" + fragmentId.substring(fragmentId.indexOf("#") + 1) + " a " +
-                    "knowledgebase:Fragment; ?p ?o }\n" +
-                    "LIMIT 200";
+                    "knowledgebase:Fragment; ?p ?o }\n";
+//                    "LIMIT 200";
 
             qe = QueryExecutionFactory.sparqlService(AppContextListener.prop.getProperty("fuseki.url" + "" + "" +
                     ".query"), selectQuery);
@@ -979,7 +1014,7 @@ public class FusekiUtils {
                 }
 
 
-                CommonUtils.mapResultObjectToEntry(list, resultObj);
+                CommonUtils.mapResultObjectToEntry(list, resultObj, clazz);
             }
             fragmentList.add(list.get(0));
         }
@@ -989,16 +1024,16 @@ public class FusekiUtils {
     public static <T extends MyEntry> List<T> mapResultObjectListToEntry(Class<T> clazz, List<ResultObj> resultObjs) {
         List<T> list = new ArrayList<T>();
         for (ResultObj resultObj : resultObjs) {
-            if (resultObj.getO().equals(KB_PREFIX_SHORT + clazz.getSimpleName())) {
-                list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
-            }
+            //if (resultObj.getO().equals(KB_PREFIX_SHORT + clazz.getSimpleName())) {
+            //    list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
+            //}
 //            else if (resultObj.getO().equals(KB_PREFIX_SHORT + "CI") || resultObj.getO().equals(KB_PREFIX_SHORT +
 //                    "VMI")) {
 //                list.add(EntryFactory.getInstance(clazz, resultObj.getS().replace(KB_PREFIX_SHORT, "")));
 //            }
 
 
-            CommonUtils.mapResultObjectToEntry(list, resultObj);
+            CommonUtils.mapResultObjectToEntry(list, resultObj, clazz);
         }
         return list;
     }

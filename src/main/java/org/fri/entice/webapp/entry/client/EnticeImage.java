@@ -16,6 +16,7 @@ public class EnticeImage {
     private List<String> categories;
     private int numberOfChilds;
     private String description;
+    private String vmiURL;
 
 //    - image_name (String)
 //    - image_avatar (Int)
@@ -26,7 +27,7 @@ public class EnticeImage {
 //    - image_tags (List<String>) (seznam tagov oz. kategorij, ki jih izbere uporabnik pri uploadu slike)
 
     public EnticeImage(String id, String avatarURI, String imageName, String ownerID, int imageSize, int pulls, List<String>
-            categories, int numberOfChilds, String description, String ownerFullName) {
+            categories, int numberOfChilds, String description, String ownerFullName, String vmiURL) {
         this.id = id;
         this.avatarURI = avatarURI;
         this.imageName = imageName;
@@ -37,6 +38,7 @@ public class EnticeImage {
         this.numberOfChilds = numberOfChilds;
         this.description = description;
         this.ownerFullName = ownerFullName;
+        this.vmiURL = vmiURL;
 
         try{
             String[] avatarTab = avatarURI.split("/");
@@ -136,5 +138,13 @@ public class EnticeImage {
 
     public void setAvatarId(int avatarId) {
         this.avatarId = avatarId;
+    }
+
+    public String getVmiURL() {
+        return vmiURL;
+    }
+
+    public void setVmiURL(String vmiURL) {
+        this.vmiURL = vmiURL;
     }
 }

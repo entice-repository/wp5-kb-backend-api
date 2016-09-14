@@ -2,6 +2,7 @@ package org.fri.entice.webapp.rest;
 
 import com.vmrepository.RepoGuardClientFunctionalities.MOEstart;
 import com.vmrepository.RepoGuardClientFunctionalities.UploadImageAsInstanceFromS3;
+import com.vmrepository.RepoGuardClientFunctionalities.UploadOptimizedVMI;
 import com.vmrepository.RepoGuardClientFunctionalities.UploadVMI;
 import com.vmrepository.repoguardwebserver.FileNotFoundException_Exception;
 import com.vmrepository.repoguardwebserver.IOException_Exception;
@@ -31,6 +32,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 
 @Path("/gui/")
@@ -205,49 +208,55 @@ public class GUIService implements IGUIService {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Override
-    public ResponseObj uploadImage(@FormDataParam("file_upload") InputStream fileInputStream, @FormDataParam
-            ("file_upload") FormDataContentDisposition contentDispositionHeader, @FormDataParam("functional_tests")
-    InputStream functionalTestInputStream, @FormDataParam("functional_tests") FormDataContentDisposition
-            functionalTestDispositionHeader, @Nullable @FormDataParam("category_list") List<String> categoryList,
-                                   @FormDataParam("image_description") String imageDescription, @FormDataParam
-                                               ("image_name") String imageName, @FormDataParam("pareto_point_x") int
-                                               paretoPointIndexX, @FormDataParam("pareto_point_y") int
-                                               paretoPointIndexY, @FormDataParam("pareto_point_id") String
-                                               paretoPointId, @Nullable @FormDataParam("avatar_id") int avatarID,
-                                   @FormDataParam("user_id") String userID) {
+    public ResponseObj uploadImage(@Nullable @FormDataParam("file_upload") InputStream fileInputStream, @Nullable
+    @FormDataParam("file_upload") FormDataContentDisposition contentDispositionHeader, @FormDataParam
+            ("functional_tests") InputStream functionalTestInputStream, @FormDataParam("functional_tests")
+    FormDataContentDisposition functionalTestDispositionHeader, @Nullable @FormDataParam("category_list")
+    List<String> categoryList, @FormDataParam("image_url") String imageURL, @FormDataParam("image_description")
+    String imageDescription, @FormDataParam("image_name") String imageName, @FormDataParam("pareto_point") int
+            paretoPoint, @FormDataParam("pareto_point_id") String paretoPointId, @Nullable @FormDataParam
+            ("avatar_id") int avatarID, @FormDataParam("user_id") String userID) {
         try {
-            if (contentDispositionHeader == null && contentDispositionHeader.getFileName().length() <= 0)
-                return new ResponseObj(204, "file name is null! File name: " + contentDispositionHeader.getFileName());
-            else if (imageDescription == null || imageDescription.length() == 0)
+//            if (contentDispositionHeader == null || contentDispositionHeader.getFileName().length() <= 0)
+//                return new ResponseObj(204, "file name is null! File name: ");
+            if (imageDescription == null || imageDescription.length() == 0)
                 return new ResponseObj(204, "image description is not set! image_description");
+//            else if (repositoryID == null || repositoryID.length() == 0)
+//                return new ResponseObj(204, "repository index is not set! repository_id");
             else if (imageName == null || imageName.length() == 0)
                 return new ResponseObj(204, "image name is not set! image_name");
-            else if (paretoPointIndexX < 0) return new ResponseObj(204, "pareto point x is not set! pareto_point_x");
-            else if (paretoPointIndexY < 0) return new ResponseObj(204, "pareto point y is not set! pareto_point_y");
+            else if (paretoPoint < 0) return new ResponseObj(204, "pareto point is not set! pareto_point");
             else if (paretoPointId == null || paretoPointId.length() == 0)
                 return new ResponseObj(204, "pareto ID is not set!\npareto_point_id");
             else if (userID == null || userID.length() == 0)
                 return new ResponseObj(204, "user ID is not set!\nuser_id");
-
-            String filePath = SERVER_UPLOAD_LOCATION_FOLDER + contentDispositionHeader.getFileName();
+            final boolean uploadFromURL = imageURL != null && imageURL.length() > 0;
+            String filePath = uploadFromURL ? null : SERVER_UPLOAD_LOCATION_FOLDER + contentDispositionHeader
+                    .getFileName();
 
             // save the file to the server
-            saveFile(fileInputStream, filePath);
+            if (!uploadFromURL) saveFile(fileInputStream, filePath);
 
+            String successMessage = null;
             //upload VMI in the repository
-            String successMessage = UploadVMI.performUpload(filePath);
-
+            try {
+                successMessage = uploadFromURL ? UploadOptimizedVMI.executeUpload(imageURL, paretoPoint) : UploadVMI
+                        .performUpload(filePath, paretoPoint);
+            } catch (Exception e) {
+                return new ResponseObj(111, "failed to upload from url: " + e.getMessage());
+            }
             String functionalityID = "";
             // if functionality test is selected
             if (functionalTestDispositionHeader != null && functionalTestDispositionHeader.getFileName().length() > 0) {
                 String functionalTestFilePath = SERVER_UPLOAD_LOCATION_FOLDER + functionalTestDispositionHeader
                         .getFileName();
-                if (functionalTestDispositionHeader != null) saveFile(functionalTestInputStream, functionalTestFilePath);
+                if (functionalTestDispositionHeader != null)
+                    saveFile(functionalTestInputStream, functionalTestFilePath);
 
                 File file = new File(functionalTestFilePath);
 
                 //upload functional test in the repository
-                String successFunctionalTestMessage = UploadVMI.performUpload(functionalTestFilePath); //todo: get ID
+                String successFunctionalTestMessage = UploadVMI.performUpload(functionalTestFilePath, paretoPoint);
                 // of the functional test when Nishant fixes JSON
                 functionalityID = UUID.randomUUID().toString();
 
@@ -264,28 +273,58 @@ public class GUIService implements IGUIService {
             }
 
             if (successMessage != null) {
-                File file = new File(filePath);
+                File file = null;
+
+                String fileName = "";
+                if (!uploadFromURL) file = new File(filePath);
+
+
 
                 // create DiskImage entity
                 DiskImage diskImage = new DiskImage(UUID.randomUUID().toString(), ImageType.VMI, imageDescription,
                         imageName, "", FileFormat.IMG, "http://193.2.72.90/images/avatars/" + (avatarID != -1 ?
-                        avatarID + "" : ""), false, "https://s3.tnode" +
-                        ".com:9869/flexiant-entice/" + contentDispositionHeader.getFileName(), "", 0, userID,
-                        functionalityID, "", "", false, System.currentTimeMillis(), false, "1.0", (int) (file.length
-                        () / 1024), paretoPointIndexX, paretoPointIndexY, paretoPointId, categoryList);
+                        avatarID + "" : ""), false,successMessage.split(",")[3].split("\".")[2] , "", 0, userID,
+                        functionalityID, "", "", false, System.currentTimeMillis(), false, "1.0", uploadFromURL ?
+                        getFileSize(imageURL) : (int) (file.length() / 1024), paretoPoint, paretoPoint,
+                        paretoPointId, categoryList, mapRepositoryIndexToRealOne(paretoPoint + ""));
 
                 String insertStatement = FusekiUtils.generateInsertObjectStatement(diskImage);
                 UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement),
                         AppContextListener.prop.getProperty("fuseki.url.update"));
                 upp.execute();
-                file.delete();
-                return new ResponseObj(200, "success upload");
+                if(file != null)
+                    file.delete();
+                return new ResponseObj(200, "success upload" + successMessage);
             }
-            else return new ResponseObj(404, "failed upload");
+            else return new ResponseObj(404, "failed upload" + successMessage);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseObj(404, "FAILED uploaded on LPT VMI | stacktrace"+e.getMessage() );
+            return new ResponseObj(404, "FAILED uploaded on LPT VMI | stacktrace" + e.getMessage());
         }
+    }
+
+    private int getFileSize(String url) {
+        try {
+            final URL uri = new URL(url);
+            URLConnection ucon;
+            ucon = uri.openConnection();
+            ucon.connect();
+            final String contentLengthStr = ucon.getHeaderField("content-length");
+            return (int)(Long.valueOf(contentLengthStr) / 1024);
+        } catch (final IOException e1) {
+            e1.getMessage();
+            return -1;
+        }
+    }
+
+    private String mapRepositoryIndexToRealOne(String repositoryIndex) {
+        List<Repository> repositoryList = FusekiUtils.getAllEntityAttributes(Repository.class);
+        try {
+            return repositoryList.get(Integer.valueOf(repositoryIndex)).getId();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return repositoryList.get(0).getId();
     }
 
     // save uploaded file to a defined location on the server
@@ -331,6 +370,29 @@ public class GUIService implements IGUIService {
         return null;
     }
 
+
+
+    @GET
+    @Path("nishant")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getNishant(@QueryParam("node_id") int nodeId) {
+        try {
+          return UploadOptimizedVMI.executeUpload("https://entice.lpds.sztaki.hu:5443/api/imagebuilder/build/99b5f56b-75ba-4a02-ad37-52ecfbeb1afa/result/image",(nodeId - 1));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        } catch (FileNotFoundException_Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        } catch (IOException_Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        } catch (URISyntaxException_Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
+
 //    @Override
 //    public ResponseSynthesisObj performImageSynthesis(String cloudID, String imageID, String instanceType, @Nullable
 //    String securityGroupID, @Nullable String subnetIDs, @Nullable String ssh, InputStream contextualisationStream,
@@ -374,7 +436,7 @@ public class GUIService implements IGUIService {
         List<DiskImage> diskImages = FusekiUtils.getAllEntityAttributes(DiskImage.class, null, (title != null ? ". ?s" +
                 " " +
                 "knowledgebase:DiskImage_Title ?title . FILTER regex(?title, \"" + title + "\", \"i\") ." : "") +
-                (categoryId != null ? "?s knowledgebase:DiskImage_Categories ?cat . FILTER regex(?cat, " +
+                (categoryId != null ? ". ?s knowledgebase:DiskImage_Categories ?cat . FILTER regex(?cat, " +
                         "\""+categoryId+"\", \"i\")" : ""));
 
         ArrayList<EnticeImage> enticeImages = new ArrayList<>();
@@ -389,18 +451,23 @@ public class GUIService implements IGUIService {
         for (int i = paginationPage * hitsPerPage; i < maxSize; i++) {
 
             List<Fragment> fragmentList = FusekiUtils.getFragmentDataOfDiskImage(diskImages.get(i).getId(), false);
-            List<Functionality> functionalityList = FusekiUtils.getFunctionalityOfDiskImage(diskImages.get(0)
-                    .getRefFunctionalityId());
-            diskImages.get(0).setFunctionalityList(functionalityList);
 
-            Set<String> setOfRepositoryIds = new HashSet<>();
-            for (Fragment fragment : fragmentList) {
-                setOfRepositoryIds.add(fragment.getRefRepositoryId());
-            }
-            List<Repository> matchingRepositories = new ArrayList<>();
-            for (Repository repository : repositoriesList) {
-                if (listContainsId(setOfRepositoryIds, repository.getId())) matchingRepositories.add(repository);
-            }
+
+
+            List<Functionality> functionalityList = FusekiUtils.getFunctionalityOfDiskImage(diskImages.get(i)
+                    .getRefFunctionalityId());
+            if(functionalityList.size() > 0)
+                diskImages.get(i).setFunctionalityList(functionalityList);
+
+//            Set<String> setOfRepositoryIds = new HashSet<>();
+//            for (Fragment fragment : fragmentList) {
+//                setOfRepositoryIds.add(fragment.getRefRepositoryId());
+//            }
+//            List<Repository> matchingRepositories = new ArrayList<>();
+//            for (Repository repository : repositoriesList) {
+//                if (listContainsId(setOfRepositoryIds, repository.getId())) matchingRepositories.add(repository);
+//            }
+
 
             String userFullName = "dummy full name";
             try {
@@ -409,6 +476,11 @@ public class GUIService implements IGUIService {
             } catch (Exception e) {
                 //e.printStackTrace();
             }
+
+            List<Repository> repositoryList = new ArrayList<>();
+            if(diskImages.get(i).getRepository() != null)
+                repositoryList.add(diskImages.get(i).getRepository());
+
 //            enticeImages.add(new EnticeImage(diskImages.get(i).getId(), diskImages.get(i).getPictureUrl(), diskImages
 //                    .get(i).getTitle(), diskImages.get(i).getRefOwnerId() == null ? "unknown user" : diskImages.get
 //                    (i).getRefOwnerId(), diskImages.get(i).getDiskImageSize(), 0, diskImages.get(i).getCategoryList()
@@ -416,8 +488,8 @@ public class GUIService implements IGUIService {
             enticeImages.add(new EnticeDetailedImage(diskImages.get(i).getId(), diskImages.get(i).getPictureUrl(), diskImages.get
                     (i).getTitle(), diskImages.get(i).getRefOwnerId() == null ? "unknown user" : diskImages.get(i)
                     .getRefOwnerId(), diskImages.get(i).getDiskImageSize(), 0, diskImages.get(i).getCategoryList(), 0,
-                    matchingRepositories, diskImages.get(i).getFunctionalityList(), null, diskImages.get(i)
-                    .getDescription(), userFullName));
+                    repositoryList, diskImages.get(i).getFunctionalityList(), null, diskImages.get(i)
+                    .getDescription(), userFullName, diskImages.get(i).getIri()));
 
             if(order != null && order.length() > 0){
                 if(order.equals("name"))
@@ -497,7 +569,7 @@ public class GUIService implements IGUIService {
                 (0).getTitle(), diskImages.get(0).getRefOwnerId() == null ? "unknown user" : diskImages.get(0)
                 .getRefOwnerId(), diskImages.get(0).getDiskImageSize(), 0, diskImages.get(0).getCategoryList(), 0,
                 matchingRepositories, diskImages.get(0).getFunctionalityList(), null, diskImages.get(0)
-                .getDescription(), "aaa");
+                .getDescription(), "aaa", diskImages.get(0).getIri());
     }
 
     private boolean listContainsId(Set<String> setOfRepositoryIds, String id) {
@@ -558,13 +630,15 @@ public class GUIService implements IGUIService {
 
     //  a8169e97-59a0-4478-a0fc-db41a6d99dd9
     @GET
-    @Path("deyloy_vmi_on_cloud")
+    @Path("deploy_vmi_on_cloud")
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public String deployDiskImageOnTheCloud(@QueryParam("image_id") String imageID, @QueryParam("cloud_id")
     String cloudID, @QueryParam("cloud_access_key") String cloudAccesseKey, @QueryParam("cloud_secret_key")
     String cloudSecretKey) {
         List<DiskImage> diskImages = FusekiUtils.getAllEntityAttributes(DiskImage.class, imageID);
+        if(diskImages.size() == 0) return "VMI with id \"" + imageID + "\" does not exist!";
+
         try {
             return UploadImageAsInstanceFromS3.uploadImageAsInstanceFromS3(cloudAccesseKey, cloudSecretKey,
                     diskImages.get(0).getTitle(), cloudID, diskImages.get(0).getIri());

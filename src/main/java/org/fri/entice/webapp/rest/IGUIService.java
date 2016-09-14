@@ -39,8 +39,8 @@ public interface IGUIService {
     public ResponseObj uploadImage(InputStream fileInputStream, FormDataContentDisposition contentDispositionHeader,
                                    InputStream functionalTestInputStream, FormDataContentDisposition
                                                functionalTestDispositionHeader, List<String> categoryList, String
-                                               imageDescription, String imageName, int paretoPointIndexX, int
-                                               paretoPointIndexY, String paretoPointId, int avatarID, String userID);
+                                               imageURL, String imageDescription, String imageName, int paretoPoint,
+                                   String paretoPointId, int avatarID, String userID);
 
     //
 //    // todo: verify!!!

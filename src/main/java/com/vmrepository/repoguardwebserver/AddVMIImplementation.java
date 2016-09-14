@@ -1,7 +1,6 @@
 
 package com.vmrepository.repoguardwebserver;
 
-import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -11,6 +10,7 @@ import javax.xml.ws.Action;
 import javax.xml.ws.FaultAction;
 import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
+import java.util.List;
 
 
 /**
@@ -35,6 +35,7 @@ public interface AddVMIImplementation {
      * @param arg0
      * @return
      *     returns java.util.List<java.lang.String>
+     * @throws URISyntaxException_Exception
      * @throws FileNotFoundException_Exception
      * @throws IOException_Exception
      */
@@ -44,7 +45,8 @@ public interface AddVMIImplementation {
     @ResponseWrapper(localName = "receiveVMImageResponse", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.ReceiveVMImageResponse")
     @Action(input = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/receiveVMImageRequest", output = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/receiveVMImageResponse", fault = {
         @FaultAction(className = FileNotFoundException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/receiveVMImage/Fault/FileNotFoundException"),
-        @FaultAction(className = IOException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/receiveVMImage/Fault/IOException")
+        @FaultAction(className = IOException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/receiveVMImage/Fault/IOException"),
+        @FaultAction(className = URISyntaxException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/receiveVMImage/Fault/URISyntaxException")
     })
     public List<String> receiveVMImage(
         @WebParam(name = "arg0", targetNamespace = "")
@@ -57,7 +59,7 @@ public interface AddVMIImplementation {
         long arg3,
         @WebParam(name = "arg4", targetNamespace = "")
         String arg4)
-        throws FileNotFoundException_Exception, IOException_Exception
+        throws FileNotFoundException_Exception, IOException_Exception, URISyntaxException_Exception
     ;
 
     /**
@@ -82,10 +84,10 @@ public interface AddVMIImplementation {
     /**
      * 
      * @param arg0
+     * @throws URISyntaxException_Exception
      * @throws FileNotFoundException_Exception
      * @throws IOException_Exception
      * @throws ParseException_Exception
-     * @throws URISyntaxException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "reDistribution", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.ReDistribution")
@@ -108,9 +110,9 @@ public interface AddVMIImplementation {
      * @param arg0
      * @return
      *     returns java.util.List<java.lang.String>
+     * @throws URISyntaxException_Exception
      * @throws FileNotFoundException_Exception
      * @throws IOException_Exception
-     * @throws URISyntaxException_Exception
      */
     @WebMethod
     @WebResult(targetNamespace = "")
@@ -178,31 +180,6 @@ public interface AddVMIImplementation {
 
     /**
      * 
-     * @param arg1
-     * @param arg0
-     * @return
-     *     returns boolean
-     * @throws FileNotFoundException_Exception
-     * @throws IOException_Exception
-     */
-    @WebMethod(operationName = "Authenticate")
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "Authenticate", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.Authenticate")
-    @ResponseWrapper(localName = "AuthenticateResponse", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.AuthenticateResponse")
-    @Action(input = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/AuthenticateRequest", output = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/AuthenticateResponse", fault = {
-        @FaultAction(className = FileNotFoundException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/Authenticate/Fault/FileNotFoundException"),
-        @FaultAction(className = IOException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/Authenticate/Fault/IOException")
-    })
-    public boolean authenticate(
-        @WebParam(name = "arg0", targetNamespace = "")
-        String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        String arg1)
-        throws FileNotFoundException_Exception, IOException_Exception
-    ;
-
-    /**
-     * 
      * @param arg0
      * @return
      *     returns boolean
@@ -220,13 +197,12 @@ public interface AddVMIImplementation {
      * 
      * @param arg3
      * @param arg2
-     * @param arg5
      * @param arg4
      * @param arg1
      * @param arg0
-     * @param arg6
      * @return
      *     returns java.util.List<java.lang.String>
+     * @throws URISyntaxException_Exception
      * @throws FileNotFoundException_Exception
      * @throws IOException_Exception
      */
@@ -236,24 +212,21 @@ public interface AddVMIImplementation {
     @ResponseWrapper(localName = "receiveOptimizedVMImageResponse", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.ReceiveOptimizedVMImageResponse")
     @Action(input = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/receiveOptimizedVMImageRequest", output = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/receiveOptimizedVMImageResponse", fault = {
         @FaultAction(className = FileNotFoundException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/receiveOptimizedVMImage/Fault/FileNotFoundException"),
-        @FaultAction(className = IOException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/receiveOptimizedVMImage/Fault/IOException")
+        @FaultAction(className = IOException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/receiveOptimizedVMImage/Fault/IOException"),
+        @FaultAction(className = URISyntaxException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/receiveOptimizedVMImage/Fault/URISyntaxException")
     })
     public List<String> receiveOptimizedVMImage(
         @WebParam(name = "arg0", targetNamespace = "")
-        byte[] arg0,
+        String arg0,
         @WebParam(name = "arg1", targetNamespace = "")
         String arg1,
         @WebParam(name = "arg2", targetNamespace = "")
         String arg2,
         @WebParam(name = "arg3", targetNamespace = "")
-        int arg3,
+        String arg3,
         @WebParam(name = "arg4", targetNamespace = "")
-        long arg4,
-        @WebParam(name = "arg5", targetNamespace = "")
-        String arg5,
-        @WebParam(name = "arg6", targetNamespace = "")
-        String arg6)
-        throws FileNotFoundException_Exception, IOException_Exception
+        String arg4)
+        throws FileNotFoundException_Exception, IOException_Exception, URISyntaxException_Exception
     ;
 
     /**
@@ -287,6 +260,31 @@ public interface AddVMIImplementation {
         long arg3,
         @WebParam(name = "arg4", targetNamespace = "")
         String arg4)
+        throws FileNotFoundException_Exception, IOException_Exception
+    ;
+
+    /**
+     * 
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns boolean
+     * @throws FileNotFoundException_Exception
+     * @throws IOException_Exception
+     */
+    @WebMethod(operationName = "Authenticate")
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "Authenticate", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.Authenticate")
+    @ResponseWrapper(localName = "AuthenticateResponse", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.AuthenticateResponse")
+    @Action(input = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/AuthenticateRequest", output = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/AuthenticateResponse", fault = {
+        @FaultAction(className = FileNotFoundException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/Authenticate/Fault/FileNotFoundException"),
+        @FaultAction(className = IOException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/Authenticate/Fault/IOException")
+    })
+    public boolean authenticate(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0,
+        @WebParam(name = "arg1", targetNamespace = "")
+        String arg1)
         throws FileNotFoundException_Exception, IOException_Exception
     ;
 
@@ -339,6 +337,28 @@ public interface AddVMIImplementation {
     /**
      * 
      * @param arg0
+     * @return
+     *     returns java.lang.String
+     * @throws URISyntaxException_Exception
+     * @throws MalformedURLException_Exception
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "parserURL", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.ParserURL")
+    @ResponseWrapper(localName = "parserURLResponse", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.ParserURLResponse")
+    @Action(input = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/parserURLRequest", output = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/parserURLResponse", fault = {
+        @FaultAction(className = URISyntaxException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/parserURL/Fault/URISyntaxException"),
+        @FaultAction(className = MalformedURLException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/parserURL/Fault/MalformedURLException")
+    })
+    public String parserURL(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0)
+        throws MalformedURLException_Exception, URISyntaxException_Exception
+    ;
+
+    /**
+     * 
+     * @param arg0
      */
     @WebMethod
     @RequestWrapper(localName = "cleanVMI", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.CleanVMI")
@@ -347,6 +367,21 @@ public interface AddVMIImplementation {
     public void cleanVMI(
         @WebParam(name = "arg0", targetNamespace = "")
         String arg0);
+
+    /**
+     * 
+     * @param arg1
+     * @param arg0
+     */
+    @WebMethod
+    @RequestWrapper(localName = "downloadVMIViaURI", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.DownloadVMIViaURI")
+    @ResponseWrapper(localName = "downloadVMIViaURIResponse", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.DownloadVMIViaURIResponse")
+    @Action(input = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/downloadVMIViaURIRequest", output = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/downloadVMIViaURIResponse")
+    public void downloadVMIViaURI(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0,
+        @WebParam(name = "arg1", targetNamespace = "")
+        String arg1);
 
     /**
      * 
@@ -368,26 +403,11 @@ public interface AddVMIImplementation {
 
     /**
      * 
-     * @param arg1
-     * @param arg0
-     */
-    @WebMethod
-    @RequestWrapper(localName = "downloadVMIViaURI", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.DownloadVMIViaURI")
-    @ResponseWrapper(localName = "downloadVMIViaURIResponse", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.DownloadVMIViaURIResponse")
-    @Action(input = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/downloadVMIViaURIRequest", output = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/downloadVMIViaURIResponse")
-    public void downloadVMIViaURI(
-        @WebParam(name = "arg0", targetNamespace = "")
-        String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        String arg1);
-
-    /**
-     * 
      * @param arg0
      * @return
      *     returns java.lang.String
-     * @throws UnknownHostException_Exception
      * @throws URISyntaxException_Exception
+     * @throws UnknownHostException_Exception
      */
     @WebMethod
     @WebResult(targetNamespace = "")

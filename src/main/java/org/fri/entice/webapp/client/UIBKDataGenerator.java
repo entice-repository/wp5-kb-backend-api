@@ -101,7 +101,7 @@ public class UIBKDataGenerator {
                         "description", i < titles.length ? titles[i] : "Fedora " + i , "some predecessor..", FileFormat.IMG, "http://www.example" + "" +
                         ".org/PictureURL", Math.random() < 0.5, "http://www.example.org/iri", "123", 50 + Math.random
                         () * 100, "http://www.example.org/ownerID", "789", "100", "7", Math.random() < 0.5, (int)
-                        (Math.random() * 30), Math.random() < 0.5, "1.0", (int) (1000 + Math.random() * 100000),-1,-1,"paretoID",null);
+                        (Math.random() * 30), Math.random() < 0.5, "1.0", (int) (1000 + Math.random() * 100000),-1,-1,"paretoID",null,null);
                 diskImages.add(diskImage);
                 insertStatement = FusekiUtils.generateInsertObjectStatement(diskImage);
                 upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);

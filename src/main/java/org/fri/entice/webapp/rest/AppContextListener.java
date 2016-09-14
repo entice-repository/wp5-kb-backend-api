@@ -2,14 +2,10 @@ package org.fri.entice.webapp.rest;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.fri.entice.webapp.cassandra.CassandraParamsObj;
-import org.fri.entice.webapp.cassandra.CassandraService;
 import org.fri.entice.webapp.util.CommonUtils;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +14,7 @@ public class AppContextListener implements ServletContextListener {
 
     private Logger logger;
     public static Properties prop = new Properties();
-    private CassandraService cassandraService;
+//    private CassandraService cassandraService;
 
     /**
      * CALLED ON SERVICE INIT
@@ -78,7 +74,7 @@ public class AppContextListener implements ServletContextListener {
             e.printStackTrace();
         }
     }
-
+    /*
     private void initCassandraConnectionToService() {
         List<String> clusters = new ArrayList<String>();
         clusters.add(prop.getProperty("apache.cassandra.ip"));
@@ -90,6 +86,7 @@ public class AppContextListener implements ServletContextListener {
         CassandraService.initCassandraPropertyTables();
         logger.log(Level.INFO, "Metric table data loaded.");
     }
+    */
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {

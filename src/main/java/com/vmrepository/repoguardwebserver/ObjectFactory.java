@@ -34,9 +34,11 @@ public class ObjectFactory {
     private final static QName _GetVMIIPResponse_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "getVMIIPResponse");
     private final static QName _UploadImageInstanceFromS3_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "uploadImageInstanceFromS3");
     private final static QName _TrackLocation_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "trackLocation");
+    private final static QName _ParserURLResponse_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "parserURLResponse");
     private final static QName _UnknownHostException_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "UnknownHostException");
     private final static QName _ReceiveOptimizedVMImageResponse_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "receiveOptimizedVMImageResponse");
     private final static QName _GetBucketVMIList_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "getBucketVMIList");
+    private final static QName _ParserURL_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "parserURL");
     private final static QName _ReDistributionResponse_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "reDistributionResponse");
     private final static QName _CleanVMIResponse_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "cleanVMIResponse");
     private final static QName _ReDistribution_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "reDistribution");
@@ -54,6 +56,7 @@ public class ObjectFactory {
     private final static QName _GetBucketListResponse_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "getBucketListResponse");
     private final static QName _DeleteUnoptimizedVMI_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "deleteUnoptimizedVMI");
     private final static QName _UploadVMIAsObjectStorage_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "uploadVMIAsObjectStorage");
+    private final static QName _MalformedURLException_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "MalformedURLException");
     private final static QName _GetVMIIP_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "getVMIIP");
     private final static QName _DownloadVMIViaURIResponse_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "downloadVMIViaURIResponse");
     private final static QName _AuthenticateResponse_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "AuthenticateResponse");
@@ -63,7 +66,7 @@ public class ObjectFactory {
     private final static QName _StorageNodesResponse_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "StorageNodesResponse");
     private final static QName _UploadImageInstanceDirectly_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "uploadImageInstanceDirectly");
     private final static QName _Upload_QNAME = new QName("http://RepoGuardWebServer.vmrepository.com/", "upload");
-    private final static QName _ReceiveOptimizedVMImageArg0_QNAME = new QName("", "arg0");
+    private final static QName _UploadArg0_QNAME = new QName("", "arg0");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.vmrepository.repoguardwebserver
@@ -110,6 +113,14 @@ public class ObjectFactory {
      */
     public OptDistributeResponse createOptDistributeResponse() {
         return new OptDistributeResponse();
+    }
+
+    /**
+     * Create an instance of {@link MalformedURLException }
+     * 
+     */
+    public MalformedURLException createMalformedURLException() {
+        return new MalformedURLException();
     }
 
     /**
@@ -273,6 +284,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ParserURL }
+     * 
+     */
+    public ParserURL createParserURL() {
+        return new ParserURL();
+    }
+
+    /**
      * Create an instance of {@link CleanVMIResponse }
      * 
      */
@@ -286,6 +305,14 @@ public class ObjectFactory {
      */
     public ReDistribution createReDistribution() {
         return new ReDistribution();
+    }
+
+    /**
+     * Create an instance of {@link ParserURLResponse }
+     * 
+     */
+    public ParserURLResponse createParserURLResponse() {
+        return new ParserURLResponse();
     }
 
     /**
@@ -475,6 +502,15 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link ParserURLResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://RepoGuardWebServer.vmrepository.com/", name = "parserURLResponse")
+    public JAXBElement<ParserURLResponse> createParserURLResponse(ParserURLResponse value) {
+        return new JAXBElement<ParserURLResponse>(_ParserURLResponse_QNAME, ParserURLResponse.class, null, value);
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link UnknownHostException }{@code >}}
      * 
      */
@@ -499,6 +535,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://RepoGuardWebServer.vmrepository.com/", name = "getBucketVMIList")
     public JAXBElement<GetBucketVMIList> createGetBucketVMIList(GetBucketVMIList value) {
         return new JAXBElement<GetBucketVMIList>(_GetBucketVMIList_QNAME, GetBucketVMIList.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link ParserURL }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://RepoGuardWebServer.vmrepository.com/", name = "parserURL")
+    public JAXBElement<ParserURL> createParserURL(ParserURL value) {
+        return new JAXBElement<ParserURL>(_ParserURL_QNAME, ParserURL.class, null, value);
     }
 
     /**
@@ -655,6 +700,15 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link MalformedURLException }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://RepoGuardWebServer.vmrepository.com/", name = "MalformedURLException")
+    public JAXBElement<MalformedURLException> createMalformedURLException(MalformedURLException value) {
+        return new JAXBElement<MalformedURLException>(_MalformedURLException_QNAME, MalformedURLException.class, null, value);
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link GetVMIIP }{@code >}}
      * 
      */
@@ -739,9 +793,9 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link byte[]}{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "", name = "arg0", scope = ReceiveOptimizedVMImage.class)
-    public JAXBElement<byte[]> createReceiveOptimizedVMImageArg0(byte[] value) {
-        return new JAXBElement<byte[]>(_ReceiveOptimizedVMImageArg0_QNAME, byte[].class, ReceiveOptimizedVMImage.class, ((byte[]) value));
+    @XmlElementDecl(namespace = "", name = "arg0", scope = Upload.class)
+    public JAXBElement<byte[]> createUploadArg0(byte[] value) {
+        return new JAXBElement<byte[]>(_UploadArg0_QNAME, byte[].class, Upload.class, ((byte[]) value));
     }
 
     /**
@@ -750,7 +804,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "arg0", scope = UploadImageInstanceDirectly.class)
     public JAXBElement<byte[]> createUploadImageInstanceDirectlyArg0(byte[] value) {
-        return new JAXBElement<byte[]>(_ReceiveOptimizedVMImageArg0_QNAME, byte[].class, UploadImageInstanceDirectly.class, ((byte[]) value));
+        return new JAXBElement<byte[]>(_UploadArg0_QNAME, byte[].class, UploadImageInstanceDirectly.class, ((byte[]) value));
     }
 
     /**
@@ -759,16 +813,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "arg0", scope = ReceiveVMImage.class)
     public JAXBElement<byte[]> createReceiveVMImageArg0(byte[] value) {
-        return new JAXBElement<byte[]>(_ReceiveOptimizedVMImageArg0_QNAME, byte[].class, ReceiveVMImage.class, ((byte[]) value));
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link byte[]}{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "", name = "arg0", scope = Upload.class)
-    public JAXBElement<byte[]> createUploadArg0(byte[] value) {
-        return new JAXBElement<byte[]>(_ReceiveOptimizedVMImageArg0_QNAME, byte[].class, Upload.class, ((byte[]) value));
+        return new JAXBElement<byte[]>(_UploadArg0_QNAME, byte[].class, ReceiveVMImage.class, ((byte[]) value));
     }
 
 }

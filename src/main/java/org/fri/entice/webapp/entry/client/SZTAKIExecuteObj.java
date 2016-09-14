@@ -9,6 +9,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class SZTAKIExecuteObj {
 
+    private String jobID;
+
     // ImageId (Int) REQ !! interni id za ENTICE, ne id, kot ga zahteva SZTAKI
     private String imageId;
     // it will be generated on SZTAKI cloud deploy
@@ -40,7 +42,7 @@ public class SZTAKIExecuteObj {
     // MaxNumberOfIteration (String) REQ
     private int maxIterationsNum;
     // MaxNumberOfVMIs (UInt) OPT.
-    private int XmaxNumberOfVMs;
+    private short XmaxNumberOfVMs;
     // Aimed Reduction Ratio (Float) OPT.
     private double XaimedReductionRatio;
     // Aimed Size (UInt) OPT.
@@ -60,7 +62,7 @@ public class SZTAKIExecuteObj {
             fsPartition, String imageKeyPair, String imagePrivateKey, String cloudEndpointURL, String cloudAccessKey,
                             String cloudSecretKey, String cloudOptimizerVMInstanceType, String
                                     cloudWorkerVMInstanceType, int freeDiskSpace, int numberOfParallelWorkerVMs, int
-                                    maxIterationsNum, int XmaxNumberOfVMs, double XaimedReductionRatio, long
+                                    maxIterationsNum, short XmaxNumberOfVMs, double XaimedReductionRatio, long
                                     XaimedSize, int XmaxRunningTime, String s3EndpointURL, String s3AccessKey, String
                                     s3SecretKey, String s3Path) {
         this.imageId = imageId;
@@ -190,7 +192,7 @@ public class SZTAKIExecuteObj {
         return XmaxNumberOfVMs;
     }
 
-    public void setXmaxNumberOfVMs(int XmaxNumberOfVMs) {
+    public void setXmaxNumberOfVMs(short XmaxNumberOfVMs) {
         this.XmaxNumberOfVMs = XmaxNumberOfVMs;
     }
 

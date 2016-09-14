@@ -31,6 +31,8 @@ public class DiskImage extends MyEntry {
     private int paretoPointY;
     private String paretoId;
     private List<String> categoryList;
+    private String repositoryID;
+    private Repository repository;
 
     List<Fragment> fragmentList;
 
@@ -42,7 +44,7 @@ public class DiskImage extends MyEntry {
                      FileFormat fileFormatC, String pictureUrlC, boolean encryption, String iriC, String refSlaId,
                      double priceC, String refOwnerId, String refFunctionalityId, String refQualityId, String
                              refOperatingSystemId, boolean needsDataC, long generationTimeC, boolean obfuscationC,
-                     String version, int diskImageSize, int paretoPointX, int paretoPointY, String paretoId,List<String> categoryList) {
+                     String version, int diskImageSize, int paretoPointX, int paretoPointY, String paretoId,List<String> categoryList, String repositoryID) {
         super(id);
         this.imageType = imageTypeC;
         this.description = descriptionC;
@@ -67,6 +69,7 @@ public class DiskImage extends MyEntry {
         this.paretoPointY = paretoPointY;
         this.paretoId = paretoId;
         this.categoryList = categoryList;
+        this.repositoryID = repositoryID;
     }
 
     public ImageType getImageType() {
@@ -298,6 +301,22 @@ public class DiskImage extends MyEntry {
 
     public void setFunctionalityList(List<Functionality> functionalityList) {
         this.functionalityList = functionalityList;
+    }
+
+    public String getRepositoryID() {
+        return repositoryID;
+    }
+
+    public void setRepositoryID(String repositoryID) {
+        this.repositoryID = repositoryID;
+    }
+
+    public Repository getRepository() {
+        return repository;
+    }
+
+    public void setRepository(Repository repository) {
+        this.repository = repository;
     }
 }
 

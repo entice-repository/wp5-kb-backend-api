@@ -362,13 +362,7 @@ public class JSONService implements IUserService{
     @Path("get_all_repositories")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Repository> getAllRepositories() {
-        //ugly hack!!
-        List<Repository> repositoryList = FusekiUtils.getAllEntityAttributes(Repository.class);
-        List<Repository> resultList = new ArrayList<>();
-        for (Repository repository : repositoryList) {
-            if (repository.getGeolocation() != null) resultList.add(repository);
-        }
-        return resultList;
+        return FusekiUtils.getAllEntityAttributes(Repository.class);
     }
 
     @GET

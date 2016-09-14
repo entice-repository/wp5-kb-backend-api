@@ -8,12 +8,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ResponseObj extends MyEntry {
 
     private int code;
-    private String repositoryID;
+    private String message;
 
-    public ResponseObj(int code, String repositoryID) {
+    public ResponseObj(int code, String message) {
         super(null);
         this.code = code;
-        this.repositoryID = repositoryID;
+        this.message = message;
     }
 
     public ResponseObj() {
@@ -29,10 +29,10 @@ public class ResponseObj extends MyEntry {
     }
 
     public String getRepositoryID() {
-        return repositoryID;
+        return message;
     }
 
-    public void setRepositoryID(String repositoryID) {
-        this.repositoryID = repositoryID;
+    public void setRepositoryID(String message) {
+        this.message = message;
     }
 }
