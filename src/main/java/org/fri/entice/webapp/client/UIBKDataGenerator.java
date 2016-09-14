@@ -9,7 +9,6 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -30,10 +29,10 @@ public class UIBKDataGenerator {
 //            final String PATH = "http://193.2.72.90:3030/entice/update";
             final String PATH = "http://193.2.72.90:3030/entice/update";
 
-            final int repositorySize = 6;
-            final int diskImageSize = 32;
-            final int fragmentMaxSize = 10;
-            final int historyDataMaxSize = 10;
+            final int repositorySize = 4;
+            final int diskImageSize = 8;
+            final int fragmentMaxSize = 1;
+            final int historyDataMaxSize = 100;
 
             System.out.println("Started insertion..");
             long startTime = System.currentTimeMillis();
@@ -165,7 +164,7 @@ public class UIBKDataGenerator {
                         Delivery delivery = new Delivery(UUID.randomUUID().toString(), "http://www.example" +
                                 ".org/ownerID", "http://www.example.org/functionalityID", requestTime,
                                 repositories.get((int) (Math.random() * repositorySize)).getId(), diskImage.getId(), "cloud" + (int) (1 + Math.random() *
-                                10), fragment.getId(),requestTime + (int)(fragment.getFragmentSize() * 1.0/ getTransferTime(k) * 1000 ) ,
+                                10), fragment.getId(),requestTime + (int)(fragment.getFragmentSize() * 1.0/ ReviewDataGenerator.getTransferTime(k) * 1000 ) ,
                                 (int) (Math.random() * 20000));
                         insertStatement = FusekiUtils.generateInsertObjectStatement(delivery);
                         upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
@@ -184,26 +183,6 @@ public class UIBKDataGenerator {
         } catch (Exception e) {
             e.printStackTrace();
             e.printStackTrace();
-        }
-    }
-
-    private static float getTransferTime(int k) {
-        Random rn = new Random();
-        // rn.nextInt(max - min + 1) + min
-        switch(k){
-            case 0:
-            case 1:
-                // 812 to 937
-                return rn.nextInt(937 - 812 + 1) + 812;
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-                // 437 to 562
-                return rn.nextInt(562 - 437 + 1) + 437;
-            default:
-                // 87 to 100
-                return rn.nextInt(100 - 87 + 1) + 87;
         }
     }
 

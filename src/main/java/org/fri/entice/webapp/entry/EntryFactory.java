@@ -15,6 +15,7 @@ public class EntryFactory {
         else if (clazz.getSimpleName().equals("User")) return (T) new User(id);
         else if (clazz.getSimpleName().equals("Geolocation")) return (T) new Geolocation(id);
         else if (clazz.getSimpleName().equals("Quality")) return (T) new Quality(id);
+        else if (clazz.getSimpleName().equals("RecipeBuild")) return (T) new RecipeBuild(id);
         return null;
     }
 }

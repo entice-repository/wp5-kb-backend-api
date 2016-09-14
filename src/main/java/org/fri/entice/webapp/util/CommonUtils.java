@@ -55,8 +55,6 @@ public class CommonUtils {
             }
             else if (list.get(index) instanceof DiskImage) {
                 List<DiskImage> diskImageList = (List<DiskImage>) list;
-                if(!diskImageList.get(index).getId().equals(resultObj.getS()))
-                    System.out.println("ni pravi id!!");
 
                 if (resultObj.getO().endsWith("CI"))
                     diskImageList.get(index).setImageType(ImageType.CI);
@@ -131,6 +129,15 @@ public class CommonUtils {
                 else if (resultObj.getP().endsWith("Fragment_HashValues"))
                     fragmentList.get(index).setHashValue(resultObj.getO());
             }
+            else if (list.get(index) instanceof RecipeBuild) {
+                List<RecipeBuild> recipeBuilds = (List<RecipeBuild>) list;
+                if (resultObj.getP().endsWith("RecipeBuild_Message"))
+                    recipeBuilds.get(index).setMessage(resultObj.getO().replaceFirst(FusekiUtils.KB_PREFIX_SHORT, ""));
+                else if (resultObj.getP().endsWith("RecipeBuild_RecipeID"))
+                    recipeBuilds.get(index).setRecipeId(resultObj.getO());
+                else if (resultObj.getP().endsWith("RecipeBuild_Status"))
+                    recipeBuilds.get(index).setStatus(resultObj.getO());
+            }
 //            "knowledgebase:Functionality_hasImplementation \"%s\" ;\n" +
 //                    "knowledgebase:Functionality_Classification \"%s\" ;\n" +
 //                    "knowledgebase:Functionality_Description \"%s\" ;\n" +
@@ -142,11 +149,10 @@ public class CommonUtils {
             else if (list.get(index) instanceof Functionality) {
                 List<Functionality> functionalityList = (List<Functionality>) list;
                 if (resultObj.getP().endsWith("Functionality_hasImplementation"))
-                    functionalityList.get(index).setRefImplementationId(resultObj.getO()
-                            .replaceFirst(FusekiUtils.KB_PREFIX_SHORT, ""));
+                    functionalityList.get(index).setRefImplementationId(resultObj.getO().replaceFirst(FusekiUtils
+                            .KB_PREFIX_SHORT, ""));
                 else if (resultObj.getP().endsWith("Functionality_Classification"))
-                    functionalityList.get(index).setClassification(Integer.valueOf(resultObj
-                            .getO()));
+                    functionalityList.get(index).setClassification(Integer.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Functionality_Description"))
                     functionalityList.get(index).setDescription(resultObj.getO());
                 else if (resultObj.getP().endsWith("Functionality_Domain"))
@@ -223,11 +229,9 @@ public class CommonUtils {
                 if (resultObj.getP().endsWith("HistoryData_Location"))
                     historyDataList.get(index).setLocation(resultObj.getO());
                 else if (resultObj.getP().endsWith("HistoryData_ValidFrom"))
-                    historyDataList.get(index).setValidFrom(new DateTime(resultObj.getO())
-                            .getMillis());
+                    historyDataList.get(index).setValidFrom(new DateTime(resultObj.getO()).getMillis());
                 else if (resultObj.getP().endsWith("HistoryData_ValidTo"))
-                    historyDataList.get(index).setValidTo(new DateTime(resultObj.getO())
-                            .getMillis());
+                    historyDataList.get(index).setValidTo(new DateTime(resultObj.getO()).getMillis());
                 else if (resultObj.getP().endsWith("HistoryData_Value"))
                     historyDataList.get(index).setValue(resultObj.getO());
             }

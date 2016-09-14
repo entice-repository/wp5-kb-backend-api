@@ -69,7 +69,7 @@ public class AppContextListener implements ServletContextListener {
 //            }catch (Exception e){
 //                e.printStackTrace();
 //            }
-
+          //  ReviewDataGenerator.generateData();
         } catch (Exception e) {
             e.printStackTrace();
         }

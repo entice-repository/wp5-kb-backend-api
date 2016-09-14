@@ -120,14 +120,6 @@ public class UploadVMI {
                 byte[] vmImageBytes = new byte[1024 * 1024 * 32];
                 int bytesRead;
 
-                /*
-                node ID | Matching repository
-                ------------------------------
-                1       | SZTAKI
-                2       | UIBK
-                3       | Amazon - Virginia East
-                4       | LJ
-                */
                 //String vmibucketName = "flexiant-entice";
                 String message = null;
                 while ((bytesRead = bin.read(vmImageBytes)) != -1) {

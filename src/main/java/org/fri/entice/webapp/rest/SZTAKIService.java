@@ -13,10 +13,16 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateProcessor;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.fri.entice.webapp.entry.Quality;
+import org.fri.entice.webapp.entry.RecipeBuild;
 import org.fri.entice.webapp.entry.client.MyJsonObject;
 import org.fri.entice.webapp.entry.client.SZTAKIExecuteObj;
+import org.fri.entice.webapp.util.FusekiUtils;
+import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -25,10 +31,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Path("/sztaki/")
 public class SZTAKIService implements ISZTAKIService {
@@ -601,7 +604,21 @@ public class SZTAKIService implements ISZTAKIService {
 
             System.out.println(response.getStatusLine());
             if (resEntity != null) {
-                return EntityUtils.toString(resEntity, "UTF-8");
+                String resultStr = EntityUtils.toString(resEntity, "UTF-8");
+                JSONObject resultJson = new JSONObject(resultStr);
+                String recipeID = "";
+                try {
+                    recipeID = ((JSONObject) resultJson.get("result")).get("request_id").toString();
+                } catch (Exception e) {
+                }
+                RecipeBuild recipeBuild = new RecipeBuild(UUID.randomUUID().toString(), recipeID, resultJson.get
+                        ("status").toString(), resultJson.get("message").toString());
+                String insertStatement = FusekiUtils.generateInsertObjectStatement(recipeBuild);
+                UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement),
+                        AppContextListener.prop.getProperty("fuseki.url.update"));
+                upp.execute();
+
+                return resultStr;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -609,6 +626,21 @@ public class SZTAKIService implements ISZTAKIService {
         }
         return null;
     }
+
+    @GET
+    @Path("get_recipe_builds")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    public List<RecipeBuild> getRecipeBuilds() {
+        try{
+            return FusekiUtils.getAllEntityAttributes(RecipeBuild.class);
+        }   catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     @GET
     @Path("get_builder_status")

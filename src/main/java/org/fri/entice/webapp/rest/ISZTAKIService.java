@@ -1,10 +1,12 @@
 package org.fri.entice.webapp.rest;
 
+import org.fri.entice.webapp.entry.RecipeBuild;
 import org.fri.entice.webapp.entry.client.MyJsonObject;
 import org.fri.entice.webapp.entry.client.SZTAKIExecuteObj;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import java.util.List;
 import java.util.Map;
 
 public interface ISZTAKIService {
@@ -36,4 +38,7 @@ public interface ISZTAKIService {
 
     @GET
     public String showLast10ValuesofOptimization(String optimizerID);
+
+    @GET
+    public List<RecipeBuild> getRecipeBuilds();
 }

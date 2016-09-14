@@ -113,7 +113,7 @@ public class FusekiUtils {
             else if (obj instanceof DiskImageSLA) {
                 DiskImageSLA diskImageSLA = (DiskImageSLA) obj;
                 return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
-                        "knowledgebase:%s a knowledgebase:DiskImageSLA, owl:NamedIndividual, knowledgebase:" +
+                        "knowledgebase:%s a knowledgebase:DiskImageSLA, owl:NamedIndividual," +
                         "knowledgebase:DiskImageSLA_hasAgreedAvailabilityCountry  \"%s\" ;\n" +
                         "knowledgebase:DiskImageSLA_hasAgreedAvailabilityRepository  \"%s\" ;\n" +
                         "knowledgebase:DiskImageSLA_hasAgreedRestriction  \"%s\" ;\n" +
@@ -121,6 +121,16 @@ public class FusekiUtils {
                         "knowledgebase:DiskImageSLA_hasAgreedQoSOrder  \"%s\" ;\n" +
                         "knowledgebase:DiskImageSLA_SecuredDelivery  \"%s\" ;\n" +
                         "}", diskImageSLA.getId());   //TODO
+            }
+            // CREATE RECIPE BUILD OBJECT
+            else if (obj instanceof RecipeBuild) {
+                RecipeBuild recipeBuild = (RecipeBuild) obj;
+                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                        "knowledgebase:%s a knowledgebase:RecipeBuild, owl:NamedIndividual ;" +
+                        "knowledgebase:RecipeBuild_RecipeID  \"%s\" ;\n" +
+                        "knowledgebase:RecipeBuild_Status  \"%s\" ;\n" +
+                        "knowledgebase:RecipeBuild_Message  \"%s\" ;\n" +
+                        "}", recipeBuild.getId(),recipeBuild.getRecipeId(),recipeBuild.getStatus(),recipeBuild.getMessage());
             }
             // CREATE FRAGMENT
             else if (obj instanceof Fragment) {
