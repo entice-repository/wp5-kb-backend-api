@@ -83,6 +83,31 @@ public interface AddVMIImplementation {
 
     /**
      * 
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns boolean
+     * @throws FileNotFoundException_Exception
+     * @throws IOException_Exception
+     */
+    @WebMethod(operationName = "Authenticate")
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "Authenticate", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.Authenticate")
+    @ResponseWrapper(localName = "AuthenticateResponse", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.AuthenticateResponse")
+    @Action(input = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/AuthenticateRequest", output = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/AuthenticateResponse", fault = {
+        @FaultAction(className = FileNotFoundException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/Authenticate/Fault/FileNotFoundException"),
+        @FaultAction(className = IOException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/Authenticate/Fault/IOException")
+    })
+    public boolean authenticate(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0,
+        @WebParam(name = "arg1", targetNamespace = "")
+        String arg1)
+        throws FileNotFoundException_Exception, IOException_Exception
+    ;
+
+    /**
+     * 
      * @param arg0
      * @throws URISyntaxException_Exception
      * @throws FileNotFoundException_Exception
@@ -260,31 +285,6 @@ public interface AddVMIImplementation {
         long arg3,
         @WebParam(name = "arg4", targetNamespace = "")
         String arg4)
-        throws FileNotFoundException_Exception, IOException_Exception
-    ;
-
-    /**
-     * 
-     * @param arg1
-     * @param arg0
-     * @return
-     *     returns boolean
-     * @throws FileNotFoundException_Exception
-     * @throws IOException_Exception
-     */
-    @WebMethod(operationName = "Authenticate")
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "Authenticate", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.Authenticate")
-    @ResponseWrapper(localName = "AuthenticateResponse", targetNamespace = "http://RepoGuardWebServer.vmrepository.com/", className = "com.vmrepository.repoguardwebserver.AuthenticateResponse")
-    @Action(input = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/AuthenticateRequest", output = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/AuthenticateResponse", fault = {
-        @FaultAction(className = FileNotFoundException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/Authenticate/Fault/FileNotFoundException"),
-        @FaultAction(className = IOException_Exception.class, value = "http://RepoGuardWebServer.vmrepository.com/AddVMIImplementation/Authenticate/Fault/IOException")
-    })
-    public boolean authenticate(
-        @WebParam(name = "arg0", targetNamespace = "")
-        String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        String arg1)
         throws FileNotFoundException_Exception, IOException_Exception
     ;
 

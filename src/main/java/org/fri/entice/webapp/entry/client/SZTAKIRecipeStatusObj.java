@@ -1,30 +1,27 @@
-package org.fri.entice.webapp.entry;
+package org.fri.entice.webapp.entry.client;
 
-public class RecipeBuild extends MyEntry {
-//    private String recipeId;
-//    private String status;
-//    private String message;
+@Deprecated
+public class SZTAKIRecipeStatusObj {
 
+    private String id;
     private String jobId;
     private String message;
     private String request_status; //" -> "finished"
     private String outcome; //" -> "cancelled"
     private long size;
     private String url;
+//    private String request_id; //" -> "8befa25b-e052-4831-8f1a-7c6c07c00c46"
 
-    public RecipeBuild(String id) {
-        super(id);
+    public SZTAKIRecipeStatusObj(String id) {
+        this.id = id;
     }
 
-    public RecipeBuild(String id, String jobId, String message, String request_status, String outcome,
-                       long size, String url) {
-        super(id);
-        this.jobId = jobId;
-        this.message = message;
-        this.request_status = request_status;
-        this.outcome = outcome;
-        this.size = size;
-        this.url = url;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getJobId() {
@@ -74,4 +71,12 @@ public class RecipeBuild extends MyEntry {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    //    public String getRequest_id() {
+//        return request_id;
+//    }
+//
+//    public void setRequest_id(String request_id) {
+//        this.request_id = request_id;
+//    }
 }

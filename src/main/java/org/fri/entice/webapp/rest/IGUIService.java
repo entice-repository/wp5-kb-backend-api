@@ -32,7 +32,7 @@ public interface IGUIService {
     public Pareto getParetoStage2();
 
     @GET
-    public Pareto getNewestPareto();
+    public Pareto getNewestPareto(int stage);
 
     // contentDispositionHeader == filename
     @POST

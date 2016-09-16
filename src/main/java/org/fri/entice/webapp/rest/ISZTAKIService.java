@@ -1,8 +1,10 @@
 package org.fri.entice.webapp.rest;
 
+import org.fri.entice.webapp.entry.Quality;
 import org.fri.entice.webapp.entry.RecipeBuild;
 import org.fri.entice.webapp.entry.client.MyJsonObject;
 import org.fri.entice.webapp.entry.client.SZTAKIExecuteObj;
+import org.fri.entice.webapp.entry.client.SZTAKIOptimizationStatusObj;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -34,11 +36,20 @@ public interface ISZTAKIService {
 
     // aka delete
     @GET
-    public String stopImageBuilder(String builderID);
+    public Map<String,String> stopImageBuilder(String builderID, boolean cancelExecution);
 
     @GET
     public String showLast10ValuesofOptimization(String optimizerID);
 
     @GET
     public List<RecipeBuild> getRecipeBuilds();
+
+    @GET
+    public List<Quality> getOptimizationList();
+
+    @GET
+    public List<SZTAKIOptimizationStatusObj> getOptimizationRefreshedList();
+
+    @GET
+    public List<RecipeBuild> getRecipeRefreshedBuilds();
 }

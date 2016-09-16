@@ -24,115 +24,115 @@ public class ReviewDataGenerator {
             UpdateProcessor upp;
             String insertStatement;
 
-////            User user = new User(UUID.randomUUID().toString(), "test@gmail.com2", "Test user2", "test2", "12345632424", "test2",1);
-////            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
-////            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-////            upp.execute();
-//
-//            // insert USER data:
-//            User user = new User(UUID.randomUUID().toString(), "guest@gmail.com", "Guest", "pass", "12345632424", "guest",1);
+//            User user = new User(UUID.randomUUID().toString(), "test@gmail.com2", "Test user2", "test2", "12345632424", "test2",1);
 //            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
 //            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
 //            upp.execute();
-//
-//            user = new User(UUID.randomUUID().toString(), "vlado@stankovski.net", "Vlado Stankovski", "vlado", "123456", "vlados",2);
-//            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
+
+            // insert USER data:
+            User user = new User(UUID.randomUUID().toString(), "guest@gmail.com", "Guest", "pass", "12345632424", "guest",1);
+            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
+            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+            upp.execute();
+
+            user = new User(UUID.randomUUID().toString(), "vlado@stankovski.net", "Vlado Stankovski", "vlado", "123456", "vlados",2);
+            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
+            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+            upp.execute();
+
+            user = new User(UUID.randomUUID().toString(), "admin@admin.com", "John Admin", "admin", "123456", "admin",2);
+            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
+            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+            upp.execute();
+
+            user = new User(UUID.randomUUID().toString(), "polona.stefanic@fgg.uni-lj.si", "Polona Štefanič", "polona", "123456", "polonas",1);
+            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
+            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+            upp.execute();
+
+            // insert GEOLOCATION data:
+            Geolocation geolocationSlovenia = new Geolocation(UUID.randomUUID().toString(),"Slovenia","si","Europe",46.0660481,14.3920137,11,"UTC+01:00");
+            insertStatement = FusekiUtils.generateInsertObjectStatement(geolocationSlovenia);
+            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+            upp.execute();
+
+            Geolocation geolocationAustria = new Geolocation(UUID.randomUUID().toString(),"Austria","at","Europe",47.2853696,11.2387048,11,"UTC+01:00");
+            insertStatement = FusekiUtils.generateInsertObjectStatement(geolocationAustria);
+            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+            upp.execute();
+
+            Geolocation geolocationHungary = new Geolocation(UUID.randomUUID().toString(),"Hungary","hu","Budapest",47.4876761,19.0329196,13.71,"UTC+01:00");
+            insertStatement = FusekiUtils.generateInsertObjectStatement(geolocationHungary);
+            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+            upp.execute();
+
+//            Geolocation geolocationUK = new Geolocation(UUID.randomUUID().toString(),"UK","gb","Edinburgh ",55.9409861,-3.3454651,11,"UTC+00:00");
+//            insertStatement = FusekiUtils.generateInsertObjectStatement(geolocationUK);
 //            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
 //            upp.execute();
-//
-//            user = new User(UUID.randomUUID().toString(), "admin@admin.com", "John Admin", "admin", "123456", "admin",2);
-//            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
+
+//            Geolocation geolocationSpain = new Geolocation(UUID.randomUUID().toString(),"Spain","es","Madrid ",40.4378698,-3.8196232,11,"UTC+01:00");
+//            insertStatement = FusekiUtils.generateInsertObjectStatement(geolocationSpain);
 //            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
 //            upp.execute();
-//
-//            user = new User(UUID.randomUUID().toString(), "polona.stefanic@fgg.uni-lj.si", "Polona Štefanič", "polona", "123456", "polonas",1);
-//            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
-//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-//            upp.execute();
-//
-//            // insert GEOLOCATION data:
-//            Geolocation geolocationSlovenia = new Geolocation(UUID.randomUUID().toString(),"Slovenia","si","Europe",46.0660481,14.3920137,11,"UTC+01:00");
-//            insertStatement = FusekiUtils.generateInsertObjectStatement(geolocationSlovenia);
-//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-//            upp.execute();
-//
-//            Geolocation geolocationAustria = new Geolocation(UUID.randomUUID().toString(),"Austria","at","Europe",47.2853696,11.2387048,11,"UTC+01:00");
-//            insertStatement = FusekiUtils.generateInsertObjectStatement(geolocationAustria);
-//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-//            upp.execute();
-//
-//            Geolocation geolocationHungary = new Geolocation(UUID.randomUUID().toString(),"Hungary","hu","Budapest",47.4876761,19.0329196,13.71,"UTC+01:00");
-//            insertStatement = FusekiUtils.generateInsertObjectStatement(geolocationHungary);
-//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-//            upp.execute();
-//
-////            Geolocation geolocationUK = new Geolocation(UUID.randomUUID().toString(),"UK","gb","Edinburgh ",55.9409861,-3.3454651,11,"UTC+00:00");
-////            insertStatement = FusekiUtils.generateInsertObjectStatement(geolocationUK);
-////            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-////            upp.execute();
-//
-////            Geolocation geolocationSpain = new Geolocation(UUID.randomUUID().toString(),"Spain","es","Madrid ",40.4378698,-3.8196232,11,"UTC+01:00");
-////            insertStatement = FusekiUtils.generateInsertObjectStatement(geolocationSpain);
-////            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-////            upp.execute();
-//
-//            Geolocation geolocationUS = new Geolocation(UUID.randomUUID().toString(),"USA","us","Virginia West ",38.8986891,-82.4256365,7,"UTC-05:00");
-//            insertStatement = FusekiUtils.generateInsertObjectStatement(geolocationUS);
-//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-//            upp.execute();
-//
-//
-//            List<String> supportedFormats = new ArrayList<String>();
-//            supportedFormats.add("ISO");
-//
-//            if (Math.random() < 0.5) supportedFormats.add("DAA");
-//            if (Math.random() < 0.5) supportedFormats.add("ADF");
-//            if (Math.random() < 0.5) supportedFormats.add("MD1");
-//            if (Math.random() < 0.5) supportedFormats.add("MD2");
-//            if (Math.random() < 0.5) supportedFormats.add("CSO");
-//            if (Math.random() < 0.5) supportedFormats.add("CUE");
-//
-//                /*
-//                node ID | Matching repository
-//                ------------------------------
-//                1       | SZTAKI
-//                2       | UIBK
-//                3       | Amazon - Virginia East
-//                4       | LJ
-//                */
-//
-//            // insert REPOSITORY data:
-//            Repository repository = new Repository(UUID.randomUUID().toString(), geolocationHungary.getId(),
-//                    "http://www.example.org/interfaceEndpointHungary", 0.0275 + Math.random() * 0.0133, 0.0374
-//                    + Math.random() * 0.0034, 50 + Math.random() * 100, 50 + Math.random() * 1000, supportedFormats);
-//            repositories.add(repository);
-//            insertStatement = FusekiUtils.generateInsertObjectStatement(repository);
-//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-//            upp.execute();
-//
-//            repository = new Repository(UUID.randomUUID().toString(), geolocationAustria.getId(),
-//                    "http://www.example.org/interfaceEndpointAustria", 0.0275 + Math.random() * 0.0133, 0.0374
-//                    + Math.random() * 0.0034, 50 + Math.random() * 100, 50 + Math.random() * 1000, supportedFormats);
-//            repositories.add(repository);
-//            insertStatement = FusekiUtils.generateInsertObjectStatement(repository);
-//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-//            upp.execute();
-//
-//            repository = new Repository(UUID.randomUUID().toString(), geolocationUS.getId(),
-//                    "http://www.example.org/interfaceEndpointVirginiaEast", 0.0275 + Math.random() * 0.0133, 0.0374
-//                    + Math.random() * 0.0034, 50 + Math.random() * 100, 50 + Math.random() * 1000, supportedFormats);
-//            repositories.add(repository);
-//            insertStatement = FusekiUtils.generateInsertObjectStatement(repository);
-//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-//            upp.execute();
-//
-//            repository = new Repository(UUID.randomUUID().toString(), geolocationSlovenia.getId(),
-//                    "http://www.example.org/interfaceEndpointSlovenia", 0.0275 + Math.random() * 0.0133, 0.0374
-//                    + Math.random() * 0.0034, 50 + Math.random() * 100, 50 + Math.random() * 1000, supportedFormats);
-//            repositories.add(repository);
-//            insertStatement = FusekiUtils.generateInsertObjectStatement(repository);
-//            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-//            upp.execute();
+
+            Geolocation geolocationUS = new Geolocation(UUID.randomUUID().toString(),"USA","wvu","Virginia West ",38.8986891,-82.4256365,7,"UTC-05:00");
+            insertStatement = FusekiUtils.generateInsertObjectStatement(geolocationUS);
+            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+            upp.execute();
+
+
+            List<String> supportedFormats = new ArrayList<String>();
+            supportedFormats.add("ISO");
+
+            if (Math.random() < 0.5) supportedFormats.add("DAA");
+            if (Math.random() < 0.5) supportedFormats.add("ADF");
+            if (Math.random() < 0.5) supportedFormats.add("MD1");
+            if (Math.random() < 0.5) supportedFormats.add("MD2");
+            if (Math.random() < 0.5) supportedFormats.add("CSO");
+            if (Math.random() < 0.5) supportedFormats.add("CUE");
+
+                /*
+                node ID | Matching repository
+                ------------------------------
+                1       | SZTAKI
+                2       | UIBK
+                3       | Amazon - Virginia East
+                4       | LJ
+                */
+
+            // insert REPOSITORY data:
+            Repository repository = new Repository(UUID.randomUUID().toString(), geolocationHungary.getId(),
+                    "http://www.example.org/interfaceEndpointHungary", 0.0275 + Math.random() * 0.0133, 0.0374
+                    + Math.random() * 0.0034, 50 + Math.random() * 100, 50 + Math.random() * 1000, supportedFormats);
+            repositories.add(repository);
+            insertStatement = FusekiUtils.generateInsertObjectStatement(repository);
+            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+            upp.execute();
+
+            repository = new Repository(UUID.randomUUID().toString(), geolocationAustria.getId(),
+                    "http://www.example.org/interfaceEndpointAustria", 0.0275 + Math.random() * 0.0133, 0.0374
+                    + Math.random() * 0.0034, 50 + Math.random() * 100, 50 + Math.random() * 1000, supportedFormats);
+            repositories.add(repository);
+            insertStatement = FusekiUtils.generateInsertObjectStatement(repository);
+            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+            upp.execute();
+
+            repository = new Repository(UUID.randomUUID().toString(), geolocationUS.getId(),
+                    "http://www.example.org/interfaceEndpointVirginiaEast", 0.0275 + Math.random() * 0.0133 + 1.0, 0.0374
+                    + Math.random() * 0.0034, 50 + Math.random() * 100, 50 + Math.random() * 1000, supportedFormats);
+            repositories.add(repository);
+            insertStatement = FusekiUtils.generateInsertObjectStatement(repository);
+            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+            upp.execute();
+
+            repository = new Repository(UUID.randomUUID().toString(), geolocationSlovenia.getId(),
+                    "http://www.example.org/interfaceEndpointSlovenia", 0.0275 + Math.random() * 0.0133, 0.0374
+                    + Math.random() * 0.0034, 50 + Math.random() * 100, 50 + Math.random() * 1000, supportedFormats);
+            repositories.add(repository);
+            insertStatement = FusekiUtils.generateInsertObjectStatement(repository);
+            upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
+            upp.execute();
 
 //            repository = new Repository(UUID.randomUUID().toString(), geolocationSpain.getId(),
 //                    "http://www.example.org/interfaceEndpointSpain", 0.0275 + Math.random() * 0.0133, 0.0374

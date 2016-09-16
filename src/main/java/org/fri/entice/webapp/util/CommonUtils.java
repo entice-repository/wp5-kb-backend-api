@@ -4,6 +4,8 @@ import org.fri.entice.webapp.entry.*;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -132,11 +134,67 @@ public class CommonUtils {
             else if (list.get(index) instanceof RecipeBuild) {
                 List<RecipeBuild> recipeBuilds = (List<RecipeBuild>) list;
                 if (resultObj.getP().endsWith("RecipeBuild_Message"))
-                    recipeBuilds.get(index).setMessage(resultObj.getO().replaceFirst(FusekiUtils.KB_PREFIX_SHORT, ""));
+                    recipeBuilds.get(index).setMessage(resultObj.getO());
                 else if (resultObj.getP().endsWith("RecipeBuild_RecipeID"))
-                    recipeBuilds.get(index).setRecipeId(resultObj.getO());
+                    recipeBuilds.get(index).setJobId(resultObj.getO());
                 else if (resultObj.getP().endsWith("RecipeBuild_Status"))
-                    recipeBuilds.get(index).setStatus(resultObj.getO());
+                    recipeBuilds.get(index).setRequest_status(resultObj.getO());
+                else if (resultObj.getP().endsWith("RecipeBuild_Outcome"))
+                    recipeBuilds.get(index).setOutcome(resultObj.getO());
+                else if (resultObj.getP().endsWith("RecipeBuild_Size"))
+                    recipeBuilds.get(index).setSize(Long.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("RecipeBuild_URL"))
+                    recipeBuilds.get(index).setUrl(resultObj.getO());
+            }
+
+//            false ;
+//            knowledgebase:Quality_JobID  "" ;
+//            knowledgebase:Quality_MaxNumberOfVMs
+//            1 ;
+//            knowledgebase:
+//            0 ;
+//            knowledgebase:
+//                    -1 ;
+//            knowledgebase:
+//            0 ;
+//            knowledgebase:
+//            0 ;
+//            knowledgebase:
+//            0 ;
+//            knowledgebase:
+//            0 ;
+//            knowledgebase:
+//            1 ;
+//            knowledgebase:
+//            36000 .
+            else if (list.get(index) instanceof Quality) {
+                List<Quality> qualityList = (List<Quality>) list;
+                if (resultObj.getP().endsWith("Quality_AimedReductionRatio"))
+                    qualityList.get(index).setAimedReductionRatio(Double.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_IsOptimizationNecessary"))
+                    qualityList.get(index).setIsOptimizationNecessary(Boolean.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_IsUpdateNecessary"))
+                    qualityList.get(index).setIsUpdateNecessary(Boolean.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_MaxNumberOfVMs"))
+                    qualityList.get(index).setMaxNumberOfVMs(Short.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_IsUpdateNecessary"))
+                    qualityList.get(index).setIsUpdateNecessary(Boolean.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_OptimizedSize"))
+                    qualityList.get(index).setOptimizedSize(Integer.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_PercentStorageOptimised"))
+                    qualityList.get(index).setPercentStorageOptimised(Integer.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_UserRating"))
+                    qualityList.get(index).setUserRating(Integer.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_actualIterationsNum"))
+                    qualityList.get(index).setActualIterationsNum(Integer.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_actualRunningTime"))
+                    qualityList.get(index).setActualRunningTime(Long.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_maxIterationsNum"))
+                    qualityList.get(index).setMaxIterationsNum(Integer.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_maxRunningTime"))
+                    qualityList.get(index).setMaxRunningTime(Long.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_JobID"))
+                    qualityList.get(index).setJobID(resultObj.getO());
             }
 //            "knowledgebase:Functionality_hasImplementation \"%s\" ;\n" +
 //                    "knowledgebase:Functionality_Classification \"%s\" ;\n" +
@@ -193,15 +251,16 @@ public class CommonUtils {
                     geolocationList.get(index).setContinent(resultObj.getO());
                 else if (resultObj.getP().endsWith("Geolocation_Latitude"))
                     geolocationList.get(index).setLatitude(Double.valueOf(resultObj.getO()));
-                else if (resultObj.getP().endsWith("Geolocation_Longitude"))      {
+                else if (resultObj.getP().endsWith("Geolocation_Longitude")) {
                     String val = resultObj.getO();    //ugly hack
                     if (val.contains("^^http://www.w3.org/2001/XMLSchema#double"))
                         val = val.replace("^^http://www.w3.org/2001/XMLSchema#double", "").replaceAll("\"", "");
                     geolocationList.get(index).setLongitude(Double.valueOf(val));
                 }
-                else if (resultObj.getP().endsWith("GeoLocation_Altitude")) geolocationList.get(geolocationList.size
-                        () - 1).setAltitude(Double.valueOf(resultObj.getO()));
-                else if (resultObj.getP().endsWith("GeoLocation_Timezone")) geolocationList.get(index).setTimezone(resultObj.getO());
+                else if (resultObj.getP().endsWith("GeoLocation_Altitude"))
+                    geolocationList.get(geolocationList.size() - 1).setAltitude(Double.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("GeoLocation_Timezone"))
+                    geolocationList.get(index).setTimezone(resultObj.getO());
             }
 //            "     knowledgebase:User_Email        \"%s\" ;\n" +
 //                    "        knowledgebase:User_FullName     \"%s\" ;\n" +
@@ -211,16 +270,12 @@ public class CommonUtils {
 //                    "        knowledgebase:User_Privilege     \"%s\" ;" +
             else if (list.get(index) instanceof User) {
                 List<User> userList = (List<User>) list;
-                if (resultObj.getP().endsWith("User_Email"))
-                    userList.get(index).setEmail(resultObj.getO());
-                else if (resultObj.getP().endsWith("User_FullName"))
-                    userList.get(index).setFullName(resultObj.getO());
+                if (resultObj.getP().endsWith("User_Email")) userList.get(index).setEmail(resultObj.getO());
+                else if (resultObj.getP().endsWith("User_FullName")) userList.get(index).setFullName(resultObj.getO());
                 else if (resultObj.getP().endsWith("User_PhoneNumber"))
                     userList.get(index).setPhoneNumber(resultObj.getO());
-                else if (resultObj.getP().endsWith("User_UserName"))
-                    userList.get(index).setUsername(resultObj.getO());
-                else if (resultObj.getP().endsWith("User_Password"))
-                    userList.get(index).setPassword(resultObj.getO());
+                else if (resultObj.getP().endsWith("User_UserName")) userList.get(index).setUsername(resultObj.getO());
+                else if (resultObj.getP().endsWith("User_Password")) userList.get(index).setPassword(resultObj.getO());
                 else if (resultObj.getP().endsWith("User_Privilege"))
                     userList.get(index).setGroupID(Integer.valueOf(resultObj.getO()));
             }
@@ -253,7 +308,8 @@ public class CommonUtils {
                 }
             }
             else {
-                throw new UnsupportedOperationException("The mapping is not implemented for this class! ! " + list.get(index).getClass());
+                throw new UnsupportedOperationException("The mapping is not implemented for this class! ! " + list
+                        .get(index).getClass());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -278,6 +334,20 @@ public class CommonUtils {
     public static String readFile(String path, Charset encoding) throws IOException {
         byte[] encoded = Files.readAllBytes(Paths.get(path));
         return new String(encoded, encoding);
+    }
+
+    public static int getFileSize(String url) {
+        try {
+            final URL uri = new URL(url);
+            URLConnection ucon;
+            ucon = uri.openConnection();
+            ucon.connect();
+            final String contentLengthStr = ucon.getHeaderField("content-length");
+            return (int)(Long.valueOf(contentLengthStr) / 1024);
+        } catch (final IOException e1) {
+            e1.getMessage();
+            return -1;
+        }
     }
 
 }

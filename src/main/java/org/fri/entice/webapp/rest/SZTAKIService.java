@@ -21,6 +21,8 @@ import org.fri.entice.webapp.entry.Quality;
 import org.fri.entice.webapp.entry.RecipeBuild;
 import org.fri.entice.webapp.entry.client.MyJsonObject;
 import org.fri.entice.webapp.entry.client.SZTAKIExecuteObj;
+import org.fri.entice.webapp.entry.client.SZTAKIOptimizationStatusObj;
+import org.fri.entice.webapp.util.CommonUtils;
 import org.fri.entice.webapp.util.FusekiUtils;
 import org.json.JSONObject;
 
@@ -229,24 +231,23 @@ public class SZTAKIService implements ISZTAKIService {
     @Override
     public Map<String, String> executeOptimizer(final SZTAKIExecuteObj sztakiExecuteObj) {
         Map<String, String> resultMap = new HashMap<>();
-//        final Quality quality = new Quality(UUID.randomUUID().toString(), sztakiExecuteObj.getXaimedSize(), -1, 0,
-//                true, 0, false, true, 0, sztakiExecuteObj.getMaxIterationsNum(), 0, sztakiExecuteObj
-//                .getXaimedReductionRatio(), sztakiExecuteObj.getXmaxRunningTime(), 0, (short) 1, new
-//                ArrayList<String>());
+        Quality quality = new Quality(UUID.randomUUID().toString(), sztakiExecuteObj.getXaimedSize(), -1, 0,
+                true, 0, false, true, 0, sztakiExecuteObj.getMaxIterationsNum(), 0, sztakiExecuteObj
+                .getXaimedReductionRatio(), sztakiExecuteObj.getXmaxRunningTime(), 0, (short) 1, new
+                ArrayList<String>());
         try {
-//            String insertStatement = FusekiUtils.generateInsertObjectStatement(quality);
-//            UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement),
-//                    AppContextListener.prop.getProperty("fuseki.url.update"));
-//            upp.execute();
-//            resultMap.put("optimization_job_id: ", quality.getId());
-
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    initOptimizationLifecycle(sztakiExecuteObj, quality);
-//                }
-//            }).start();
-            return initOptimizationLifecycle(sztakiExecuteObj, null);
+            String optimizerID = initOptimizationLifecycle(sztakiExecuteObj);
+            quality.setJobID(optimizerID);
+            if (optimizerID != null) {
+                String insertStatement = FusekiUtils.generateInsertObjectStatement(quality);
+                UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement),
+                        AppContextListener.prop.getProperty("fuseki.url.update"));
+                upp.execute();
+                resultMap.put("optimization_job_id", quality.getId());
+                resultMap.put("optimizer_id", optimizerID);
+            }
+            else resultMap.put("error", "error while executing optimization");
+            return resultMap;
 
         } catch (Exception e) {
             resultMap.put("an error occured", e.getMessage());
@@ -255,7 +256,7 @@ public class SZTAKIService implements ISZTAKIService {
         return resultMap;
     }
 
-    private Map<String,String> initOptimizationLifecycle(SZTAKIExecuteObj sztakiExecuteObj, Quality quality) {
+    private String initOptimizationLifecycle(SZTAKIExecuteObj sztakiExecuteObj) {
         try {
             // set other SZTAKI optimization parameters
             sztakiExecuteObj.setCloudOptimizerVMInstanceType("m1.medium");
@@ -397,14 +398,14 @@ public class SZTAKIService implements ISZTAKIService {
 ////                resultMap.put(optimizerID, sztakiExecuteObj.getImageId());
 ////                return resultMap;
 //            }
-            Map<String,String> resultMap  = new HashMap<>();
-            resultMap.put(optimizerID, sztakiExecuteObj.getImageId());
-            return resultMap;
+           // Map<String,String> resultMap  = new HashMap<>();
+            //resultMap.put(optimizerID, sztakiExecuteObj.getImageId());
+            return optimizerID;
         } catch (IOException | IndexOutOfBoundsException | NullPointerException | ParseException e) {
             e.printStackTrace();
 //            resultMap.put("IOException", e.getMessage());
 //            return resultMap;
-            return new HashMap<>();
+            return null;
         }
     }
 
@@ -612,7 +613,7 @@ public class SZTAKIService implements ISZTAKIService {
                 } catch (Exception e) {
                 }
                 RecipeBuild recipeBuild = new RecipeBuild(UUID.randomUUID().toString(), recipeID, resultJson.get
-                        ("status").toString(), resultJson.get("message").toString());
+                        ("status").toString(), resultJson.get("message").toString(),"",0,"");
                 String insertStatement = FusekiUtils.generateInsertObjectStatement(recipeBuild);
                 UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement),
                         AppContextListener.prop.getProperty("fuseki.url.update"));
@@ -641,6 +642,150 @@ public class SZTAKIService implements ISZTAKIService {
         return null;
     }
 
+    @GET
+    @Path("get_recipe_refreshed_builds")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    public List<RecipeBuild> getRecipeRefreshedBuilds() {
+        try {
+            List<RecipeBuild> recipeBuildList = FusekiUtils.getAllEntityAttributes(RecipeBuild.class);
+            List<RecipeBuild> sztakiRecipeStatusObjs = new ArrayList<>();
+            for (RecipeBuild recipeBuild : recipeBuildList) {
+                if (recipeBuild.getRequest_status().equals("finished"))   {
+                    sztakiRecipeStatusObjs.add(recipeBuild);
+                    continue;
+                }
+
+                RecipeBuild statusObj = new RecipeBuild(recipeBuild.getId());
+                sztakiRecipeStatusObjs.add(statusObj);
+
+                if (recipeBuild.getJobId().length() > 0) {
+                    String result = getLocalBuilderStatus(recipeBuild.getJobId(), false);
+                    JSONObject resultJson = new JSONObject(result);
+                    try {
+                        JSONObject subResult = (JSONObject) resultJson.get("result");
+                        statusObj.setJobId(subResult.getString("request_id"));
+                        statusObj.setRequest_status(subResult.getString("request_status"));
+                        statusObj.setOutcome(subResult.getString("outcome:"));
+                        statusObj.setMessage(resultJson.getString("message"));
+
+                        if (statusObj.getRequest_status().equals("finished") && statusObj.getOutcome().equals
+                                ("success")) {
+                            String builderResult = getLocalBuilderStatus(statusObj.getJobId(), true);
+                            JSONObject builderResultJson = new JSONObject(builderResult);
+                            JSONObject imageResResObj = ((JSONObject) ((JSONObject) builderResultJson.get("result"))
+                                    .get("image"));
+                            statusObj.setUrl(imageResResObj.getString("url"));
+                            statusObj.setSize(CommonUtils.getFileSize(statusObj.getUrl()));
+
+                            boolean successRecipeManipulation = deleteRecipeAndCreateANewOne(recipeBuild.getId(),
+                                    statusObj);
+                            if (!successRecipeManipulation) System.out.println("error while recipe modification!");
+                        }
+                        else if (statusObj.getRequest_status().equals("finished")) {
+                            boolean successRecipeManipulation = deleteRecipeAndCreateANewOne(recipeBuild.getId(),
+                                    statusObj);
+                            if (!successRecipeManipulation) System.out.println("error while recipe modification!");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return sztakiRecipeStatusObjs;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private boolean deleteRecipeAndCreateANewOne(String recipeBuildID, RecipeBuild recipeBuild) {
+        try {
+            boolean successDeleteFromKB = FusekiUtils.deleteRecipeBuild(recipeBuildID);
+
+            if (successDeleteFromKB) {
+                String insertStatement = FusekiUtils.generateInsertObjectStatement(recipeBuild);
+                UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement),
+                        AppContextListener.prop.getProperty("fuseki.url.update"));
+                upp.execute();
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    @GET
+    @Path("get_optimization_list")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    public List<Quality> getOptimizationList() {
+        try{
+            return FusekiUtils.getAllEntityAttributes(Quality.class);
+        }   catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @GET
+    @Path("get_optimization_refreshed_list")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    public List<SZTAKIOptimizationStatusObj> getOptimizationRefreshedList() {
+        try {
+            List<Quality> qualityList = FusekiUtils.getAllEntityAttributes(Quality.class);
+            List<SZTAKIOptimizationStatusObj> sosoList = new ArrayList<>();
+            for (Quality quality : qualityList) {
+                if (quality.getJobID() != null && quality.getJobID().length() > 0) {
+                    SZTAKIOptimizationStatusObj so = new SZTAKIOptimizationStatusObj(quality.getJobID());
+                    sosoList.add(so);
+
+                    String result = getOptimizationStatusLocal(quality.getJobID());
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+
+                        so.setOptimizerPhase(jsonObject.getString("optimizerPhase"));
+                        so.setAimedReductionRatio(jsonObject.getDouble("aimedReductionRatio"));
+                        so.setMaxRunningTime(jsonObject.getInt("maxRunningTime"));
+                        so.setNumberOfVMsStarted(jsonObject.getInt("numberOfVMsStarted"));
+                        so.setOptimizedImageURL(jsonObject.getString("optimizedImageURL"));
+                        so.setStarted(jsonObject.getLong("started"));
+                        so.setRunningTime(jsonObject.getLong("runningTime"));
+                        so.setOptimizedUsedSpace(jsonObject.getLong("optimizedUsedSpace"));
+                        so.setOriginalImageSize(jsonObject.getLong("originalImageSize"));
+                        so.setMaxNumberOfVMs(jsonObject.getInt("maxNumberOfVMs"));
+                        so.setRemovables(jsonObject.getString("removables"));
+                        so.setOptimizerVMStatus(jsonObject.getString("optimizerVMStatus"));
+                        so.setOriginalUsedSpace(jsonObject.getLong("originalUsedSpace"));
+                        so.setFailure(jsonObject.getString("failure"));
+                        so.setOptimizedImageSize(jsonObject.getLong("optimizedImageSize"));
+                        so.setAimedSize(jsonObject.getInt("aimedSize"));
+                        so.setEnded(jsonObject.getLong("ended"));
+                        so.setIteration(jsonObject.getInt("iteration"));
+                        so.setShrinkerPhase(jsonObject.getString("shrinkerPhase"));
+                        so.setChart(jsonObject.get("chart").toString());
+                        so.setMaxIterationsNum(jsonObject.getInt("maxIterationsNum"));
+                        so.setStatus(jsonObject.getString("status"));
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return sosoList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     @GET
     @Path("get_builder_status")
@@ -648,6 +793,10 @@ public class SZTAKIService implements ISZTAKIService {
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public String getImageBuilderStatus(@QueryParam("builder_id") String builderID, @QueryParam("show_result") boolean showResult) {
+        return getLocalBuilderStatus(builderID, showResult);
+    }
+
+    private String getLocalBuilderStatus(String builderID, boolean showResult) {
         try {
             URIBuilder builder = new URIBuilder(AppContextListener.prop.getProperty("sztaki.builder.url") + "/" + builderID+ (showResult ? "/result" : ""));
             HttpClient httpClient = HttpClientBuilder.create().build();
@@ -673,33 +822,57 @@ public class SZTAKIService implements ISZTAKIService {
         } return null;
     }
 
+    // not jobID
     @GET
     @Path("delete_builder")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-    public String stopImageBuilder(@QueryParam("builder_id") String builderID) {
+    public Map<String, String> stopImageBuilder(@QueryParam("builder_id") String recipeBuilderID, @QueryParam("cancel_execution") boolean cancelExecution) {
+//        curl -X DELETE https://entice.lpds.sztaki.hu:5443/api/imagebuilder/build/<request_id>
+        Map<String, String> resultMap = new HashMap<String, String>();
         try {
+            boolean successDeleteFromKB = false;
+            List<RecipeBuild> recipeBuildList = FusekiUtils.getAllEntityAttributes(RecipeBuild.class, recipeBuilderID);
+            if (recipeBuildList.size() == 0) {
+                resultMap.put("error", "RecipeBuild object does not exist!");
+                return resultMap;
+            }
+
+            try {
+//                String kbBuilderID =  FusekiUtils.getAllEntityAttributes(RecipeBuild.class,".?s
+// knowledgebase:RecipeBuild_RecipeID \"" + builderID + "\" ").get(0).getId();
+                String kbBuilderID = recipeBuildList.get(0).getId();
+                successDeleteFromKB = FusekiUtils.deleteRecipeBuild(kbBuilderID);
+                resultMap.put("kb_deletion", String.valueOf(successDeleteFromKB));
+            } catch (Exception e) {
+                resultMap.put("error", "ID does not exist in Knowledge base");
+                return resultMap;
+            }
+
             HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpDelete httpDelete = new HttpDelete(AppContextListener.prop.getProperty("sztaki.builder.url") + "/" + builderID+ "/result");
-            httpDelete.addHeader("optimizer_id", builderID);
+            HttpDelete httpDelete = new HttpDelete(AppContextListener.prop.getProperty("sztaki.builder.url") + "/" +
+                    recipeBuildList.get(0).getJobId() + (cancelExecution ? "" : "/result"));
+            httpDelete.addHeader("optimizer_id", recipeBuildList.get(0).getJobId());
             HttpResponse response = httpClient.execute(httpDelete);
 
             System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
 
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             StringBuffer result = new StringBuffer();
+
             String line = "";
             while ((line = rd.readLine()) != null) {
                 result.append(line);
             }
+            resultMap.put("sztaki_recipe_deletion", result.toString());
 
-            System.out.println(result.toString());
+            return resultMap;
         } catch (IOException e) {
             e.printStackTrace();
-            return e.getMessage();
+            resultMap.put("error", e.getMessage());
+            return resultMap;
         }
-        return null;
     }
 
     @Override

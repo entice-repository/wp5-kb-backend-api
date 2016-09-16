@@ -22,6 +22,7 @@ import org.fri.entice.webapp.entry.client.EnticeDetailedImage;
 import org.fri.entice.webapp.entry.client.EnticeImage;
 import org.fri.entice.webapp.entry.client.ResponseObj;
 import org.fri.entice.webapp.entry.client.ResponseSynthesisObj;
+import org.fri.entice.webapp.util.CommonUtils;
 import org.fri.entice.webapp.util.FusekiUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -32,8 +33,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.*;
 
 @Path("/gui/")
@@ -144,17 +143,18 @@ public class GUIService implements IGUIService {
     @Path("get_newest_pareto") // rename it to: get_pareto_stage1 ..2
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-    public Pareto getNewestPareto() {
+    public Pareto getNewestPareto(@QueryParam("stage") int stage) {
         boolean generatePareto = true;
         try {
-            generatePareto = MOEstart.generateParetoStage1();
 
-            if (generatePareto) {
-                String id = FusekiUtils.getEntityID(Pareto.class, "ORDER BY DESC(xsd:dateTime(?o)) LIMIT 1");
+            if (stage == 2) {
+                String id = FusekiUtils.getEntityID(Pareto.class, " . ?s knowledgebase:Pareto_Stage 2 . ?s knowledgebase:Pareto_Create_Date ?dateFrom ","ORDER BY DESC(xsd:dateTime(?dateFrom)) LIMIT 1");
                 return FusekiUtils.getAllEntityAttributes(Pareto.class, id).get(0);
             }
-            else {
-                return null;
+            else{
+                generatePareto = MOEstart.generateParetoStage1();
+                String id = FusekiUtils.getEntityID(Pareto.class, " . ?s knowledgebase:Pareto_Stage 1 . ?s knowledgebase:Pareto_Create_Date ?dateFrom ","ORDER BY DESC(xsd:dateTime(?dateFrom)) LIMIT 1");
+                return FusekiUtils.getAllEntityAttributes(Pareto.class, id).get(0);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -285,7 +285,7 @@ public class GUIService implements IGUIService {
                         imageName, "", FileFormat.IMG, "http://193.2.72.90/images/avatars/" + (avatarID != -1 ?
                         avatarID + "" : ""), false,successMessage.split(",")[3].split("\".")[2] , "", 0, userID,
                         functionalityID, "", "", false, System.currentTimeMillis(), false, "1.0", uploadFromURL ?
-                        getFileSize(imageURL) : (int) (file.length() / 1024), paretoPoint, paretoPoint,
+                        CommonUtils.getFileSize(imageURL) : (int) (file.length() / 1024), paretoPoint, paretoPoint,
                         paretoPointId, categoryList, mapRepositoryIndexToRealOne(paretoPoint + ""));
 
                 String insertStatement = FusekiUtils.generateInsertObjectStatement(diskImage);
@@ -303,19 +303,7 @@ public class GUIService implements IGUIService {
         }
     }
 
-    private int getFileSize(String url) {
-        try {
-            final URL uri = new URL(url);
-            URLConnection ucon;
-            ucon = uri.openConnection();
-            ucon.connect();
-            final String contentLengthStr = ucon.getHeaderField("content-length");
-            return (int)(Long.valueOf(contentLengthStr) / 1024);
-        } catch (final IOException e1) {
-            e1.getMessage();
-            return -1;
-        }
-    }
+
 
     private String mapRepositoryIndexToRealOne(String repositoryIndex) {
         List<Repository> repositoryList = FusekiUtils.getAllEntityAttributes(Repository.class);

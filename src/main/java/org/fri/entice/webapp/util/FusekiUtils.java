@@ -128,9 +128,13 @@ public class FusekiUtils {
                 return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
                         "knowledgebase:%s a knowledgebase:RecipeBuild, owl:NamedIndividual ;" +
                         "knowledgebase:RecipeBuild_RecipeID  \"%s\" ;\n" +
-                        "knowledgebase:RecipeBuild_Status  \"%s\" ;\n" +
                         "knowledgebase:RecipeBuild_Message  \"%s\" ;\n" +
-                        "}", recipeBuild.getId(),recipeBuild.getRecipeId(),recipeBuild.getStatus(),recipeBuild.getMessage());
+                        "knowledgebase:RecipeBuild_Status  \"%s\" ;\n" +
+                        "knowledgebase:RecipeBuild_Outcome  \"%s\" ;\n" +
+                        "knowledgebase:RecipeBuild_Size  %d ;\n" +
+                        "knowledgebase:RecipeBuild_URL  \"%s\" ;\n" +
+                        "}", recipeBuild.getId(), recipeBuild.getJobId(), recipeBuild.getMessage(), recipeBuild
+                        .getRequest_status(), recipeBuild.getOutcome(), recipeBuild.getSize(), recipeBuild.getUrl());
             }
             // CREATE FRAGMENT
             else if (obj instanceof Fragment) {
@@ -217,36 +221,33 @@ public class FusekiUtils {
                         functionality.getInputDescription(), functionality.getName(), functionality
                                 .getOutputDescription(), functionality.getTag());
             }
-//                    Quality_AimedSize
-//            Quality_OptimizedSize
-//                    Quality_PercentStorageOptimised
-//            Quality_FunctionalityTested
-//                    Quality_UserRating
-//            Quality_IsUpdateNecessary
-//                    Quality_IsOptimizationNecessary
-//            Quality_NumberOfDownloads
-//                    Quality_maxIterationsNum
-//            Quality_actualIterationsNum
-//                    Quality_AimedReductionRatio
-//            Quality_maxRunningTime
-//                    Quality_actualRunningTime
-//            Quality_MaxNumberOfVMs
-            // Quality_UserComments
-            //     private String jobID;
 
             // CREATE QUALITY - for optimization
             else if (obj instanceof Quality) {
-                Functionality functionality = (Functionality) obj;
-                return String.format("PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
+                Quality quality = (Quality) obj;
+                return String.format(Locale.US,"PREFIX " + KB_PREFIX + "PREFIX " + OWL_PREFIX + " INSERT DATA {" +
                                 "knowledgebase:%s a knowledgebase:Quality, owl:NamedIndividual ;" +
-                                "knowledgebase:Quality_ \"%s\" ;\n" +
-                                "knowledgebase:Quality_ \"%s\" ;\n" +
-                                "knowledgebase:Quality_ \"%s\" ;\n" +
-                                "knowledgebase:Quality_ \"%s\" ;\n" +
-                                "knowledgebase:Quality_ \"%s\" ;\n" +
-                                "}", functionality.getId(), functionality.getRefImplementationId(), functionality
-                        .getClassification(), functionality.getDescription(), functionality.getDomain(), functionality.getInputDescription(), functionality.getName(), functionality
-                                .getOutputDescription(), functionality.getTag());
+                                "knowledgebase:Quality_AimedSize %d ;\n" +
+                                "knowledgebase:Quality_OptimizedSize %d ;\n" +
+                                "knowledgebase:Quality_PercentStorageOptimised  %d ;\n" +
+//                                "knowledgebase:Quality_FunctionalityTested \"%s\" ;\n" +
+                                "knowledgebase:Quality_UserRating  %d ;\n" +
+                                "knowledgebase:Quality_IsUpdateNecessary %s ;\n" +
+                                "knowledgebase:Quality_IsOptimizationNecessary %s ;\n" +
+                                "knowledgebase:Quality_NumberOfDownloads %d ;\n" +
+                                "knowledgebase:Quality_maxIterationsNum %d ;\n" +
+                                "knowledgebase:Quality_actualIterationsNum %d ;\n" +
+                                "knowledgebase:Quality_AimedReductionRatio %f ;\n" +
+                                "knowledgebase:Quality_maxRunningTime %d ;\n" +
+                                "knowledgebase:Quality_actualRunningTime %d ;\n" +
+                                "knowledgebase:Quality_MaxNumberOfVMs %d ;\n" +
+//                                "knowledgebase:Quality_UserComments \"%s\" ;\n" +
+                                "knowledgebase:Quality_JobID \"%s\" ;\n" +
+                                "}", quality.getId(), quality.getAimedSize(), quality.getOptimizedSize(), quality
+                        .getPercentStorageOptimised(), quality.getUserRating(), quality.isUpdateNecessary(), quality
+                        .isOptimizationNecessary(), quality.getNumberOfDownloads(), quality.getMaxIterationsNum(),
+                        quality.getActualIterationsNum(), quality.getAimedReductionRatio(), quality.getMaxRunningTime
+                                (), quality.getActualRunningTime(), quality.getMaxNumberOfVMs(), quality.getJobID());
             }
             // CREATE GEOLOCATION
             else if (obj instanceof Geolocation) {
@@ -415,7 +416,7 @@ public class FusekiUtils {
                     "SELECT ?s ?p ?o\n" +
                     "WHERE { knowledgebase:" + queryFilterCondition[0] + " a knowledgebase:" + entityClass + " ; ?p " +
                     "?o }";
-        else if (entityClass.equals("HistoryData")) {
+        else if (entityClass.equals("HistoryData") || entityClass.equals("RecipeBuild") && queryFilterCondition.length > 0) {
             return "prefix knowledgebase: <http://www.semanticweb" +
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                     "SELECT ?s ?p ?o\n" +
@@ -513,6 +514,15 @@ public class FusekiUtils {
     }
 
     public static String getEntityQuery(String entityClass, String... postfixCondition) {
+        if(postfixCondition.length > 1)
+            return "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
+                    "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "\n" +
+                    "SELECT ?s ?p ?o\n" +
+                    "WHERE { ?s a knowledgebase:"+entityClass+" "+postfixCondition[0] +" }\n" +
+                    postfixCondition[1];
+
         return "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
                 "prefix knowledgebase: <http://www.semanticweb" +
                 ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
@@ -666,6 +676,26 @@ public class FusekiUtils {
         UpdateRequest query = UpdateFactory.create(queryString);
         UpdateProcessor qe = UpdateExecutionFactory.createRemoteForm(query, endpoint);
         qe.execute();
+    }
+
+    public static boolean deleteRecipeBuild(String id) {
+        try {
+            String queryString = "prefix knowledgebase: <http://www.semanticweb" +
+                    ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
+                    "\n" +
+                    "DELETE\n" +
+                    "{\n" +
+                    "knowledgebase:" + id + " a knowledgebase:RecipeBuild ;\n" +
+                    "}\n" +
+                    "WHERE {}";
+            UpdateRequest query = UpdateFactory.create(queryString);
+            UpdateProcessor qe = UpdateExecutionFactory.createRemoteForm(query, AppContextListener.prop.getProperty
+                    ("fuseki.url.update"));
+            qe.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
     }
     //--------------------------------------------------------------
 
@@ -949,7 +979,7 @@ public class FusekiUtils {
                 resultObj.setS(conditions[0]);
             }
         }
-        else if (conditions.length > 0 && (clazz.getSimpleName().equals("DiskImage") || clazz.getSimpleName().equals("Repository") || clazz.getSimpleName().equals
+        else if (conditions.length > 0 && (clazz.getSimpleName().equals("DiskImage") || clazz.getSimpleName().equals("RecipeBuild") || clazz.getSimpleName().equals("Repository") || clazz.getSimpleName().equals
                 ("Functionality") || clazz.getSimpleName().equals("User") || clazz.getSimpleName().equals("Geolocation")) && resultObjs.size() > 0 &&
                 resultObjs.get(0).getS() == null) {
             for (ResultObj resultObj : resultObjs) {

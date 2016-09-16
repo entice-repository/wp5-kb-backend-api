@@ -176,4 +176,8 @@ public class Quality extends MyEntry {
     public void setJobID(String jobID) {
         this.jobID = jobID;
     }
+
+    public long getAimedSize() {
+        return aimedSize;
+    }
 }
