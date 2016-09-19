@@ -1,0 +1,49 @@
+knowledgebase:diskImage1
+        a                              knowledgebase:DiskImage , owl:NamedIndividual , knowledgebase:CI ;
+        knowledgebase:DiskImageSLA_AgreedAvailabilityCountry
+                "" ;
+        knowledgebase:DiskImageSLA_AgreedAvailabilityRepository
+                "" ;
+        knowledgebase:DiskImageSLA_AgreedPriorityLevel
+                "" ;
+        knowledgebase:DiskImageSLA_AgreedQoSOrder
+                "" ;
+        knowledgebase:DiskImageSLA_AgreedRestriction
+                "" ;
+        knowledgebase:DiskImageSLA_DataProperty
+                "" ;
+        knowledgebase:DiskImageSLA_SecuredDelivery
+                "" ;
+        knowledgebase:DiskImageSLA_id  "" ;
+        knowledgebase:DiskImage_DataProperty
+                "" ;
+        knowledgebase:DiskImage_Description
+                "" ;
+        knowledgebase:DiskImage_Encryption
+                "" ;
+        knowledgebase:DiskImage_FileFormat
+                "" ;
+        knowledgebase:DiskImage_Functionality
+                "" ;
+        knowledgebase:DiskImage_GenerationTime
+                "" ;
+        knowledgebase:DiskImage_IRI    "" ;
+        knowledgebase:DiskImage_NeedsDataFile
+                "" ;
+        knowledgebase:DiskImage_OperatingSystem
+                "" ;
+        knowledgebase:DiskImage_Owner  "" ;
+        knowledgebase:DiskImage_Picture
+                "" ;
+        knowledgebase:DiskImage_Predecessor
+                "" ;
+        knowledgebase:DiskImage_Price  "" ;
+        knowledgebase:DiskImage_Quality
+                "" ;
+        knowledgebase:DiskImage_SLA    "" ;
+        knowledgebase:DiskImage_Title  "CoreOS CI" ;
+        knowledgebase:DiskImage_Type   "" ;
+        knowledgebase:DiskImage_Version
+                "" ;
+        knowledgebase:DiskImage_id     "" .
+

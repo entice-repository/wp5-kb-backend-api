@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#"
+         xml:base="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns:xml="http://www.w3.org/XML/1998/namespace"
+        >
+    <owl:Ontology rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase">
+        <owl:versionIRI rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase/0.2"/>
+    </owl:Ontology>
+    <owl:NamedIndividual
+            rdf:about="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#diskImage1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#CI"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#DiskImage"/>
+        <DiskImageSLA_AgreedAvailabilityCountry></DiskImageSLA_AgreedAvailabilityCountry>
+        <DiskImageSLA_AgreedAvailabilityRepository></DiskImageSLA_AgreedAvailabilityRepository>
+        <DiskImageSLA_AgreedPriorityLevel></DiskImageSLA_AgreedPriorityLevel>
+        <DiskImageSLA_AgreedQoSOrder></DiskImageSLA_AgreedQoSOrder>
+        <DiskImageSLA_AgreedRestriction></DiskImageSLA_AgreedRestriction>
+        <DiskImageSLA_DataProperty></DiskImageSLA_DataProperty>
+        <DiskImageSLA_SecuredDelivery></DiskImageSLA_SecuredDelivery>
+        <DiskImageSLA_id></DiskImageSLA_id>
+        <DiskImage_DataProperty></DiskImage_DataProperty>
+        <DiskImage_Description></DiskImage_Description>
+        <DiskImage_Encryption></DiskImage_Encryption>
+        <DiskImage_FileFormat></DiskImage_FileFormat>
+        <DiskImage_Functionality></DiskImage_Functionality>
+        <DiskImage_GenerationTime></DiskImage_GenerationTime>
+        <DiskImage_IRI></DiskImage_IRI>
+        <DiskImage_NeedsDataFile></DiskImage_NeedsDataFile>
+        <DiskImage_OperatingSystem></DiskImage_OperatingSystem>
+        <DiskImage_Owner></DiskImage_Owner>
+        <DiskImage_Picture></DiskImage_Picture>
+        <DiskImage_Predecessor></DiskImage_Predecessor>
+        <DiskImage_Price></DiskImage_Price>
+        <DiskImage_Quality></DiskImage_Quality>
+        <DiskImage_SLA></DiskImage_SLA>
+        <DiskImage_Title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CoreOS CI</DiskImage_Title>
+        <DiskImage_Type></DiskImage_Type>
+        <DiskImage_Version></DiskImage_Version>
+        <DiskImage_id></DiskImage_id>
+    </owl:NamedIndividual>
+
+</rdf:RDF>
