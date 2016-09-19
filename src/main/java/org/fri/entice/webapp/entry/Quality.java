@@ -5,7 +5,7 @@ import java.util.List;
 public class Quality extends MyEntry {
 
     private long aimedSize;
-    private int optimizedSize;
+    private long optimizedSize;
     private int percentStorageOptimised;    //(0-100)
     private boolean functionalityTested;
     private int userRating;     //(0-5)
@@ -26,7 +26,7 @@ public class Quality extends MyEntry {
         super(id);
     }
 
-    public Quality(String id, long aimedSize, int optimizedSize, int percentStorageOptimised, boolean
+    public Quality(String id, long aimedSize, long optimizedSize, int percentStorageOptimised, boolean
             functionalityTested, int userRating, boolean isUpdateNecessary, boolean isOptimizationNecessary, int
             numberOfDownloads, int maxIterationsNum, int actualIterationsNum, double aimedReductionRatio, long
             maxRunningTime, long actualRunningTime, short maxNumberOfVMs, List<String> resultList) {
@@ -49,11 +49,11 @@ public class Quality extends MyEntry {
         jobID = "";
     }
 
-    public int getOptimizedSize() {
+    public long getOptimizedSize() {
         return optimizedSize;
     }
 
-    public void setOptimizedSize(int optimizedSize) {
+    public void setOptimizedSize(long optimizedSize) {
         this.optimizedSize = optimizedSize;
     }
 

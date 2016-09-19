@@ -231,9 +231,8 @@ public class SZTAKIService implements ISZTAKIService {
     @Override
     public Map<String, String> executeOptimizer(final SZTAKIExecuteObj sztakiExecuteObj) {
         Map<String, String> resultMap = new HashMap<>();
-        Quality quality = new Quality(UUID.randomUUID().toString(), sztakiExecuteObj.getXaimedSize(), -1, 0,
-                true, 0, false, true, 0, sztakiExecuteObj.getMaxIterationsNum(), 0, sztakiExecuteObj
-                .getXaimedReductionRatio(), sztakiExecuteObj.getXmaxRunningTime(), 0, (short) 1, new
+        Quality quality = new Quality(UUID.randomUUID().toString(), 0, -1, 0,
+                true, 0, false, true, 0, sztakiExecuteObj.getMaxIterationsNum(), 0, 0.0, 0, 0, (short) 1, new
                 ArrayList<String>());
         try {
             String optimizerID = initOptimizationLifecycle(sztakiExecuteObj);
@@ -264,7 +263,7 @@ public class SZTAKIService implements ISZTAKIService {
             sztakiExecuteObj.setS3EndpointURL(AppContextListener.prop.getProperty("s3.endpoint.url"));
             sztakiExecuteObj.setS3AccessKey(AppContextListener.prop.getProperty("s3.access.key"));
             sztakiExecuteObj.setS3SecretKey(AppContextListener.prop.getProperty("s3.secret.key"));
-            sztakiExecuteObj.setS3Path(AppContextListener.prop.getProperty("s3.path"));
+//            sztakiExecuteObj.setS3Path(AppContextListener.prop.getProperty("s3.path"));
             sztakiExecuteObj.setCloudEndpointURL(AppContextListener.prop.getProperty("sztaki.cloud.endpoint.url"));
 
             //get current deployment image list
@@ -315,7 +314,7 @@ public class SZTAKIService implements ISZTAKIService {
 ////                return resultMap;
 //            }
 
-            sztakiExecuteObj.setImageId("ami-00001563");
+            sztakiExecuteObj.setImageId("ami-00001578");
 //            String result = null;// sb.toString();
 //            //             set image ID with new generated one on SZTAKI cloud
 //            if (result.startsWith("Success: ImageId ")) {
@@ -467,7 +466,14 @@ public class SZTAKIService implements ISZTAKIService {
 //    }
 
 
-
+    // GET: get status of an optimization procedure
+    @GET
+    @Path("delete_optimization_job")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    public String deleteOptimizationJob(@QueryParam("entity_id") String entityID) {
+        return "Optimization removed: " + FusekiUtils.deleteEntityById(entityID, Quality.class.getSimpleName());
+    }
 
     // GET: get status of an optimization procedure
     @GET
@@ -493,8 +499,8 @@ public class SZTAKIService implements ISZTAKIService {
             HttpResponse response = httpClient.execute(httpGet);
             HttpEntity resEntity = response.getEntity();
 
-            System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
-            System.out.println(response.getStatusLine());
+//            System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+//            System.out.println(response.getStatusLine());
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             StringBuffer result = new StringBuffer();
             String line = "";
@@ -642,12 +648,24 @@ public class SZTAKIService implements ISZTAKIService {
         return null;
     }
 
+    private List<RecipeBuild> globalRecipeList = new ArrayList<>();
+    private long recipeLastRefreshTime = 0;
+
     @GET
     @Path("get_recipe_refreshed_builds")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public List<RecipeBuild> getRecipeRefreshedBuilds() {
+        if (recipeLastRefreshTime > 0) {
+            if((System.currentTimeMillis() - recipeLastRefreshTime) <= 10000 ){
+               // System.out.println("not refreshed..");
+                return globalRecipeList;
+            }
+            recipeLastRefreshTime = System.currentTimeMillis();
+        }
+        else recipeLastRefreshTime = System.currentTimeMillis();
+
         try {
             List<RecipeBuild> recipeBuildList = FusekiUtils.getAllEntityAttributes(RecipeBuild.class);
             List<RecipeBuild> sztakiRecipeStatusObjs = new ArrayList<>();
@@ -693,6 +711,8 @@ public class SZTAKIService implements ISZTAKIService {
                     }
                 }
             }
+            //System.out.println(">> refreshed..");
+            globalRecipeList = sztakiRecipeStatusObjs;
             return sztakiRecipeStatusObjs;
         } catch (Exception e) {
             e.printStackTrace();
@@ -702,7 +722,7 @@ public class SZTAKIService implements ISZTAKIService {
 
     private boolean deleteRecipeAndCreateANewOne(String recipeBuildID, RecipeBuild recipeBuild) {
         try {
-            boolean successDeleteFromKB = FusekiUtils.deleteRecipeBuild(recipeBuildID);
+            boolean successDeleteFromKB = FusekiUtils.deleteEntityById(recipeBuildID, RecipeBuild.class.getSimpleName());
 
             if (successDeleteFromKB) {
                 String insertStatement = FusekiUtils.generateInsertObjectStatement(recipeBuild);
@@ -733,12 +753,27 @@ public class SZTAKIService implements ISZTAKIService {
         return null;
     }
 
+    private List<SZTAKIOptimizationStatusObj> globalOptimizationList = new ArrayList<>();
+    private long lastOptimizationTime = 0;
+    private boolean optimizationExecuted = false;
+
     @GET
     @Path("get_optimization_refreshed_list")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public List<SZTAKIOptimizationStatusObj> getOptimizationRefreshedList() {
+        if (lastOptimizationTime > 0) {
+            if (optimizationExecuted || (System.currentTimeMillis() - lastOptimizationTime) <= 20000) {
+                System.out.println("optimiaztion not refreshed..");
+                return globalOptimizationList;
+            }
+            optimizationExecuted = true;
+            lastOptimizationTime = System.currentTimeMillis();
+        }
+        else lastOptimizationTime = System.currentTimeMillis();
+
+
         try {
             List<Quality> qualityList = FusekiUtils.getAllEntityAttributes(Quality.class);
             List<SZTAKIOptimizationStatusObj> sosoList = new ArrayList<>();
@@ -774,14 +809,23 @@ public class SZTAKIService implements ISZTAKIService {
                         so.setMaxIterationsNum(jsonObject.getInt("maxIterationsNum"));
                         so.setStatus(jsonObject.getString("status"));
 
+                        //delete failed jobs
+                        // if(jsonObject.getString("status").equals("FAILED"))
+                            // FusekiUtils.deleteEntityById(quality.getId(), Quality.class.getSimpleName());
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
+            System.out.println(">> refreshed optimization..");
+            globalOptimizationList = sosoList;
             return sosoList;
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        finally {
+            optimizationExecuted = false;
         }
         return null;
     }
@@ -822,14 +866,14 @@ public class SZTAKIService implements ISZTAKIService {
         } return null;
     }
 
-    // not jobID
+    // curl -X DELETE https://entice.lpds.sztaki.hu:5443/api/imagebuilder/build/<request_id>
+    // entityID, not jobID!
     @GET
     @Path("delete_builder")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Map<String, String> stopImageBuilder(@QueryParam("builder_id") String recipeBuilderID, @QueryParam("cancel_execution") boolean cancelExecution) {
-//        curl -X DELETE https://entice.lpds.sztaki.hu:5443/api/imagebuilder/build/<request_id>
         Map<String, String> resultMap = new HashMap<String, String>();
         try {
             boolean successDeleteFromKB = false;
@@ -840,10 +884,8 @@ public class SZTAKIService implements ISZTAKIService {
             }
 
             try {
-//                String kbBuilderID =  FusekiUtils.getAllEntityAttributes(RecipeBuild.class,".?s
-// knowledgebase:RecipeBuild_RecipeID \"" + builderID + "\" ").get(0).getId();
                 String kbBuilderID = recipeBuildList.get(0).getId();
-                successDeleteFromKB = FusekiUtils.deleteRecipeBuild(kbBuilderID);
+                successDeleteFromKB = FusekiUtils.deleteEntityById(kbBuilderID, RecipeBuild.class.getSimpleName());
                 resultMap.put("kb_deletion", String.valueOf(successDeleteFromKB));
             } catch (Exception e) {
                 resultMap.put("error", "ID does not exist in Knowledge base");
@@ -866,7 +908,7 @@ public class SZTAKIService implements ISZTAKIService {
                 result.append(line);
             }
             resultMap.put("sztaki_recipe_deletion", result.toString());
-
+            recipeLastRefreshTime = 0;
             return resultMap;
         } catch (IOException e) {
             e.printStackTrace();

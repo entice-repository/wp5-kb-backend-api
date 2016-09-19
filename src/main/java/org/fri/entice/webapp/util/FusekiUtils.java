@@ -678,14 +678,14 @@ public class FusekiUtils {
         qe.execute();
     }
 
-    public static boolean deleteRecipeBuild(String id) {
+    public static boolean deleteEntityById(String id, String entityName) {
         try {
             String queryString = "prefix knowledgebase: <http://www.semanticweb" +
                     ".org/project-entice/ontologies/2015/7/knowledgebase#>\n" +
                     "\n" +
                     "DELETE\n" +
                     "{\n" +
-                    "knowledgebase:" + id + " a knowledgebase:RecipeBuild ;\n" +
+                    "knowledgebase:" + id + " a knowledgebase:"+entityName+" ;\n" +
                     "}\n" +
                     "WHERE {}";
             UpdateRequest query = UpdateFactory.create(queryString);
@@ -929,6 +929,8 @@ public class FusekiUtils {
                             y = ((ResultBinding) qs).getBinding().get(var).getLiteral().getValue().toString();
                         else if (resStr.contains("^^http://www.w3.org/2001/XMLSchema#anyURI"))
                             y = resStr.replace("^^http://www.w3.org/2001/XMLSchema#anyURI", "").replaceAll("\"", "");
+                        else if (resStr.contains("^^http://www.w3.org/2001/XMLSchema#integer"))
+                            y = resStr.replace("^^http://www.w3.org/2001/XMLSchema#integer", "").replaceAll("\"", "");
                         else if (resStr.contains("-")) y = resStr.replaceAll("\"", "");
                         else if (resStr.contains("^^http://www.w3.org/2001/XMLSchema#double"))
                             y = resStr.replace("^^http://www.w3.org/2001/XMLSchema#double", "").replaceAll("\"", "");

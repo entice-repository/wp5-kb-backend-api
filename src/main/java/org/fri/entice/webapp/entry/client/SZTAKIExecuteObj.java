@@ -1,7 +1,5 @@
 package org.fri.entice.webapp.entry.client;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 //@JsonIgnoreProperties(ignoreUnknown = true)
@@ -42,29 +40,37 @@ public class SZTAKIExecuteObj {
     // MaxNumberOfIteration (String) REQ
     private int maxIterationsNum;
     // MaxNumberOfVMIs (UInt) OPT.
-    private short XmaxNumberOfVMs;
+//    private short XmaxNumberOfVMs;
     // Aimed Reduction Ratio (Float) OPT.
-    private double XaimedReductionRatio;
+//    private double XaimedReductionRatio;
     // Aimed Size (UInt) OPT.
-    private long XaimedSize;
-    // MaxRunningTime (Float) OPT. ?? Komentar: to mora biti int ali long, saj je enota milliseconds ali seconds
-    private int XmaxRunningTime;
+//    private long XaimedSize;
+    // MaxRunningTime (Float) OPT. ??
+//    private int XmaxRunningTime;
 
     private String s3EndpointURL;
     private String s3AccessKey;
     private String s3SecretKey;
-    private String s3Path;
+//    private String s3Path;
 
     public SZTAKIExecuteObj() {
     }
+
+    //old constructor:
+//    public SZTAKIExecuteObj(String imageId, String imageURL, String validatorScriptURL, String imageUserName, String
+//            fsPartition, String imageKeyPair, String imagePrivateKey, String cloudEndpointURL, String cloudAccessKey,
+//                            String cloudSecretKey, String cloudOptimizerVMInstanceType, String
+//                                    cloudWorkerVMInstanceType, int freeDiskSpace, int numberOfParallelWorkerVMs, int
+//                                    maxIterationsNum, short XmaxNumberOfVMs, double XaimedReductionRatio, long
+//                                    XaimedSize, int XmaxRunningTime, String s3EndpointURL, String s3AccessKey, String
+//                                    s3SecretKey, String s3Path)
 
     public SZTAKIExecuteObj(String imageId, String imageURL, String validatorScriptURL, String imageUserName, String
             fsPartition, String imageKeyPair, String imagePrivateKey, String cloudEndpointURL, String cloudAccessKey,
                             String cloudSecretKey, String cloudOptimizerVMInstanceType, String
                                     cloudWorkerVMInstanceType, int freeDiskSpace, int numberOfParallelWorkerVMs, int
-                                    maxIterationsNum, short XmaxNumberOfVMs, double XaimedReductionRatio, long
-                                    XaimedSize, int XmaxRunningTime, String s3EndpointURL, String s3AccessKey, String
-                                    s3SecretKey, String s3Path) {
+                                    maxIterationsNum, String s3EndpointURL, String s3AccessKey, String
+                                    s3SecretKey) {
         this.imageId = imageId;
         this.imageURL = imageURL;
         this.validatorScriptURL = validatorScriptURL;
@@ -80,14 +86,14 @@ public class SZTAKIExecuteObj {
         this.freeDiskSpace = freeDiskSpace;
         this.numberOfParallelWorkerVMs = numberOfParallelWorkerVMs;
         this.maxIterationsNum = maxIterationsNum;
-        this.XmaxNumberOfVMs = XmaxNumberOfVMs;
-        this.XaimedReductionRatio = XaimedReductionRatio;
-        this.XaimedSize = XaimedSize;
-        this.XmaxRunningTime = XmaxRunningTime;
+//        this.XmaxNumberOfVMs = XmaxNumberOfVMs;
+//        this.XaimedReductionRatio = XaimedReductionRatio;
+//        this.XaimedSize = XaimedSize;
+//        this.XmaxRunningTime = XmaxRunningTime;
         this.s3EndpointURL = s3EndpointURL;
         this.s3AccessKey = s3AccessKey;
         this.s3SecretKey = s3SecretKey;
-        this.s3Path = s3Path;
+//        this.s3Path = s3Path;
     }
 
     public String getImageId() {
@@ -187,41 +193,41 @@ public class SZTAKIExecuteObj {
         this.maxIterationsNum = maxIterationsNum;
     }
 
-    @JsonProperty("XmaxNumberOfVMs")
-    public int getXmaxNumberOfVMs() {
-        return XmaxNumberOfVMs;
-    }
+//    @JsonProperty("XmaxNumberOfVMs")
+//    public int getXmaxNumberOfVMs() {
+//        return XmaxNumberOfVMs;
+//    }
 
-    public void setXmaxNumberOfVMs(short XmaxNumberOfVMs) {
-        this.XmaxNumberOfVMs = XmaxNumberOfVMs;
-    }
+//    public void setXmaxNumberOfVMs(short XmaxNumberOfVMs) {
+//        this.XmaxNumberOfVMs = XmaxNumberOfVMs;
+//    }
 
-    @JsonProperty("XaimedReductionRatio")
-    public double getXaimedReductionRatio() {
-        return XaimedReductionRatio;
-    }
+//    @JsonProperty("XaimedReductionRatio")
+//    public double getXaimedReductionRatio() {
+//        return XaimedReductionRatio;
+//    }
 
-    public void setXaimedReductionRatio(double xaimedReductionRatio) {
-        XaimedReductionRatio = xaimedReductionRatio;
-    }
+//    public void setXaimedReductionRatio(double xaimedReductionRatio) {
+//        XaimedReductionRatio = xaimedReductionRatio;
+//    }
 
-    @JsonProperty("XaimedSize")
-    public long getXaimedSize() {
-        return XaimedSize;
-    }
+//    @JsonProperty("XaimedSize")
+//    public long getXaimedSize() {
+//        return XaimedSize;
+//    }
 
-    public void setXaimedSize(long xaimedSize) {
-        XaimedSize = xaimedSize;
-    }
+//    public void setXaimedSize(long xaimedSize) {
+//        XaimedSize = xaimedSize;
+//    }
 
-    @JsonProperty("XmaxRunningTime")
-    public int getXmaxRunningTime() {
-        return XmaxRunningTime;
-    }
+//    @JsonProperty("XmaxRunningTime")
+//    public int getXmaxRunningTime() {
+//        return XmaxRunningTime;
+//    }
 
-    public void setXmaxRunningTime(int xmaxRunningTime) {
-        XmaxRunningTime = xmaxRunningTime;
-    }
+//    public void setXmaxRunningTime(int xmaxRunningTime) {
+//        XmaxRunningTime = xmaxRunningTime;
+//    }
 
     public String getFsPartition() {
         return fsPartition;
@@ -247,9 +253,9 @@ public class SZTAKIExecuteObj {
         return s3SecretKey;
     }
 
-    public String getS3Path() {
-        return s3Path;
-    }
+//    public String getS3Path() {
+//        return s3Path;
+//    }
 
     public void setFsPartition(String fsPartition) {
         this.fsPartition = fsPartition;
@@ -275,7 +281,7 @@ public class SZTAKIExecuteObj {
         this.s3SecretKey = s3SecretKey;
     }
 
-    public void setS3Path(String s3Path) {
-        this.s3Path = s3Path;
-    }
+//    public void setS3Path(String s3Path) {
+//        this.s3Path = s3Path;
+//    }
 }

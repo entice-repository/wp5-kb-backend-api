@@ -179,8 +179,13 @@ public class CommonUtils {
                     qualityList.get(index).setMaxNumberOfVMs(Short.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Quality_IsUpdateNecessary"))
                     qualityList.get(index).setIsUpdateNecessary(Boolean.valueOf(resultObj.getO()));
-                else if (resultObj.getP().endsWith("Quality_OptimizedSize"))
-                    qualityList.get(index).setOptimizedSize(Integer.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_OptimizedSize")){
+                    try{
+                    qualityList.get(index).setOptimizedSize(Long.valueOf(resultObj.getO()));
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 else if (resultObj.getP().endsWith("Quality_PercentStorageOptimised"))
                     qualityList.get(index).setPercentStorageOptimised(Integer.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Quality_UserRating"))

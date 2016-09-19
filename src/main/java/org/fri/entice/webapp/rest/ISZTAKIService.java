@@ -16,6 +16,9 @@ public interface ISZTAKIService {
     public Map<String, String> executeOptimizer(SZTAKIExecuteObj sztakiExecuteObj);
 
     @GET
+    public String deleteOptimizationJob(String entityID);
+
+    @GET
     public String getStatus(String optimizerID);
 
     @GET

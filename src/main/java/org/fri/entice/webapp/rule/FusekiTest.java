@@ -1,4 +1,4 @@
-package org.fri.entice.webapp.client;
+package org.fri.entice.webapp.rule;
 
 import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
 import com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory;
@@ -13,6 +13,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.reasoner.ValidityReport;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.vocabulary.RDFS;
+import org.apache.log4j.BasicConfigurator;
 import org.fri.entice.webapp.util.FusekiUtils;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -39,108 +40,21 @@ public class FusekiTest {
             ".Other\" ." + "}   ";
 
     public static void main(String[] args) {
-        //TODO: uncomment!!!
-        // validateOntology();
+         validateOntology();
 
-        //BasicConfigurator.configure();
-
-        /*
-        System.out.println(String.format("Adding %s", id));
-        UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(String.format(UPDATE_TEMPLATE,
-                id)), "http://localhost:3030/ds/update");
-        upp.execute();
-        */
-
-        /*
-        User user = new User(UUID.randomUUID().toString(), "sandi.gec@gmail.com", "Sandi Gec4", "444",
-                "+38631873088", "sandig4");
-
-        ClientConfig config = new ClientConfig().register(JacksonFeatures.class);
-        Client client = ClientBuilder.newClient(config);
-
-        user = new User(UUID.randomUUID().toString(), "sandokan@aa.com", "Sandokan G.", "pass1234", "090 000",
-                "testko");
-        WebTarget service = client.target("http://193.2.72.90:7070/JerseyREST/");
-        Response resp = service.path("rest").path("service").path("register_user").request().post(Entity.entity(user,
-                MediaType.APPLICATION_JSON_TYPE));
-
-
-        String insertStatementStr = FusekiUtils.generateInsertObjectStatement(user);
-        UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr),
-                "http://localhost:3030/entice/update");
-        */
-        //   if (Boolean.valueOf(resp.readEntity(String.class)))
-        //      System.out.println("User " + user.getFullName() + " added into the KB.");
-
-//        System.out.println("Jena Fuseki existing reasoners:");
-//        FusekiUtils.getAllReasoners();
+        BasicConfigurator.configure();
 
         reasonerTest();
-//        pelletTest();
 
+        pelletTest();
 
-   //     upp.execute();
-    //    System.out.println("User object added!");
-          /*
-        DiskImage diskImage = new DiskImage(UUID.randomUUID().toString(), ImageType.CI, "some description", "some " +
-                "title", "some predecessor..", FileFormat.IMG, "picture URL", false, "iriC", "123", 49.99, "333",
-                "43", "54",
-                "556", false, 5, true,"1.1",999);
-        insertStatementStr = FusekiUtils.generateInsertObjectStatement(diskImage);
-        upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr),
-                "http://localhost:3030/entice/update");
-        upp.execute();
-        System.out.println("DiskImage object added!");
-        */
-
-        /*
-        List<String> hashValue = new ArrayList();
-        hashValue.add("v1");
-        hashValue.add("v2");
-        hashValue.add("v3");
-        hashValue.add("v4");
-        hashValue.add("v5");
-        Fragment fragment = new Fragment(UUID.randomUUID().toString(),"referenceImageId2","repositoryID2","anyURI2",
-        32145,hashValue);
-
-        insertStatementStr = FusekiUtils.generateInsertObjectStatement(fragment);
-        upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr),
-                "http://localhost:3030/entice/update");
-        upp.execute();
-        System.out.println("Fragment object added!");
-        */
-
-        /*
-        Delivery delivery = new Delivery(UUID.randomUUID().toString(), "refUserId1", "refFucntionalityId1", 31232L,
-                "refRepositoryId1", "refDiskImageId1", 434234L);
-
-        insertStatementStr = FusekiUtils.generateInsertObjectStatement(delivery);
-        upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr),
-                "http://localhost:3030/entice/update");
-        upp.execute();
-        System.out.println("Delivery object added!");
-        */
-        /*
-        Functionality functionality = new Functionality(UUID.randomUUID().toString(), 12, "some tag1", "some name1",
-                "some description...1", "some input description1", "some otuput description1", "someRefImplId", "some" +
-                " domain");
-
-        insertStatementStr = FusekiUtils.generateInsertObjectStatement(functionality);
-        upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatementStr),
-                "http://localhost:3030/entice/update");
-        upp.execute();
-        System.out.println("Functionality object added!");
-        */
         String query = FusekiUtils.getAllUploadedImages(false);
 
-
         //Query the collection, dump output
-        /*
         QueryExecution qe = QueryExecutionFactory.sparqlService("http://localhost:3030/ds/query", query);
         ResultSet results = qe.execSelect();
         ResultSetFormatter.out(System.out, results);
         qe.close();
-        */
     }
 
     private static void validateOntology() {
@@ -159,16 +73,16 @@ public class FusekiTest {
 
     private static void pelletTest() {
         // ontology that will be used
-//        String ont = "http://www.mindswap.org/2004/owl/mindswappers";
-//        // create an empty ontology model using Pellet spec
-//        OntModel model = ModelFactory.createOntologyModel(PelletReasonerFactory.THE_SPEC);
-//
-//        // read the file
-//        model.read(ont);
-//
-//        // get the instances of a class
-//        OntClass Person = model.getOntClass("http://xmlns.com/foaf/0.1/Person");
-//        Iterator instances = Person.listInstances();
+        String ont = "http://www.mindswap.org/2004/owl/mindswappers";
+        // create an empty ontology model using Pellet spec
+        OntModel model = ModelFactory.createOntologyModel(PelletReasonerFactory.getInstance().getReasonerName());
+
+        // read the file
+        model.read(ont);
+
+        // get the instances of a class
+        OntClass Person = model.getOntClass("http://xmlns.com/foaf/0.1/Person");
+        Iterator instances = Person.listInstances();
     }
 
     private static String ns = "http://www.semanticweb.org/project-entice/ontologies/2015/7/knowledgebase#";
