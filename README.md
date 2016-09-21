@@ -1,5 +1,5 @@
 # wp5-kb-backend-api
-This is an Individual work package of Entice Knowledge Base backend API with various functionalities:
+This is an Individual work package of Entice Knowledge Base backend API developed by University of Ljubljana (UL), Slovenia  with various functionalities:
 
 - Jena Fuseki based Knowledge Base management,
 - integration with SZTAKI services,
