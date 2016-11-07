@@ -4,7 +4,7 @@
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     <display-name>Entice Restful Web Application</display-name>
     <listener>
-        <listener-class>org.fri.entice.webapp.rest.AppContextListener</listener-class>
+        <listener-class>org.ul.entice.webapp.rest.AppContextListener</listener-class>
     </listener>
 
     <servlet>
@@ -35,7 +35,7 @@
 
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.fri.entice.webapp.rest.ExampleApplication</param-value>
+            <param-value>org.ul.entice.webapp.rest.ExampleApplication</param-value>
         </init-param>
 
         <init-param>
@@ -59,7 +59,6 @@
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
-    <!--UNCOMMENT TO ENABLE APACHE SHIRO-->
     <listener>
         <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
     </listener>
