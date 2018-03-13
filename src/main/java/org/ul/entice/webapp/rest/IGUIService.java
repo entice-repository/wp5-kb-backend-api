@@ -1,13 +1,13 @@
 package org.ul.entice.webapp.rest;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.jclouds.javax.annotation.Nullable;
 import org.ul.entice.webapp.entry.Pareto;
 import org.ul.entice.webapp.entry.User;
 import org.ul.entice.webapp.entry.client.EnticeDetailedImage;
 import org.ul.entice.webapp.entry.client.ResponseObj;
 import org.ul.entice.webapp.entry.client.ResponseSynthesisObj;
 
-import javax.annotation.Nullable;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.Response;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 public interface IGUIService {
     @GET
-    public Map<String,String> performUserLogin(String username, String password);
+    public Map<String, String> performUserLogin(String username, String password);
 
     @GET
     public String performUserLogout(String sessionID);
@@ -32,14 +32,18 @@ public interface IGUIService {
     public Pareto getParetoStage2();
 
     @GET
+    public Pareto getParetoStage3();
+
+    @GET
     public Pareto getNewestPareto(int stage);
 
     // contentDispositionHeader == filename
     @POST
     public ResponseObj uploadImage(InputStream fileInputStream, FormDataContentDisposition contentDispositionHeader,
+                                   InputStream ovfInputStream, FormDataContentDisposition ovfDispositionHeader,
                                    InputStream functionalTestInputStream, FormDataContentDisposition
-                                               functionalTestDispositionHeader, List<String> categoryList, String
-                                               imageURL, String imageDescription, String imageName, int paretoPoint,
+                                           functionalTestDispositionHeader, List<String> categoryList, String
+                                           imageURL, String imageDescription, String imageName, int paretoPoint,
                                    String paretoPointId, int avatarID, String userID);
 
     //
@@ -61,7 +65,7 @@ public interface IGUIService {
     public ResponseSynthesisObj performImageSynthesis(String cloudID, String imageID, String instanceType, @Nullable String
             securityGroupID, @Nullable String subnetIDs, @Nullable String ssh, InputStream contextualisationStream,
                                                       InputStream functionalTestStream, int constraints, String
-                                                                  notifyEmail, long startTime, @Nullable int avatarID);
+                                                              notifyEmail, long startTime, @Nullable int avatarID);
 
     // imageSize, currentSize, startTime, table of restrictions (from for examples: hours to actual dates)
     @GET
@@ -69,7 +73,7 @@ public interface IGUIService {
 
     @GET
     public Object[] getEnticeImages(String title, String categoryId, int paginationPage, int hitsPerPage,
-                                             String order, boolean isDescendingSort);
+                                    String order, boolean isDescendingSort);
 
     @GET
     public EnticeDetailedImage getEnticeDetailedImage(String imageID);
@@ -78,8 +82,8 @@ public interface IGUIService {
         ADMINS ONLY
     */
     // Users can redistribute only their images, administrator can redistribute all images
-    @GET
-    public List<Pareto> getParetoDistribution(String username, String password, String imageID);
+//    @GET
+//    public List<Pareto> getParetoDistribution(String username, String password, String imageID);
 
     // Users can redistribute only their images, administrator can redistribute all images
     @GET

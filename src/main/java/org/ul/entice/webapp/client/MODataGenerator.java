@@ -38,35 +38,23 @@ public class MODataGenerator {
     private static int fragments = 0;
     private static List<DiskImage> diskImages = new ArrayList<DiskImage>();
     private static List<Repository> repositories = new ArrayList<Repository>();
-    private static final int cloudSize = 100;
+    private static final int cloudSize = 10;
 
     public static void main(String[] args) {
         try {
             final String PATH = "http://193.2.72.90:3030/entice-mo2/update";
 
-            final int repositorySize = 100;
-            final int diskImageSize = 500;
-            final int fragmentMaxSize = 1;
-            int historyDataMaxSize = 10000;  // usage history data where the delivery time you will calculate with the method that you already have
+            // 2.
+            // no fragments 8, no clouds 8 clouds, number of historical data: 80
+
+            final int repositorySize = 8;
+            final int diskImageSize = 10;
+            final int fragmentMaxSize = 8;
+            int historyDataMaxSize = 80;  // usage history data where the delivery time you will calculate with the method that you already have
+
 
             // get all centroids coordinates of all countries:
-           List<Geolocation> geolocationList =  readXMLFromFile("D:\\projects\\lpt\\entice-ul-api\\internal_work\\countryInfo.xml");
-
-//            BufferedReader br = new BufferedReader(new FileReader());
-//            try {
-//                StringBuilder sb = new StringBuilder();
-//                String line = br.readLine();
-//
-//                while (line != null) {
-//                    sb.append(line);
-//                    sb.append(System.lineSeparator());
-//                    line = br.readLine();
-//                    System.out.println(line);
-//                }
-//                String everything = sb.toString();
-//            } finally {
-//                br.close();
-//            }
+           List<Geolocation> geolocationList =  readXMLFromFile("\\internal_work\\countryInfo.xml");
 
             System.out.println("Started insertion..");
             long startTime = System.currentTimeMillis();
@@ -93,12 +81,10 @@ public class MODataGenerator {
                 upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
                 upp.execute();
 
-                // TODO: fill the data from amazon from cheaper to expensier (6 repos):
-                // https://aws.amazon.com/s3/pricing/
                 Repository repository = new Repository(UUID.randomUUID().toString(), geolocationList.get(i).getId(), "http://www" +
                         ".example" + "" +
                         ".org/interfaceEndpoint", 0.0275 + Math.random() * 0.0133, 0.0374 + Math.random() * 0.0034,
-                        0.0374 + Math.random() * 0.0034, 50 + Math.random() * 100, supportedFormats);
+                        0.0374 + Math.random() * 0.0034, 50 + Math.random() * 100, supportedFormats,Math.random() * 0.7 + 99.3);
                 repositories.add(repository);
                 insertStatement = FusekiUtils.generateInsertObjectStatement(repository);
                 upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
@@ -156,27 +142,23 @@ public class MODataGenerator {
                     if (Math.random() < 0.5) hashValue.add("b");
                     if (Math.random() < 0.5) hashValue.add("c");
                     if (Math.random() < 0.5) hashValue.add("d");
+
+                    //generate replication data for every fragment:
+                    List<String> refReplicas = new ArrayList<>();
+                    for (Repository repository : repositories)
+                        if (Math.random() < 0.3)
+                            refReplicas.add(repository.getId());
+
+                    if(refReplicas.size() == 0)
+                        refReplicas = null;
+
                     Fragment fragment = new Fragment(UUID.randomUUID().toString(), diskImage.getId(), repositories
                             .get((int) (Math.random() * repositorySize)).getId(), "http://www" + ".example.org/do",
-                            diskImage.getDiskImageSize(), hashValue, historyDataList);
+                            diskImage.getDiskImageSize(), hashValue, historyDataList, refReplicas, randomWithRange(0,10));
                     insertStatement = FusekiUtils.generateInsertObjectStatement(fragment);
                     upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
                     upp.execute();
                     fragments++;
-
-                    // 20 % of the cases the fragments to be transferred with a theoretical speed of 10 Gbit/s. In
-                    // reality
-                    // that is like between 812 and 937 Mbyte/s. So if the fragment size is 500 Mbyte, for 937
-                    // Mbytes/s the
-                    // delivery time will be 0.5336second.
-
-                    // 40 % of the cases the fragments to be transferred through an overloaded 10gibit network with a
-                    // speed of
-                    // 437 to 562 Mbytes. So for 500 Mbyte fragment the minimal transfer time would be 0.8896 seconds.
-
-                    // 40% of the cases the fragments to be transferred through 1gibit network with a speed of 87 to
-                    // 100 Mbyts
-                    // per second. So for 500 Mbyte fragment the minimal transfer time would 5 seconds.
 
                     // --- DELIVERY
                     for (int k = 0; k < fragmentMaxSize; k++) {
@@ -216,8 +198,6 @@ public class MODataGenerator {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(fXmlFile);
 
-            //optional, but recommended
-            //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
             doc.getDocumentElement().normalize();
 
             System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
@@ -244,13 +224,6 @@ public class MODataGenerator {
                             .getTextContent())) / 2.0, (Double.valueOf(eElement.getElementsByTagName("south").item(0)
                             .getTextContent()) + Double.valueOf(eElement.getElementsByTagName("north").item(0)
                             .getTextContent())) / 2.0, 1, ""));
-//                    System.out.println("Country name: " + eElement.getAttribute("countryName"));
-//                    System.out.println("Country name: " + eElement.getElementsByTagName("countryName").item(0)
-// .getTextContent());
-//                    System.out.println("west: " + eElement.getElementsByTagName("west").item(0).getTextContent());
-//                    System.out.println("north: " + eElement.getElementsByTagName("north").item(0).getTextContent());
-//                    System.out.println("east: " + eElement.getElementsByTagName("east").item(0).getTextContent());
-//                    System.out.println("south: " + eElement.getElementsByTagName("south").item(0).getTextContent());
                 }
             }
         } catch (Exception e) {
@@ -260,19 +233,11 @@ public class MODataGenerator {
     }
 
     private static String generateCloudValue() {
-         return "cloud" + 1 + (int)(Math.random() * ((cloudSize - 1) + 1));
+        return "cloud" + (int) (1 + (Math.random() * ((cloudSize - 1) + 1)));
     }
 
     public static int randomWithRange(int min, int max) {
         int range = (max - min) + 1;
         return (int) (Math.random() * range) + min;
     }
-
-//    [7:30:31] Dragi  Kimovski: 1. 100 repositories (so we can change from 10-100)
-//    2. 100 Destination clouds
-//    3. 500 fragments/images
-//    4. 10000 usage history data where the delivery time you will calculate with the method that you already have
-//    [7:30:47] Dragi  Kimovski: now I’m currently working on how to measure the quality of the solutions
-//    [7:31:39] Dragi  Kimovski: please prepare a method throu which we can select 10 or 20 repositories out of 100 so we can test them
-//    [7:31:59] Dragi  Kimovski: and for example the history usage data to take into account those changes
 }

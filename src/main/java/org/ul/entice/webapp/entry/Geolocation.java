@@ -17,6 +17,9 @@ public class Geolocation extends MyEntry {
         super(id);
     }
 
+    public Geolocation() {
+    }
+
     public Geolocation(String id, String countryName,String countryNameShort, String continent, double latitude, double longitude, double
             altitude, String timezone) {
         super(id);

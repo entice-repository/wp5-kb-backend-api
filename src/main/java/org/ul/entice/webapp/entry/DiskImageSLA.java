@@ -24,6 +24,9 @@ public class DiskImageSLA {
         this.securedDelivery = securedDelivery;
     }
 
+    public DiskImageSLA() {
+    }
+
     public String getId() {
         return id;
     }

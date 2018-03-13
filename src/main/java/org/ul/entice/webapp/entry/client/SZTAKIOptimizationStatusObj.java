@@ -30,6 +30,17 @@ public class SZTAKIOptimizationStatusObj {
         this.id = id;
     }
 
+    public SZTAKIOptimizationStatusObj(String id, long started, String status, String optimizerPhase,
+                                       long originalImageSize, long optimizedImageSize, String failure) {
+        this.id = id;
+        this.started = started;
+        this.status = status;
+        this.optimizerPhase = optimizerPhase;
+        this.originalImageSize = originalImageSize;
+        this.optimizedImageSize = optimizedImageSize;
+        this.failure = failure;
+    }
+
     public String getId() {
         return id;
     }

@@ -20,6 +20,9 @@ public class ImageObj {
         this.optimize = optimize;
     }
 
+    public ImageObj() {
+    }
+
     public String getFilename(){
         return filename;
     }

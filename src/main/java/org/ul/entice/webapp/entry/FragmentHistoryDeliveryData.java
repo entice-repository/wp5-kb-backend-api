@@ -17,15 +17,21 @@ public class FragmentHistoryDeliveryData extends MyEntry {
     private String refImageId;
     private Long queryTime; //request time to be deployed
     private Long deploymentTime;    // time taken to be deployed (ms)
-//    private Long endDeploymentTime;
+    //    private Long endDeploymentTime;
     private String refRepositoryId;
     private String destinationCloudLocationURL;
+    private int copyIdentification;
 
     public FragmentHistoryDeliveryData(String id) {
         super(id);
     }
 
-    public FragmentHistoryDeliveryData(String historyFragmentID, String fragmentId, String refImageId, Long queryTime, Long deploymentTime, String refRepositoryId, String destinationCloudLocationURL) {
+    public FragmentHistoryDeliveryData() {
+    }
+
+    public FragmentHistoryDeliveryData(String historyFragmentID, String fragmentId, String refImageId, Long queryTime,
+                                       Long deploymentTime, String refRepositoryId, String destinationCloudLocationURL,
+                                       int copyIdentification) {
         super(historyFragmentID);
         this.fragmentId = fragmentId;
         this.refImageId = refImageId;
@@ -34,6 +40,7 @@ public class FragmentHistoryDeliveryData extends MyEntry {
 //        this.endDeploymentTime = endDeploymentTime;
         this.refRepositoryId = refRepositoryId;
         this.destinationCloudLocationURL = destinationCloudLocationURL;
+        this.copyIdentification = copyIdentification;
     }
 
     public Long getQueryTime() {
@@ -82,5 +89,13 @@ public class FragmentHistoryDeliveryData extends MyEntry {
 
     public void setFragmentId(String fragmentId) {
         this.fragmentId = fragmentId;
+    }
+
+    public int getCopyIdentification() {
+        return copyIdentification;
+    }
+
+    public void setCopyIdentification(int copyIdentification) {
+        this.copyIdentification = copyIdentification;
     }
 }

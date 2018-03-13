@@ -14,6 +14,8 @@ public class User extends MyEntry {
     public User(String id){
         super(id);
     }
+    public User(){
+    }
 
     public User(String id, String email, String fullName, String password, String phoneNumber, String username, int groupID) {
         super(id);

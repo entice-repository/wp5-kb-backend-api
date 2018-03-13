@@ -27,7 +27,7 @@ public class UIBKDataGenerator {
     public static void main(String[] args) {
         try {
 //            final String PATH = "http://193.2.72.90:3030/entice/update";
-            final String PATH = "http://193.2.72.90:3030/entice/update";
+            final String PATH = "http://193.2.72.90:3030/entice-review1/update";
 
             final int repositorySize = 4;
             final int diskImageSize = 8;
@@ -38,10 +38,12 @@ public class UIBKDataGenerator {
             long startTime = System.currentTimeMillis();
 
             // insert some dummy User data
-            User user = new User(UUID.randomUUID().toString(), "sandi.gec@gmail.com", "Sandi Gec", "444", "112", "sandi",1);
+            User user = new User(UUID.randomUUID().toString(), "optimizer@entice.com", "Optimizer service", "opt123", "", "optimizer",1);
+//            User user = new User(UUID.randomUUID().toString(), "sandi.gec@gmail.com", "Sandi Gec", "444", "112", "sandi",1);
             String insertStatement = FusekiUtils.generateInsertObjectStatement(user);
             UpdateProcessor upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
-//            upp.execute();
+            upp.execute();
+            upp.execute();
 //
 //            user = new User(UUID.randomUUID().toString(), "some@email.com", "Dragi Kimovski", "pass", "112", "dragi");
 //            insertStatement = FusekiUtils.generateInsertObjectStatement(user);
@@ -86,7 +88,7 @@ public class UIBKDataGenerator {
                 Repository repository = new Repository(UUID.randomUUID().toString(), "geolocationID", "http://www" +
                         ".example" + "" +
                         ".org/interfaceEndpoint", 0.0275 + Math.random() * 0.0133, 0.0374 + Math.random() * 0.0034,
-                        0.0374 + Math.random() * 0.0034, 50 + Math.random() * 100, supportedFormats);
+                        0.0374 + Math.random() * 0.0034, 50 + Math.random() * 100, supportedFormats,99.9);
                 repositories.add(repository);
                 insertStatement = FusekiUtils.generateInsertObjectStatement(repository);
                 upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
@@ -138,7 +140,7 @@ public class UIBKDataGenerator {
                     if (Math.random() < 0.5) hashValue.add("d");
                     Fragment fragment = new Fragment(UUID.randomUUID().toString(), diskImage.getId(), repositories
                             .get((int) (Math.random() * repositorySize)).getId(), "http://www" + ".example.org/do",
-                            200 + (int) (Math.random() * 300), hashValue, historyDataList);
+                            200 + (int) (Math.random() * 300), hashValue, historyDataList, null,0);
                     insertStatement = FusekiUtils.generateInsertObjectStatement(fragment);
                     upp = UpdateExecutionFactory.createRemote(UpdateFactory.create(insertStatement), PATH);
                     upp.execute();

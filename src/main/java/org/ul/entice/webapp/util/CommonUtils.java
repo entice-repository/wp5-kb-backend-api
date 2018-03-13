@@ -2,9 +2,10 @@ package org.ul.entice.webapp.util;
 
 import org.joda.time.DateTime;
 import org.ul.common.rest.IService;
+import org.ul.entice.webapp.client.PackageEvalObj;
 import org.ul.entice.webapp.entry.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -24,39 +25,38 @@ public class CommonUtils implements IService {
     }
 
 
-    public static void mapResultObjectToEntry(List<?> list, ResultObj resultObj, Class clazz,IService service) {
+    public static void mapResultObjectToEntry(List<?> list, ResultObj resultObj, Class clazz, IService service) {
         try {
 //            if (list.size() == 0) return;
 
-            int index = getIndex((List<MyEntry>)list,resultObj.getS(), clazz);
+            int index = getIndex((List<MyEntry>) list, resultObj.getS(), clazz);
 
             if (list.get(index) instanceof Repository) {
                 List<Repository> repositoryList = (List<Repository>) list;
-                if (resultObj.getP().endsWith("Repository_GeoLocation")){
+                if (resultObj.getP().endsWith("Repository_GeoLocation")) {
                     final String geolocationID = resultObj.getO();
                     repositoryList.get(index).setGeolocationId(resultObj.getO());
-                    if(geolocationID != null && geolocationID.length() > 0){
-                        repositoryList.get(index).setGeolocation(FusekiUtils.getAllEntityAttributes(Geolocation.class,service, geolocationID).get(0));
+                    if (geolocationID != null && geolocationID.length() > 0) {
+                        repositoryList.get(index).setGeolocation(FusekiUtils.getAllEntityAttributes(Geolocation.class, service, geolocationID).get(0));
                     }
-                }
-                else if (resultObj.getP().endsWith("Repository_InterfaceEndPoint"))
+                } else if (resultObj.getP().endsWith("Repository_InterfaceEndPoint"))
                     repositoryList.get(index).setInterfaceEndpoint(resultObj.getO());
                 else if (resultObj.getP().endsWith("Repository_OperationalCost"))
                     repositoryList.get(index).setOperationalCost(Double.valueOf(resultObj.getO()));
-                else if (resultObj.getP().endsWith("Repository_StorageLevelCost") || resultObj.getP().endsWith("Repository_PriorityLevel1Cost")){
+                else if (resultObj.getP().endsWith("Repository_StorageLevelCost") || resultObj.getP().endsWith("Repository_PriorityLevel1Cost")) {
                     repositoryList.get(index).setStorageLevelCost(Double.valueOf(resultObj.getO()));
                     repositoryList.get(index).setPriorityLevel1Cost(Double.valueOf(resultObj.getO
                             ()));
-                }
-                else if (resultObj.getP().endsWith("Repository_Space"))
+                } else if (resultObj.getP().endsWith("Repository_Space"))
                     repositoryList.get(index).setSpace(Double.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Repository_Availability"))
+                    repositoryList.get(index).setAvailability(Double.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Repository_SupportedFormat"))
                     repositoryList.get(index).setSupportedFormat(resultObj.getO());
                 else if (resultObj.getP().endsWith("Repository_TheoreticalCommunicationalPerformance"))
                     repositoryList.get(index).setTheoreticalCommunicationalPerformance(Double
                             .valueOf(resultObj.getO()));
-            }
-            else if (list.get(index) instanceof DiskImage) {
+            } else if (list.get(index) instanceof DiskImage) {
                 List<DiskImage> diskImageList = (List<DiskImage>) list;
 
                 if (resultObj.getO().endsWith("CI"))
@@ -105,20 +105,20 @@ public class CommonUtils implements IService {
                     diskImageList.get(index).setParetoPointX(Integer.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("DiskImage_ParetoPointY"))
                     diskImageList.get(index).setParetoPointY(Integer.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("DiskImage_OvfURL"))
+                    diskImageList.get(index).setOvfUrl(resultObj.getO());
                 else if (resultObj.getP().endsWith("DiskImage_Pareto"))
                     diskImageList.get(index).setParetoId(resultObj.getO());
                 else if (resultObj.getP().endsWith("DiskImage_Repository")) {
                     String repositoryID = resultObj.getO();
                     diskImageList.get(index).setRepositoryID(repositoryID);
-                    if(repositoryID != null && !repositoryID.equals("null") && repositoryID.length() > 2){
+                    if (repositoryID != null && !repositoryID.equals("null") && repositoryID.length() > 2) {
                         diskImageList.get(index).setRepository(FusekiUtils
-                                .getAllEntityAttributes(Repository.class,service, repositoryID).get(0));
+                                .getAllEntityAttributes(Repository.class, service, repositoryID).get(0));
                     }
-                }
-                else if (resultObj.getP().endsWith("DiskImage_Categories"))
+                } else if (resultObj.getP().endsWith("DiskImage_Categories"))
                     diskImageList.get(index).setCategoriesFromString(resultObj.getO());
-            }
-            else if (list.get(index) instanceof Fragment) {
+            } else if (list.get(index) instanceof Fragment) {
                 List<Fragment> fragmentList = (List<Fragment>) list;
                 if (resultObj.getP().endsWith("Fragment_hasReferenceImage"))
                     fragmentList.get(index).setRefDiskImageId(resultObj.getO().replaceFirst
@@ -127,12 +127,17 @@ public class CommonUtils implements IService {
                     fragmentList.get(index).setRefRepositoryId(resultObj.getO());
                 else if (resultObj.getP().endsWith("Fragment_Size"))
                     fragmentList.get(index).setFragmentSize(Integer.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Fragment_CopyIdentification"))
+                    fragmentList.get(index).setCopyIdentification(Integer.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Fragment_IRI"))
                     fragmentList.get(index).setAnyURI(resultObj.getO());
                 else if (resultObj.getP().endsWith("Fragment_HashValues"))
                     fragmentList.get(index).setHashValue(resultObj.getO());
-            }
-            else if (list.get(index) instanceof RecipeBuild) {
+//                else if (resultObj.getP().endsWith("hasHistoryData"))
+//                    fragmentList.get(index).setHistoryDataList(resultObj.getO());   //TODO
+                else if (resultObj.getP().endsWith("Fragment_refReporeplicas"))
+                    fragmentList.get(index).getRefReporeplicas().add(resultObj.getO());
+            } else if (list.get(index) instanceof RecipeBuild) {
                 List<RecipeBuild> recipeBuilds = (List<RecipeBuild>) list;
                 if (resultObj.getP().endsWith("RecipeBuild_Message"))
                     recipeBuilds.get(index).setMessage(resultObj.getO());
@@ -146,29 +151,25 @@ public class CommonUtils implements IService {
                     recipeBuilds.get(index).setSize(Long.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("RecipeBuild_URL"))
                     recipeBuilds.get(index).setUrl(resultObj.getO());
-            }
-
-//            false ;
-//            knowledgebase:Quality_JobID  "" ;
-//            knowledgebase:Quality_MaxNumberOfVMs
-//            1 ;
-//            knowledgebase:
-//            0 ;
-//            knowledgebase:
-//                    -1 ;
-//            knowledgebase:
-//            0 ;
-//            knowledgebase:
-//            0 ;
-//            knowledgebase:
-//            0 ;
-//            knowledgebase:
-//            0 ;
-//            knowledgebase:
-//            1 ;
-//            knowledgebase:
-//            36000 .
-            else if (list.get(index) instanceof Quality) {
+            } else if (list.get(index) instanceof Redistribution) {
+                List<Redistribution> redistributionList = (List<Redistribution>) list;
+                if (resultObj.getP().endsWith("Redistribution_RepositoryID"))
+                    redistributionList.get(index).setRepositoryID(resultObj.getO());
+                else if (resultObj.getP().endsWith("Redistribution_RepositoryName"))
+                    redistributionList.get(index).setRepositoryName(resultObj.getO());
+                else if (resultObj.getP().endsWith("Redistribution_VmiName"))
+                    redistributionList.get(index).setVmiName(resultObj.getO());
+                else if (resultObj.getP().endsWith("Redistribution_RedistributionURI"))
+                    redistributionList.get(index).setRedistributionURI(resultObj.getO());
+                else if (resultObj.getP().endsWith("Redistribution_SaveTime")) {
+                    try {
+                        redistributionList.get(index).setSaveTime(new DateTime(resultObj.getO()).getMillis());
+                    } catch (Exception e) {
+                        redistributionList.get(index).setSaveTime(Long.valueOf(resultObj.getO()));
+                    }
+                } else if (resultObj.getP().endsWith("Redistribution_RedistributionTimeInSeconds"))
+                    redistributionList.get(index).setRedistributionTimeInSeconds(Integer.valueOf(resultObj.getO()));
+            } else if (list.get(index) instanceof Quality) {
                 List<Quality> qualityList = (List<Quality>) list;
                 if (resultObj.getP().endsWith("Quality_AimedReductionRatio"))
                     qualityList.get(index).setAimedReductionRatio(Double.valueOf(resultObj.getO()));
@@ -180,14 +181,13 @@ public class CommonUtils implements IService {
                     qualityList.get(index).setMaxNumberOfVMs(Short.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Quality_IsUpdateNecessary"))
                     qualityList.get(index).setIsUpdateNecessary(Boolean.valueOf(resultObj.getO()));
-                else if (resultObj.getP().endsWith("Quality_OptimizedSize")){
-                    try{
-                    qualityList.get(index).setOptimizedSize(Long.valueOf(resultObj.getO()));
-                    }catch (Exception e) {
+                else if (resultObj.getP().endsWith("Quality_OptimizedSize")) {
+                    try {
+                        qualityList.get(index).setOptimizedSize(Long.valueOf(resultObj.getO()));
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
-                else if (resultObj.getP().endsWith("Quality_PercentStorageOptimised"))
+                } else if (resultObj.getP().endsWith("Quality_PercentStorageOptimised"))
                     qualityList.get(index).setPercentStorageOptimised(Integer.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Quality_UserRating"))
                     qualityList.get(index).setUserRating(Integer.valueOf(resultObj.getO()));
@@ -201,16 +201,19 @@ public class CommonUtils implements IService {
                     qualityList.get(index).setMaxRunningTime(Long.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Quality_JobID"))
                     qualityList.get(index).setJobID(resultObj.getO());
-            }
-//            "knowledgebase:Functionality_hasImplementation \"%s\" ;\n" +
-//                    "knowledgebase:Functionality_Classification \"%s\" ;\n" +
-//                    "knowledgebase:Functionality_Description \"%s\" ;\n" +
-//                    "knowledgebase:Functionality_Domain \"%s\" ;\n" +
-//                    "knowledgebase:Functionality_InputDescription \"%s\" ;\n" +
-//                    "knowledgebase:Functionality_Name \"%s\" ;\n" +
-//                    "knowledgebase:Functionality_OutputDescription \"%s\" ;\n" +
-//                    "knowledgebase:Functionality_Tag \"%s\" ;\n" +
-            else if (list.get(index) instanceof Functionality) {
+                else if (resultObj.getP().endsWith("Quality_Started"))
+                    qualityList.get(index).setStarted(Long.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_Status"))
+                    qualityList.get(index).setStatus(resultObj.getO());
+                else if (resultObj.getP().endsWith("Quality_OptimizerPhase"))
+                    qualityList.get(index).setOptimizerPhase(resultObj.getO());
+                else if (resultObj.getP().endsWith("Quality_OriginalImageSize"))
+                    qualityList.get(index).setOriginalImageSize(Long.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_OptimizedImageSize"))
+                    qualityList.get(index).setOptimizedImageSize(Long.valueOf(resultObj.getO()));
+                else if (resultObj.getP().endsWith("Quality_Failure"))
+                    qualityList.get(index).setFailure(resultObj.getO());
+            } else if (list.get(index) instanceof Functionality) {
                 List<Functionality> functionalityList = (List<Functionality>) list;
                 if (resultObj.getP().endsWith("Functionality_hasImplementation"))
                     functionalityList.get(index).setRefImplementationId(resultObj.getO().replaceFirst(FusekiUtils
@@ -229,8 +232,7 @@ public class CommonUtils implements IService {
                     functionalityList.get(index).setOutputDescription(resultObj.getO());
                 else if (resultObj.getP().endsWith("Functionality_Tag"))
                     functionalityList.get(index).setTag(resultObj.getO());
-            }
-            else if (list.get(index) instanceof Delivery) {
+            } else if (list.get(index) instanceof Delivery) {
                 List<Delivery> deliveryList = (List<Delivery>) list;
                 if (resultObj.getP().endsWith("Delivery_hasDeliveredDiskImage"))
                     deliveryList.get(index).setRefDiskImageId(resultObj.getO());
@@ -246,8 +248,7 @@ public class CommonUtils implements IService {
                     deliveryList.get(index).setRequestTime(Long.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Delivery_TargetCloud"))
                     deliveryList.get(index).setTargetCloud(resultObj.getO());
-            }
-            else if (list.get(index) instanceof Geolocation) {
+            } else if (list.get(index) instanceof Geolocation) {
                 List<Geolocation> geolocationList = (List<Geolocation>) list;
                 if (resultObj.getP().endsWith("GeoLocation_CountryName"))
                     geolocationList.get(index).setCountryName(resultObj.getO());
@@ -262,19 +263,11 @@ public class CommonUtils implements IService {
                     if (val.contains("^^http://www.w3.org/2001/XMLSchema#double"))
                         val = val.replace("^^http://www.w3.org/2001/XMLSchema#double", "").replaceAll("\"", "");
                     geolocationList.get(index).setLongitude(Double.valueOf(val));
-                }
-                else if (resultObj.getP().endsWith("GeoLocation_Altitude"))
+                } else if (resultObj.getP().endsWith("GeoLocation_Altitude"))
                     geolocationList.get(geolocationList.size() - 1).setAltitude(Double.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("GeoLocation_Timezone"))
                     geolocationList.get(index).setTimezone(resultObj.getO());
-            }
-//            "     knowledgebase:User_Email        \"%s\" ;\n" +
-//                    "        knowledgebase:User_FullName     \"%s\" ;\n" +
-//                    "        knowledgebase:User_PhoneNumber  \"%s\" ;\n" +
-//                    "        knowledgebase:User_UserName     \"%s\" ;" +
-//                    "        knowledgebase:User_Password     \"%s\" ;" +
-//                    "        knowledgebase:User_Privilege     \"%s\" ;" +
-            else if (list.get(index) instanceof User) {
+            } else if (list.get(index) instanceof User) {
                 List<User> userList = (List<User>) list;
                 if (resultObj.getP().endsWith("User_Email")) userList.get(index).setEmail(resultObj.getO());
                 else if (resultObj.getP().endsWith("User_FullName")) userList.get(index).setFullName(resultObj.getO());
@@ -284,8 +277,7 @@ public class CommonUtils implements IService {
                 else if (resultObj.getP().endsWith("User_Password")) userList.get(index).setPassword(resultObj.getO());
                 else if (resultObj.getP().endsWith("User_Privilege"))
                     userList.get(index).setGroupID(Integer.valueOf(resultObj.getO()));
-            }
-            else if (list.get(index) instanceof HistoryData) {
+            } else if (list.get(index) instanceof HistoryData) {
                 List<HistoryData> historyDataList = (List<HistoryData>) list;
                 if (resultObj.getP().endsWith("HistoryData_Location"))
                     historyDataList.get(index).setLocation(resultObj.getO());
@@ -295,14 +287,15 @@ public class CommonUtils implements IService {
                     historyDataList.get(index).setValidTo(new DateTime(resultObj.getO()).getMillis());
                 else if (resultObj.getP().endsWith("HistoryData_Value"))
                     historyDataList.get(index).setValue(resultObj.getO());
-            }
-            else if (list.get(index) instanceof Pareto) {
+            } else if (list.get(index) instanceof Pareto) {
                 List<Pareto> paretoList = (List<Pareto>) list;
 
                 if (resultObj.getP().endsWith("Pareto_Objectives"))
                     paretoList.get(index).setTableValuesFromString(resultObj.getO(), Double.class);
                 else if (resultObj.getP().endsWith("Pareto_Variables"))
                     paretoList.get(index).setTableValuesFromString(resultObj.getO(), Integer.class);
+                else if (resultObj.getP().endsWith("Pareto_Replications"))
+                    paretoList.get(index).setOneDimensionTableValuesFromString(resultObj.getO());
                 else if (resultObj.getP().endsWith("Pareto_Stage"))
                     paretoList.get(index).setStage(Integer.valueOf(resultObj.getO()));
                 else if (resultObj.getP().endsWith("Pareto_Create_Date")) {
@@ -312,8 +305,15 @@ public class CommonUtils implements IService {
                         e.printStackTrace();    //remove after new reimport
                     }
                 }
-            }
-            else {
+            } else if (list.get(index) instanceof PackageEvalObj) {
+                List<PackageEvalObj> packageEvalObjs = (List<PackageEvalObj>) list;
+
+                if(resultObj.getS() == null)
+                    return;
+
+                if (resultObj.getP().endsWith("Package_Name"))
+                    packageEvalObjs.get(index).setName(resultObj.getO());
+            } else {
                 throw new UnsupportedOperationException("The mapping is not implemented for this class! ! " + list
                         .get(index).getClass());
             }
@@ -327,14 +327,17 @@ public class CommonUtils implements IService {
 //        Set<String> ids = new HashSet<>();
         for (MyEntry entry : entryList) {
 //            ids.add(entry.getId());
-            if (entry.getId().contains(id)) return i;
+            if (entry.getId().contains("85265b06-00fd-4e9f-8c7a-fdb542862649"))
+                System.out.println();
+            if (entry.getId().contains(id))
+                return i;
             i++;
         }
 
 //        System.out.println("ID ne obstaja!!! "+ id);
 //
         entryList.add(EntryFactory.getInstance(clazz, id));
-        return entryList.size()-1;
+        return entryList.size() - 1;
     }
 
     public static String readFile(String path, Charset encoding) throws IOException {
@@ -349,12 +352,34 @@ public class CommonUtils implements IService {
             ucon = uri.openConnection();
             ucon.connect();
             final String contentLengthStr = ucon.getHeaderField("content-length");
-            return (int)(Long.valueOf(contentLengthStr) / 1024);
+            return (int) (Long.valueOf(contentLengthStr) / 1024);
         } catch (final IOException e1) {
             e1.getMessage();
             return -1;
         }
     }
+
+    // save uploaded file to a defined location on the server
+    public static void saveFile(InputStream uploadedInputStream, String serverLocation) {
+
+        try {
+            OutputStream outpuStream = new FileOutputStream(new File(serverLocation));
+
+            int read;
+            byte[] bytes = new byte[1024];
+
+            while ((read = uploadedInputStream.read(bytes)) != -1) {
+                outpuStream.write(bytes, 0, read);
+            }
+            outpuStream.flush();
+            outpuStream.close();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
+    }
+
 
     @Override
     public String getFusekiQuery() {

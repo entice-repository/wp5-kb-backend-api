@@ -20,9 +20,11 @@ public class Fragment extends MyEntry {
     private List<String> hashValue = new ArrayList<String>(10);
 
     private List<HistoryData> historyDataList;
+    private List<String> refReporeplicas = new ArrayList<>();    // reference to the repository
+    private int copyIdentification;
 
     public Fragment(String id, String refDiskImageId, String refRepositoryId, String anyURI, int fragmentSize,
-                    List<String> hashValue, List<HistoryData> historyDataList) {
+                    List<String> hashValue, List<HistoryData> historyDataList, List<String> refReporeplicas, int copyIdentification) {
         super(id);
         this.refDiskImageId = refDiskImageId;
         this.refRepositoryId = refRepositoryId;
@@ -30,10 +32,15 @@ public class Fragment extends MyEntry {
         this.fragmentSize = fragmentSize;
         this.hashValue = hashValue;
         this.historyDataList = historyDataList;
+        this.refReporeplicas = refReporeplicas;
+        this.copyIdentification = copyIdentification;
     }
 
     public Fragment(String id) {
         super(id);
+    }
+
+    public Fragment() {
     }
 
     public String getRefDiskImageId() {
@@ -88,5 +95,21 @@ public class Fragment extends MyEntry {
 
     public void setHistoryDataList(List<HistoryData> historyDataList) {
         this.historyDataList = historyDataList;
+    }
+
+    public List<String> getRefReporeplicas() {
+        return refReporeplicas;
+    }
+
+    public void setRefReporeplicas(List<String> refReporeplicas) {
+        this.refReporeplicas = refReporeplicas;
+    }
+
+    public int getCopyIdentification() {
+        return copyIdentification;
+    }
+
+    public void setCopyIdentification(int copyIdentification) {
+        this.copyIdentification = copyIdentification;
     }
 }

@@ -20,10 +20,9 @@ import java.util.Map;
 
 public class UibkService implements IUibkService {
 
-    public static final String WS_URL = "https://goedis.dps.uibk.ac.at:7070/WebServicesRepo/add?wsdl";
 
     @Override
-    public boolean addInterface(File vmImage) {
+    public boolean addInterface(File vmImage, String wsURL) {
         try {
             AddVMIImplementationService client = new AddVMIImplementationService();
             AddVMIImplementation service = client.getAddVMIImplementationPort(new MTOMFeature(10240));
@@ -31,7 +30,7 @@ public class UibkService implements IUibkService {
             BindingProvider provider = (BindingProvider) service;
             Map<String, Object> req_ctx = provider.getRequestContext();
 
-            req_ctx.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, WS_URL);
+            req_ctx.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, wsURL);
             Map<String, List<String>> headers = new HashMap<String, List<String>>();
 
 		/*

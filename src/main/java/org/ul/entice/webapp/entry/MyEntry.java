@@ -4,6 +4,9 @@ package org.ul.entice.webapp.entry;
 public abstract class MyEntry {
     private String id;
 
+    public MyEntry() {
+    }
+
     public MyEntry(String id) {
         this.id = id;
     }
@@ -15,6 +18,4 @@ public abstract class MyEntry {
     public void setId(String id) {
         this.id = id;
     }
-
-
 }

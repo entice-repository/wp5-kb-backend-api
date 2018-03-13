@@ -4,8 +4,11 @@ import java.util.List;
 
 public class Quality extends MyEntry {
 
+    //deprecated
     private long aimedSize;
+    //deprecated
     private long optimizedSize;
+
     private int percentStorageOptimised;    //(0-100)
     private boolean functionalityTested;
     private int userRating;     //(0-5)
@@ -20,12 +23,22 @@ public class Quality extends MyEntry {
     private short maxNumberOfVMs;
     private String jobID;
 
+    private long started;
+    private String status;
+    private String optimizerPhase;
+    private long originalImageSize;
+    private long optimizedImageSize;
+    private String failure;
+
     private List<String> resultList;
 
     public Quality(String id) {
         super(id);
     }
+    public Quality() {
+    }
 
+    // version 1
     public Quality(String id, long aimedSize, long optimizedSize, int percentStorageOptimised, boolean
             functionalityTested, int userRating, boolean isUpdateNecessary, boolean isOptimizationNecessary, int
             numberOfDownloads, int maxIterationsNum, int actualIterationsNum, double aimedReductionRatio, long
@@ -48,6 +61,20 @@ public class Quality extends MyEntry {
         this.resultList = resultList;
         jobID = "";
     }
+
+    // version 2
+    public Quality(String id, long started, String status, String optimizerPhase,
+                                       long originalImageSize, long optimizedImageSize, String failure, String jobID) {
+        super(id);
+        this.started = started;
+        this.status = status;
+        this.optimizerPhase = optimizerPhase;
+        this.originalImageSize = originalImageSize;
+        this.optimizedImageSize = optimizedImageSize;
+        this.failure = failure;
+        this.jobID = jobID;
+    }
+
 
     public long getOptimizedSize() {
         return optimizedSize;
@@ -179,5 +206,61 @@ public class Quality extends MyEntry {
 
     public long getAimedSize() {
         return aimedSize;
+    }
+
+    public void setUpdateNecessary(boolean updateNecessary) {
+        isUpdateNecessary = updateNecessary;
+    }
+
+    public void setOptimizationNecessary(boolean optimizationNecessary) {
+        isOptimizationNecessary = optimizationNecessary;
+    }
+
+    public long getStarted() {
+        return started;
+    }
+
+    public void setStarted(long started) {
+        this.started = started;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getOptimizerPhase() {
+        return optimizerPhase;
+    }
+
+    public void setOptimizerPhase(String optimizerPhase) {
+        this.optimizerPhase = optimizerPhase;
+    }
+
+    public long getOriginalImageSize() {
+        return originalImageSize;
+    }
+
+    public void setOriginalImageSize(long originalImageSize) {
+        this.originalImageSize = originalImageSize;
+    }
+
+    public long getOptimizedImageSize() {
+        return optimizedImageSize;
+    }
+
+    public void setOptimizedImageSize(long optimizedImageSize) {
+        this.optimizedImageSize = optimizedImageSize;
+    }
+
+    public String getFailure() {
+        return failure;
+    }
+
+    public void setFailure(String failure) {
+        this.failure = failure;
     }
 }

@@ -17,6 +17,9 @@ public class HistoryData extends MyEntry implements Comparable<HistoryData> {
         super(id);
     }
 
+    public HistoryData() {
+    }
+
     public HistoryData(String id, long validFrom, long validTo, String value, String location) {
         super(id);
         this.validFrom = validFrom;

@@ -15,6 +15,8 @@ public class RecipeBuild extends MyEntry {
     public RecipeBuild(String id) {
         super(id);
     }
+    public RecipeBuild() {
+    }
 
     public RecipeBuild(String id, String jobId, String message, String request_status, String outcome,
                        long size, String url) {

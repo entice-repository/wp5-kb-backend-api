@@ -8,100 +8,87 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class SZTAKIExecuteObj {
 
     private String jobID;
+    private String uploadCommand;
 
-    // ImageId (Int) REQ !! interni id za ENTICE, ne id, kot ga zahteva SZTAKI
-    private String imageId;
+    // -- Source image
     // it will be generated on SZTAKI cloud deploy
     private String imageURL;
-    // ValidatorScript (String) REQ
+    private String imageFormat;
+    private String ovfURL;
+    // ValidatorScript (String)
     private String validatorScriptURL;
-    // ImageLoginName (String) REQ
-    private String imageUserName;
-    // FSPartition (String) OPT
+    private String validatorServerURL;
+    private String validatorScript;
     private String fsPartition;
-    // ImageKeyPair (String) REQ
-    private String imageKeyPair;
-    // ImagePrivateKey (String) REQ
-    private String imagePrivateKey;
+    private String fsType;
 
-    // CloudLocation (Sting) REQ
+    // -- Optimisation resource
+    private String cloudInterface;
     private String cloudEndpointURL;
-    // CloudAccessKey (String) REQ
     private String cloudAccessKey;
-    // CloudSecretKey (String) REQ
     private String cloudSecretKey;
+    private String imageId; // Image ID is the ID within the cloud repository
+    private String kbImageId;
+    private String imageKeyPair;
+    private String imageUserName;
+    private String imagePrivateKey;
+    private String imageContextualizationURL;
+    private String imageContextualization;
     private String cloudOptimizerVMInstanceType;
-    // WorkerVMInstanceType (String) REQ
     private String cloudWorkerVMInstanceType;
 
-    // FreeDiskSpace (Int) OPT.
-    private int freeDiskSpace;
-    private int numberOfParallelWorkerVMs;
-    // MaxNumberOfIteration (String) REQ
+    // -- Optimisation goals and limits
     private int maxIterationsNum;
-    // MaxNumberOfVMIs (UInt) OPT.
-//    private short XmaxNumberOfVMs;
-    // Aimed Reduction Ratio (Float) OPT.
-//    private double XaimedReductionRatio;
-    // Aimed Size (UInt) OPT.
-//    private long XaimedSize;
-    // MaxRunningTime (Float) OPT. ??
-//    private int XmaxRunningTime;
+    private int numberOfParallelWorkerVMs;
+    private int maxRunningTime;
+    private int maxNumberOfVMs;
+    private int aimedSize;
+    private double aimedReductionRatio;
+    private int freeDiskSpace;
 
-    private String s3EndpointURL;
-    private String s3AccessKey;
-    private String s3SecretKey;
-//    private String s3Path;
+    // additional data for SZTAKI
+    // knowledgeBaseURL
+    // id
 
     public SZTAKIExecuteObj() {
     }
 
-    //old constructor:
-//    public SZTAKIExecuteObj(String imageId, String imageURL, String validatorScriptURL, String imageUserName, String
-//            fsPartition, String imageKeyPair, String imagePrivateKey, String cloudEndpointURL, String cloudAccessKey,
-//                            String cloudSecretKey, String cloudOptimizerVMInstanceType, String
-//                                    cloudWorkerVMInstanceType, int freeDiskSpace, int numberOfParallelWorkerVMs, int
-//                                    maxIterationsNum, short XmaxNumberOfVMs, double XaimedReductionRatio, long
-//                                    XaimedSize, int XmaxRunningTime, String s3EndpointURL, String s3AccessKey, String
-//                                    s3SecretKey, String s3Path)
-
-    public SZTAKIExecuteObj(String imageId, String imageURL, String validatorScriptURL, String imageUserName, String
-            fsPartition, String imageKeyPair, String imagePrivateKey, String cloudEndpointURL, String cloudAccessKey,
-                            String cloudSecretKey, String cloudOptimizerVMInstanceType, String
-                                    cloudWorkerVMInstanceType, int freeDiskSpace, int numberOfParallelWorkerVMs, int
-                                    maxIterationsNum, String s3EndpointURL, String s3AccessKey, String
-                                    s3SecretKey) {
-        this.imageId = imageId;
+    public SZTAKIExecuteObj(String jobID, String imageURL, String imageFormat, String ovfURL, String validatorScriptURL, String validatorServerURL, String validatorScript, String fsPartition, String fsType, String cloudInterface, String cloudEndpointURL, String cloudAccessKey, String cloudSecretKey, String imageId, String imageKeyPair, String imageUserName, String imagePrivateKey, String imageContextualizationURL, String cloudOptimizerVMInstanceType, String cloudWorkerVMInstanceType, int maxIterationsNum, int numberOfParallelWorkerVMs, int maxRunningTime, int maxNumberOfVMs, int aimedSize, double aimedReductionRatio, int freeDiskSpace) {
+        this.jobID = jobID;
         this.imageURL = imageURL;
+        this.imageFormat = imageFormat;
+        this.ovfURL = ovfURL;
         this.validatorScriptURL = validatorScriptURL;
-        this.imageUserName = imageUserName;
+        this.validatorServerURL = validatorServerURL;
+        this.validatorScript = validatorScript;
         this.fsPartition = fsPartition;
-        this.imageKeyPair = imageKeyPair;
-        this.imagePrivateKey = imagePrivateKey;
+        this.fsType = fsType;
+        this.cloudInterface = cloudInterface;
         this.cloudEndpointURL = cloudEndpointURL;
         this.cloudAccessKey = cloudAccessKey;
         this.cloudSecretKey = cloudSecretKey;
+        this.imageId = imageId;
+        this.imageKeyPair = imageKeyPair;
+        this.imageUserName = imageUserName;
+        this.imagePrivateKey = imagePrivateKey;
+        this.imageContextualizationURL = imageContextualizationURL;
         this.cloudOptimizerVMInstanceType = cloudOptimizerVMInstanceType;
         this.cloudWorkerVMInstanceType = cloudWorkerVMInstanceType;
-        this.freeDiskSpace = freeDiskSpace;
-        this.numberOfParallelWorkerVMs = numberOfParallelWorkerVMs;
         this.maxIterationsNum = maxIterationsNum;
-//        this.XmaxNumberOfVMs = XmaxNumberOfVMs;
-//        this.XaimedReductionRatio = XaimedReductionRatio;
-//        this.XaimedSize = XaimedSize;
-//        this.XmaxRunningTime = XmaxRunningTime;
-        this.s3EndpointURL = s3EndpointURL;
-        this.s3AccessKey = s3AccessKey;
-        this.s3SecretKey = s3SecretKey;
-//        this.s3Path = s3Path;
+        this.numberOfParallelWorkerVMs = numberOfParallelWorkerVMs;
+        this.maxRunningTime = maxRunningTime;
+        this.maxNumberOfVMs = maxNumberOfVMs;
+        this.aimedSize = aimedSize;
+        this.aimedReductionRatio = aimedReductionRatio;
+        this.freeDiskSpace = freeDiskSpace;
     }
 
-    public String getImageId() {
-        return imageId;
+    public String getJobID() {
+        return jobID;
     }
 
-    public void setImageId(String imageId) {
-        this.imageId = imageId;
+    public void setJobID(String jobID) {
+        this.jobID = jobID;
     }
 
     public String getImageURL() {
@@ -112,28 +99,20 @@ public class SZTAKIExecuteObj {
         this.imageURL = imageURL;
     }
 
-    public String getImageUserName() {
-        return imageUserName;
+    public String getImageFormat() {
+        return imageFormat;
     }
 
-    public void setImageUserName(String imageUserName) {
-        this.imageUserName = imageUserName;
+    public void setImageFormat(String imageFormat) {
+        this.imageFormat = imageFormat;
     }
 
-    public String getImageKeyPair() {
-        return imageKeyPair;
+    public String getOvfURL() {
+        return ovfURL;
     }
 
-    public void setImageKeyPair(String imageKeyPair) {
-        this.imageKeyPair = imageKeyPair;
-    }
-
-    public String getImagePrivateKey() {
-        return imagePrivateKey;
-    }
-
-    public void setImagePrivateKey(String imagePrivateKey) {
-        this.imagePrivateKey = imagePrivateKey;
+    public void setOvfURL(String ovfURL) {
+        this.ovfURL = ovfURL;
     }
 
     public String getValidatorScriptURL() {
@@ -142,6 +121,46 @@ public class SZTAKIExecuteObj {
 
     public void setValidatorScriptURL(String validatorScriptURL) {
         this.validatorScriptURL = validatorScriptURL;
+    }
+
+    public String getValidatorServerURL() {
+        return validatorServerURL;
+    }
+
+    public void setValidatorServerURL(String validatorServerURL) {
+        this.validatorServerURL = validatorServerURL;
+    }
+
+    public String getValidatorScript() {
+        return validatorScript;
+    }
+
+    public void setValidatorScript(String validatorScript) {
+        this.validatorScript = validatorScript;
+    }
+
+    public String getFsPartition() {
+        return fsPartition;
+    }
+
+    public void setFsPartition(String fsPartition) {
+        this.fsPartition = fsPartition;
+    }
+
+    public String getFsType() {
+        return fsType;
+    }
+
+    public void setFsType(String fsType) {
+        this.fsType = fsType;
+    }
+
+    public String getCloudInterface() {
+        return cloudInterface;
+    }
+
+    public void setCloudInterface(String cloudInterface) {
+        this.cloudInterface = cloudInterface;
     }
 
     public String getCloudEndpointURL() {
@@ -168,6 +187,46 @@ public class SZTAKIExecuteObj {
         this.cloudSecretKey = cloudSecretKey;
     }
 
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
+    }
+
+    public String getImageKeyPair() {
+        return imageKeyPair;
+    }
+
+    public void setImageKeyPair(String imageKeyPair) {
+        this.imageKeyPair = imageKeyPair;
+    }
+
+    public String getImageUserName() {
+        return imageUserName;
+    }
+
+    public void setImageUserName(String imageUserName) {
+        this.imageUserName = imageUserName;
+    }
+
+    public String getImagePrivateKey() {
+        return imagePrivateKey;
+    }
+
+    public void setImagePrivateKey(String imagePrivateKey) {
+        this.imagePrivateKey = imagePrivateKey;
+    }
+
+    public String getImageContextualizationURL() {
+        return imageContextualizationURL;
+    }
+
+    public void setImageContextualizationURL(String imageContextualizationURL) {
+        this.imageContextualizationURL = imageContextualizationURL;
+    }
+
     public String getCloudOptimizerVMInstanceType() {
         return cloudOptimizerVMInstanceType;
     }
@@ -188,100 +247,79 @@ public class SZTAKIExecuteObj {
         return maxIterationsNum;
     }
 
-
     public void setMaxIterationsNum(int maxIterationsNum) {
         this.maxIterationsNum = maxIterationsNum;
-    }
-
-//    @JsonProperty("XmaxNumberOfVMs")
-//    public int getXmaxNumberOfVMs() {
-//        return XmaxNumberOfVMs;
-//    }
-
-//    public void setXmaxNumberOfVMs(short XmaxNumberOfVMs) {
-//        this.XmaxNumberOfVMs = XmaxNumberOfVMs;
-//    }
-
-//    @JsonProperty("XaimedReductionRatio")
-//    public double getXaimedReductionRatio() {
-//        return XaimedReductionRatio;
-//    }
-
-//    public void setXaimedReductionRatio(double xaimedReductionRatio) {
-//        XaimedReductionRatio = xaimedReductionRatio;
-//    }
-
-//    @JsonProperty("XaimedSize")
-//    public long getXaimedSize() {
-//        return XaimedSize;
-//    }
-
-//    public void setXaimedSize(long xaimedSize) {
-//        XaimedSize = xaimedSize;
-//    }
-
-//    @JsonProperty("XmaxRunningTime")
-//    public int getXmaxRunningTime() {
-//        return XmaxRunningTime;
-//    }
-
-//    public void setXmaxRunningTime(int xmaxRunningTime) {
-//        XmaxRunningTime = xmaxRunningTime;
-//    }
-
-    public String getFsPartition() {
-        return fsPartition;
-    }
-
-    public int getFreeDiskSpace() {
-        return freeDiskSpace;
     }
 
     public int getNumberOfParallelWorkerVMs() {
         return numberOfParallelWorkerVMs;
     }
 
-    public String getS3EndpointURL() {
-        return s3EndpointURL;
+    public void setNumberOfParallelWorkerVMs(int numberOfParallelWorkerVMs) {
+        this.numberOfParallelWorkerVMs = numberOfParallelWorkerVMs;
     }
 
-    public String getS3AccessKey() {
-        return s3AccessKey;
+    public int getMaxRunningTime() {
+        return maxRunningTime;
     }
 
-    public String getS3SecretKey() {
-        return s3SecretKey;
+    public void setMaxRunningTime(int maxRunningTime) {
+        this.maxRunningTime = maxRunningTime;
     }
 
-//    public String getS3Path() {
-//        return s3Path;
-//    }
+    public int getMaxNumberOfVMs() {
+        return maxNumberOfVMs;
+    }
 
-    public void setFsPartition(String fsPartition) {
-        this.fsPartition = fsPartition;
+    public void setMaxNumberOfVMs(int maxNumberOfVMs) {
+        this.maxNumberOfVMs = maxNumberOfVMs;
+    }
+
+    public int getAimedSize() {
+        return aimedSize;
+    }
+
+    public void setAimedSize(int aimedSize) {
+        this.aimedSize = aimedSize;
+    }
+
+    public double getAimedReductionRatio() {
+        return aimedReductionRatio;
+    }
+
+    public void setAimedReductionRatio(double aimedReductionRatio) {
+        this.aimedReductionRatio = aimedReductionRatio;
+    }
+
+    public int getFreeDiskSpace() {
+        return freeDiskSpace;
     }
 
     public void setFreeDiskSpace(int freeDiskSpace) {
         this.freeDiskSpace = freeDiskSpace;
     }
 
-    public void setNumberOfParallelWorkerVMs(int numberOfParallelWorkerVMs) {
-        this.numberOfParallelWorkerVMs = numberOfParallelWorkerVMs;
+    public String getImageContextualization() {
+        return imageContextualization;
     }
 
-    public void setS3EndpointURL(String s3EndpointURL) {
-        this.s3EndpointURL = s3EndpointURL;
+    public void setImageContextualization(String imageContextualization) {
+        this.imageContextualization = imageContextualization;
     }
 
-    public void setS3AccessKey(String s3AccessKey) {
-        this.s3AccessKey = s3AccessKey;
+    public String getUploadCommand() {
+        return uploadCommand;
     }
 
-    public void setS3SecretKey(String s3SecretKey) {
-        this.s3SecretKey = s3SecretKey;
+    public void setUploadCommand(String uploadCommand) {
+        this.uploadCommand = uploadCommand;
     }
 
-//    public void setS3Path(String s3Path) {
-//        this.s3Path = s3Path;
-//    }
+    public String getKbImageId() {
+        return kbImageId;
+    }
+
+    public void setKbImageId(String kbImageId) {
+        this.kbImageId = kbImageId;
+    }
 }

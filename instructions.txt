@@ -1,2 +1,2 @@
 # build project and create WAR file:
-mvn install
+mvn clean install

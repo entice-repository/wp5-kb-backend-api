@@ -16,7 +16,7 @@ public class RepoClient {
         String vmImageSourcePath = "C:\\Users\\sandig\\Downloads\\" + vmImageName;
         File vmImage = new File(vmImageSourcePath);
 
-        uibkService.addInterface(vmImage);
+        uibkService.addInterface(vmImage,"https://goedis.dps.uibk.ac.at:7070/WebServicesRepo/add?wsdl");
 
     }
 

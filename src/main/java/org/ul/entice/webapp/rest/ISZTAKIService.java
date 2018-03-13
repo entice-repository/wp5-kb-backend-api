@@ -39,7 +39,7 @@ public interface ISZTAKIService {
 
     // aka delete
     @GET
-    public Map<String,String> stopImageBuilder(String builderID, boolean cancelExecution);
+    public Map<String, String> stopImageBuilder(String builderID, boolean cancelExecution);
 
     @GET
     public String showLast10ValuesofOptimization(String optimizerID);
@@ -51,7 +51,7 @@ public interface ISZTAKIService {
     public List<Quality> getOptimizationList();
 
     @GET
-    public List<SZTAKIOptimizationStatusObj> getOptimizationRefreshedList();
+    public List<SZTAKIOptimizationStatusObj> getOptimizationRefreshedList(boolean forceRefresh);
 
     @GET
     public List<RecipeBuild> getRecipeRefreshedBuilds();

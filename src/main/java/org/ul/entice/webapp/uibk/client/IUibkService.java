@@ -4,5 +4,5 @@ import java.io.File;
 
 public interface IUibkService {
 
-    public boolean addInterface(File vmImage);
+    public boolean addInterface(File vmImage, String wsURL);
 }

@@ -222,7 +222,7 @@ public class MOService implements IService {
     @Path("/upload_image")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public ResponseObj uploadImage(@FormDataParam("file") InputStream fileInputStream, @FormDataParam("file")
-    FormDataContentDisposition contentDispositionHeader, @FormDataParam("optimization") String optimize) {
+            FormDataContentDisposition contentDispositionHeader, @FormDataParam("optimization") String optimize) {
         boolean doOptimize = new Boolean(optimize);
         System.out.println("Uploading image... !");
         String filePath = SERVER_UPLOAD_LOCATION_FOLDER + contentDispositionHeader.getFileName();
@@ -233,7 +233,7 @@ public class MOService implements IService {
         String output = "File saved to server location : " + filePath + "<br>Perform optimization: " + doOptimize;
 
         // Response.status(200).entity(output).build()
-        return new ResponseObj(200,"repositoryID");
+        return new ResponseObj(200, "repositoryID");
     }
 
     @GET
@@ -265,14 +265,13 @@ public class MOService implements IService {
     @Path("/upload_vm_script")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadImageScript(@FormDataParam("file") InputStream fileInputStream, @FormDataParam("file")
-    FormDataContentDisposition contentDispositionHeader, @FormDataParam("optimization") String optimize) {
+            FormDataContentDisposition contentDispositionHeader, @FormDataParam("optimization") String optimize) {
         boolean doOptimize = new Boolean(optimize);
         String filePath = SERVER_UPLOAD_LOCATION_FOLDER + contentDispositionHeader.getFileName();
         String output = null;
         if (contentDispositionHeader.getFileName().isEmpty()) {
             output = "Error: upload file failed! No file script specified!";
-        }
-        else {
+        } else {
             System.out.println("Uploading image script... !");
 
             String insertStatementStr = FusekiUtils.generateInsertVMStatement(contentDispositionHeader.getFileName(),
@@ -288,7 +287,7 @@ public class MOService implements IService {
             File vmImage = new File(filePath);
 
             // call UIBK add_interface service
-            uibkService.addInterface(vmImage);
+            uibkService.addInterface(vmImage, "https://goedis.dps.uibk.ac.at:7070/WebServicesRepo/add?wsdl");
 
             output = "Script file saved to server location : " + filePath + "<br>Perform optimization: " + doOptimize;
         }
@@ -362,9 +361,9 @@ public class MOService implements IService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Repository> getAllRepositories(@QueryParam("size") int size) {
         long startTime = System.currentTimeMillis();
-        if(size <= 0)                                       {
-           List<Repository> repositoryList = FusekiUtils.getAllEntityAttributes(Repository.class, this);
-            System.out.println("ENTIRE SET: "+ (System.currentTimeMillis() - startTime) + "ms");
+        if (size <= 0) {
+            List<Repository> repositoryList = FusekiUtils.getAllEntityAttributes(Repository.class, this);
+            System.out.println("ENTIRE SET: " + (System.currentTimeMillis() - startTime) + "ms");
             return repositoryList;
         }
 
@@ -378,10 +377,10 @@ public class MOService implements IService {
                 "\t\tSELECT ?s ?p ?o ?storage ?operational\n" +
                 "\t\tWHERE { ?s a knowledgebase:Repository . ?s knowledgebase:Repository_OperationalCost ?operational" +
                 " . ?s knowledgebase:Repository_StorageLevelCost ?storage\n" +
-                "\t\t\t}ORDER BY ASC(xsd:double(?operational*0.9 + ?storage)) LIMIT "+size+"\n" +
+                "\t\t\t}ORDER BY ASC(xsd:double(?operational*0.9 + ?storage)) LIMIT " + size + "\n" +
                 "\t\t}\n" +
-                "}",Repository.class,this);
-       // System.out.println("SUBSET: "+ (System.currentTimeMillis() - startTime) + "ms");
+                "}", Repository.class, this);
+        // System.out.println("SUBSET: "+ (System.currentTimeMillis() - startTime) + "ms");
 
         // TODO: write times to log!!
         return repositoryList;
@@ -391,18 +390,18 @@ public class MOService implements IService {
     @Path("get_all_geolocations")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Geolocation> getAllGeolocations() {
-        return FusekiUtils.getAllEntityAttributes(Geolocation.class,this);
+        return FusekiUtils.getAllEntityAttributes(Geolocation.class, this);
     }
 
     @GET
     @Path("get_all_disk_images")
     @Produces(MediaType.APPLICATION_JSON)
     public List<DiskImage> getAllDiskImages(@QueryParam("deep") Boolean deep) {
-        List<DiskImage> diskImages = FusekiUtils.getAllEntityAttributes(DiskImage.class,this);
+        List<DiskImage> diskImages = FusekiUtils.getAllEntityAttributes(DiskImage.class, this);
 
         if (deep != null && deep == true) {
             for (DiskImage diskImage : diskImages) {
-                List<Fragment> fragmentList = FusekiUtils.getIdEntityAttributes(Fragment.class,this, diskImage.getId());
+                List<Fragment> fragmentList = FusekiUtils.getIdEntityAttributes(Fragment.class, this, diskImage.getId());
                 diskImage.setFragmentList(fragmentList);
             }
         }
@@ -415,9 +414,8 @@ public class MOService implements IService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Fragment> getFragmentData(@QueryParam("disk_image_id") String diskImageId, @QueryParam
             ("show_history_data") Boolean showHistoryData) {
-        return FusekiUtils.getFragmentDataOfDiskImage(diskImageId, showHistoryData,this);
+        return FusekiUtils.getFragmentDataOfDiskImage(diskImageId, showHistoryData, this);
     }
-
 
 
     @GET
@@ -429,7 +427,7 @@ public class MOService implements IService {
         if (diskImageId != null)
             queryCondition = ".?s knowledgebase:Fragment_hasReferenceImage knowledgebase:" + diskImageId + " ";
 
-        List<Fragment> fragmentList = FusekiUtils.getAllEntityAttributes(Fragment.class,this, queryCondition);
+        List<Fragment> fragmentList = FusekiUtils.getAllEntityAttributes(Fragment.class, this, queryCondition);
 
         if (showHistoryData != null && showHistoryData == true) {
             for (Fragment fragment : fragmentList) {
@@ -454,7 +452,7 @@ public class MOService implements IService {
                     }
 
                     List<HistoryData> historyDataList = FusekiUtils.mapResultObjectListToEntry(HistoryData.class,
-                            historyDataResultObj,this);
+                            historyDataResultObj, this);
 
                     // Collections.sort(historyDataList,HistoryData.HistoryDataComparator);
 
@@ -490,8 +488,7 @@ public class MOService implements IService {
         try {
             if (diskImageId != null) {
                 diskImageIds.add(diskImageId);
-            }
-            else {
+            } else {
                 String allDiskImagesQuery = FusekiUtils.getDiskImageIDs();
                 QueryExecution qe = QueryExecutionFactory.sparqlService(getFusekiQuery(), allDiskImagesQuery);
                 ResultSet results = qe.execSelect();
@@ -508,107 +505,92 @@ public class MOService implements IService {
 //                new Thread(new Runnable() {
 //                    @Override
 //                    public void run() {
-                        try{
-                            String queryCondition = ".?s knowledgebase:Fragment_hasReferenceImage knowledgebase:" +
-                                    diskImageID + " ";
+                try {
+                    String queryCondition = ".?s knowledgebase:Fragment_hasReferenceImage knowledgebase:" +
+                            diskImageID + " ";
 
-                            List<Fragment> fragmentIdList = FusekiUtils.getAllEntityAttributes(Fragment.class,this,
-                                    queryCondition);
-                            //  System.out.println("Fragment list size: " + fragmentIdList.size());
+                    List<Fragment> fragmentIdList = FusekiUtils.getAllEntityAttributes(Fragment.class, this,
+                            queryCondition);
+                    //  System.out.println("Fragment list size: " + fragmentIdList.size());
 
-                            //  if(diskImageID.equals("0b844481-61de-4e4c-8771-245b7c0e16d3"))
-                            //     diskImageID.length();
+                    //  if(diskImageID.equals("0b844481-61de-4e4c-8771-245b7c0e16d3"))
+                    //     diskImageID.length();
 
-                            List<Delivery> deliveryList = FusekiUtils.getAllEntityAttributes(Delivery.class,this, ".?s " +
-                                    "knowledgebase:Delivery_hasDeliveredDiskImage \"" + diskImageID + "\" ");
-                            int deliveryIndex = 0;
-                            for (Fragment fragment : fragmentIdList) {
+                    List<Delivery> deliveryList = FusekiUtils.getAllEntityAttributes(Delivery.class, this, ".?s " +
+                            "knowledgebase:Delivery_hasDeliveredDiskImage \"" + diskImageID + "\" ");
+                    int deliveryIndex = 0;
+                    for (Fragment fragment : fragmentIdList) {
 //            fragmentHistoryDeliveryDatas.add(new FragmentHistoryDeliveryData(fragment.getId()));
 
-                                String selectQuery = FusekiUtils.getHistoryDataIDs(fragment.getId());
+                        String selectQuery = FusekiUtils.getHistoryDataIDs(fragment.getId());
 
-                                QueryExecution qe = QueryExecutionFactory.sparqlService(getFusekiQuery(), selectQuery);
+                        QueryExecution qe = QueryExecutionFactory.sparqlService(getFusekiQuery(), selectQuery);
 //        QueryExecution qe = QueryExecutionFactory.sparqlService("http://localhost:3030/entice/query", selectQuery);
-                                ResultSet results = qe.execSelect();
+                        ResultSet results = qe.execSelect();
 
-                                List<ResultObj> resultIds = FusekiUtils.getResultObjectListFromResultSet(results);
-                                for (ResultObj obj : resultIds) {
-                                    selectQuery = FusekiUtils.getAllEntitiesQuery(HistoryData.class.getSimpleName(), obj
-                                            .getO());
-                                    qe = QueryExecutionFactory.sparqlService(getFusekiQuery(), selectQuery);
-                                    results = qe.execSelect();
+                        List<ResultObj> resultIds = FusekiUtils.getResultObjectListFromResultSet(results);
+                        for (ResultObj obj : resultIds) {
+                            selectQuery = FusekiUtils.getAllEntitiesQuery(HistoryData.class.getSimpleName(), obj
+                                    .getO());
+                            qe = QueryExecutionFactory.sparqlService(getFusekiQuery(), selectQuery);
+                            results = qe.execSelect();
 
-                                    List<ResultObj> historyDataResultObj = FusekiUtils.getResultObjectListFromResultSet
-                                            (results);
+                            List<ResultObj> historyDataResultObj = FusekiUtils.getResultObjectListFromResultSet
+                                    (results);
 
-                                    // fill the subject to result list obj.   ; REMOVE when query is optimized
-                                    for (ResultObj ro : historyDataResultObj) {
-                                        ro.setS(obj.getO());
-                                    }
+                            // fill the subject to result list obj.   ; REMOVE when query is optimized
+                            for (ResultObj ro : historyDataResultObj) {
+                                ro.setS(obj.getO());
+                            }
 
-                                    List<HistoryData> historyDataList = FusekiUtils.mapResultObjectListToEntry
-                                            (HistoryData.class, historyDataResultObj,MOService.this);
+                            List<HistoryData> historyDataList = FusekiUtils.mapResultObjectListToEntry
+                                    (HistoryData.class, historyDataResultObj, MOService.this);
 
-                                    for (HistoryData historyDataObj : historyDataList) {
-                                        if (deliveryList.size() > 0) {
+                            for (HistoryData historyDataObj : historyDataList) {
+                                if (deliveryList.size() > 0) {
 //                                        int deliveryIndex = checkIfDeliveryMatchesTheFragmentInterval(deliveryList,
 //                                                new DateTime(historyDataObj.getValidFrom()), new DateTime
 //                                                        (historyDataObj.getValidTo()));
 
-                                            // filter results that are not in the selected interval
-                                            if (validDateFrom != null && validDateTo != null)
-                                                selectQuery = FusekiUtils.getAllEntitiesQuery(HistoryData.class
-                                                        .getSimpleName(), obj.getO(), validDateFrom, validDateTo);
-                                            else
-                                                selectQuery = FusekiUtils.getAllEntitiesQuery(HistoryData.class
-                                                        .getSimpleName(), obj.getO());
+                                    // filter results that are not in the selected interval
+                                    if (validDateFrom != null && validDateTo != null)
+                                        selectQuery = FusekiUtils.getAllEntitiesQuery(HistoryData.class
+                                                .getSimpleName(), obj.getO(), validDateFrom, validDateTo);
+                                    else
+                                        selectQuery = FusekiUtils.getAllEntitiesQuery(HistoryData.class
+                                                .getSimpleName(), obj.getO());
 
-                                            qe = QueryExecutionFactory.sparqlService(getFusekiQuery(), selectQuery);
-                                            results = qe.execSelect();
-                                            List<ResultObj> tmpObj = FusekiUtils.getResultObjectListFromResultSet(results);
-                                            if (tmpObj.size() > 0) {
-//                                        FragmentHistoryDeliveryData fragmentHistoryDeliveryData = new
-//                                                FragmentHistoryDeliveryData(historyDataObj.getId(), fragment.getId(),
-//                                                fragment.getRefDiskImageId(), (deliveryIndex != -1 ? deliveryList.get
-//                                                (deliveryIndex).getRequestTime() : null), historyDataObj.getValidFrom
-//                                                (), historyDataObj.getValidTo(), historyDataObj.getLocation(),
-//                                                (deliveryIndex != -1 ? deliveryList.get(deliveryIndex)
-//                                                        .getRefTargetRepositoryId() : randomCloud[(int)(Math.random
-// () * randomCloud.length)]));
-                                                FragmentHistoryDeliveryData fragmentHistoryDeliveryData = new
-                                                        FragmentHistoryDeliveryData(historyDataObj.getId(), fragment
-                                                        .getId(), fragment.getRefDiskImageId(), (deliveryIndex != -1 ?
-                                                        deliveryList.get(deliveryIndex).getRequestTime() : null),
-                                                        deliveryList.get(deliveryIndex).getDeliveryTime(),
-                                                        historyDataObj.getLocation(), deliveryList.get(deliveryIndex)
-                                                        .getTargetCloud() // TODO: CHECK THE GENERATED DATA cloud1-10, randomly!!
-                                                        // check:
-                                                        // http://193.2.72.90:7070/JerseyREST/rest/service/get_fragment_history_delivery_data
-                                                );
-                                                if(deliveryIndex < deliveryList.size())
-                                                    deliveryIndex +=1;
-                                                System.out.println("Delivery size " + deliveryList.size() +" | "+deliveryIndex);
-                                                fragmentHistoryDeliveryDatas.add(fragmentHistoryDeliveryData);
-                                            }
-                                        }
+                                    qe = QueryExecutionFactory.sparqlService(getFusekiQuery(), selectQuery);
+                                    results = qe.execSelect();
+                                    List<ResultObj> tmpObj = FusekiUtils.getResultObjectListFromResultSet(results);
+                                    if (tmpObj.size() > 0) {
+                                        if (deliveryList.get(deliveryIndex).getTargetCloud() == null)
+                                            System.out.println();
+
+                                        FragmentHistoryDeliveryData fragmentHistoryDeliveryData = new
+                                                FragmentHistoryDeliveryData(historyDataObj.getId(), fragment
+                                                .getId(), fragment.getRefDiskImageId(), (deliveryIndex != -1 ?
+                                                deliveryList.get(deliveryIndex).getRequestTime() : null),
+                                                deliveryList.get(deliveryIndex).getDeliveryTime(),
+                                                historyDataObj.getLocation(), deliveryList.get(deliveryIndex)
+                                                .getTargetCloud(), fragment.getCopyIdentification()
+                                        );
+                                        if (deliveryIndex < deliveryList.size())
+                                            deliveryIndex += 1;
+                                        System.out.println("Delivery size " + deliveryList.size() + " | " + deliveryIndex);
+                                        fragmentHistoryDeliveryDatas.add(fragmentHistoryDeliveryData);
                                     }
-
-                                    // Collections.sort(historyDataList,HistoryData.HistoryDataComparator);
-
-                                    fragment.setHistoryDataList(historyDataList);
                                 }
                             }
-//                            countDownLatch.countDown();
-                        }catch (Exception e){
-                            System.out.println("Error in thread: "+ e.getMessage());
-//                            countDownLatch.countDown();
+                            fragment.setHistoryDataList(historyDataList);
                         }
-//                    }
-//                }).run();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error in thread: " + e.getMessage());
+                }
                 System.out.println("processing id " + diskImageID);
             }
 
-//            countDownLatch.await();
             System.out.println("finito");
             return fragmentHistoryDeliveryDatas;
         } catch (Exception e) {
@@ -626,7 +608,7 @@ public class MOService implements IService {
             i++;
         }
 
-        return 0;   //hack: just use first value instead of -1
+        return 0;
     }
 
 
@@ -637,9 +619,8 @@ public class MOService implements IService {
         String queryCondition = null;
         if (diskImageId != null)
             queryCondition = ".?s knowledgebase:Delivery_hasDeliveredDiskImage knowledgebase:" + diskImageId + " ";
-//            queryCondition = ".?s knowledgebase:Delivery_hasDeliveredDiskImage \"" + diskImageId + "\"";
 
-        return FusekiUtils.getAllEntityAttributes(Delivery.class,this, queryCondition);
+        return FusekiUtils.getAllEntityAttributes(Delivery.class, this, queryCondition);
     }
 
     /**
@@ -653,16 +634,6 @@ public class MOService implements IService {
     @Consumes(MediaType.APPLICATION_JSON)
     public boolean storePareto(Pareto pareto) {
         try {
-//            for (int i = 0; i < pareto.getObjectives().length; i++) {
-//                System.out.print(pareto.getObjectives()[i][0] + ", ");
-//                System.out.print(pareto.getObjectives()[i][1] + ", ");
-//            }
-//            System.out.println();
-//            for (int i = 0; i < pareto.getVariables().length; i++) {
-//                System.out.print(pareto.getVariables()[i][0] + ", ");
-//                System.out.print(pareto.getVariables()[i][1] + ", ");
-//            }
-
             pareto.setSaveTime(DateTime.now().getMillis());
 
             String insertStatement = FusekiUtils.generateInsertObjectStatement(pareto);
@@ -676,47 +647,11 @@ public class MOService implements IService {
         return true;
     }
 
-    // http://193.2.72.90:7070/JerseyREST/rest/service/get_fragment_history_delivery_data?show_history_data=true
-    // &disk_image_id=903fb2c9-48c1-4188-ac43-eba06e2bcf20&valid_date_from=1461937370535&valid_date_to=1461937370537
-    // http://localhost:8080/JerseyREST/rest/service/get_fragment_history_delivery_data?show_history_data=true
-    // &disk_image_id=903fb2c9-48c1-4188-ac43-eba06e2bcf20
-    // http://193.2.72.90:7070/JerseyREST/rest/service/get_fragment_history_delivery_data?disk_image_id=afda9d81-45ca
-    // -4168-83d4-e36aec2c83af
-    // http://193.2.72.90:7070/JerseyREST/rest/service/get_all_disk_images?deep=true
-    // http://localhost:8080/JerseyREST/rest/service/get_pareto
-
     @GET
-    @Path("get_pareto") // rename it to: get_pareto_stage1 ..2
+    @Path("get_pareto")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Pareto> getPareto() {
-        return FusekiUtils.getAllEntityAttributes(Pareto.class,this);
-    }
-
-
-    // http://localhost:8080/JerseyREST/rest/service/get_cloud_resource
-    @GET
-    @Path("get_cloud_resource")
-    @Produces(MediaType.APPLICATION_XML)
-    public CloudResource getCloudResource(@QueryParam("cloud_provider_id") String cloudProviderID) {
-        try{
-            // TODO: retrieve the cloud resource attributes from DRIP KB
-            List<String> strings = new ArrayList<String>();
-            strings.add("first element");
-            strings.add("second element");
-            strings.add("third element");
-            return new CloudResource("some cloud provider", 3.5,strings);
-        }catch(Exception e){
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @POST
-    @Path("create_update_cloud_resource")
-    @Produces(MediaType.APPLICATION_XML)
-    public CloudResource getCloudResource(@QueryParam("cloud_provider") CloudResource cloudResource, @QueryParam("create") boolean create) {
-        // TODO: retrieve the cloud resource attributes from DRIP KB
-        return new CloudResource("some cloud provider", 3.5,null);
+        return FusekiUtils.getAllEntityAttributes(Pareto.class, this);
     }
 
     @Override

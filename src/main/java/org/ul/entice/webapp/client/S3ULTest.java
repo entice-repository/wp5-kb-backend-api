@@ -24,8 +24,8 @@ public class S3ULTest {
          *      %JAVA_HOME%\jre\lib\security\cacerts.
          *
          *  3) Into cmd, type the following:
-         *      keytool.exe -import -alias fgg-cl00.fgg.uni-lj.si -keystore %JAVA_HOME%\jre\lib\security\cacerts
-         *      -file fggcl00-cert.der
+         *      keytool.exe -import -alias fgg-cl00.fgg.uni-lj.si -keystore %JAVA_HOME%\jre\lib\security\cacerts -file fggcl00-cert.der
+         *      keytool.exe -import -alias fgg-cl00.fgg.uni-lj.si -keystore "C:\Program Files\Java\jdk1.8.0_111\jre\lib\security\cacerts" -file fggcl00-cert.crt
          *
          *  ( fggcl00-cert.der can be found under the project path: \src\main\resources\certs\ )
          *

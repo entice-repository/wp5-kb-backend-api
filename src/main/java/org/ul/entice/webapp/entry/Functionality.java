@@ -34,6 +34,8 @@ public class Functionality extends MyEntry  {
     public Functionality(String id) {
         super(id);
     }
+    public Functionality() {
+    }
 
     public Functionality(String id, int classification, String tag, String name, String description, String
             inputDescription, String outputDescription, String refImplementationId, String domain) {

@@ -37,9 +37,14 @@ public class Repository extends MyEntry {
     // behind the Cloud-based Entice environment.
     private List<String> supportedFormat; // TODO: Should we add the speed value of each format
 
+    //TODO: new field [99.3,99.9999]
+    //TODO: randomly populate the same repositories (on production!)
+    private double availability;
+
+    //TODO: update constructor with "availability"
     public Repository(String id, String geolocationId, String interfaceEndpoint, double
             operationalCost, double storageLevelCost, double theoreticalCommunicationalPerformance, double space,
-                      List<String> supportedFormat) {
+                      List<String> supportedFormat, double availability) {
         super(id);
         this.geolocationId = geolocationId;
         this.interfaceEndpoint = interfaceEndpoint;
@@ -49,10 +54,13 @@ public class Repository extends MyEntry {
         this.theoreticalCommunicationalPerformance = theoreticalCommunicationalPerformance;
         this.space = space;
         this.supportedFormat = supportedFormat;
+        this.availability = availability;
     }
 
     public Repository(String id) {
         super(id);
+    }
+    public Repository() {
     }
 
     public String getGeolocationId() {
@@ -131,5 +139,13 @@ public class Repository extends MyEntry {
 
     public void setPriorityLevel1Cost(double priorityLevel1Cost) {
         this.priorityLevel1Cost = priorityLevel1Cost;
+    }
+
+    public double getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(double availability) {
+        this.availability = availability;
     }
 }

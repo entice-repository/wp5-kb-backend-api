@@ -22,6 +22,9 @@ public class MetricTable {
         this.units = units;
     }
 
+    public MetricTable() {
+    }
+
     public String getAgentID() {
         return agentID;
     }

@@ -51,6 +51,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     public Delivery(String id){
         super(id);
     }
+    public Delivery(){
+    }
 
     public String getRefUserId() {
         return refUserId;

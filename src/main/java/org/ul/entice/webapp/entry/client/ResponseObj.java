@@ -28,11 +28,11 @@ public class ResponseObj extends MyEntry {
         this.code = code;
     }
 
-    public String getRepositoryID() {
+    public String getMessage() {
         return message;
     }
 
-    public void setRepositoryID(String message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 }

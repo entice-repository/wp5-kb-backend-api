@@ -36,8 +36,13 @@ public class DiskImage extends MyEntry {
 
     List<Fragment> fragmentList;
 
+    private String ovfUrl;
+
     public DiskImage(String id) {
         super(id);
+    }
+
+    public DiskImage() {
     }
 
     public DiskImage(String id, ImageType imageTypeC, String descriptionC, String titleC, String predecessorC,
@@ -317,6 +322,14 @@ public class DiskImage extends MyEntry {
 
     public void setRepository(Repository repository) {
         this.repository = repository;
+    }
+
+    public String getOvfUrl() {
+        return ovfUrl;
+    }
+
+    public void setOvfUrl(String ovfUrl) {
+        this.ovfUrl = ovfUrl;
     }
 }
 

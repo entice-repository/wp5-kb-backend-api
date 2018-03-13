@@ -21,6 +21,9 @@ public class ResponseSynthesisObj {
         this.jobID = jobID;
     }
 
+    public ResponseSynthesisObj() {
+    }
+
     public int getImageSize() {
         return imageSize;
     }

@@ -5,3 +5,5 @@ target/*
 .project
 *.iml
 internal_work
+src/main/java/org/ul/entice/webapp/client/*
+src/main/java/org/ul/asap/webapp/*
