@@ -12,13 +12,9 @@
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <async-supported>true</async-supported>
 
-        <Context>
-            <Environment name="configurationPath" value="D://projects//lpt//entice-ul-api//target//db.properties" type="java.lang.String"/>
-        </Context>
-
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
-            <!--<param-value>org.fri.entice.webapp.rest</param-value>-->
+            <param-value>org.fri.entice.webapp.rest</param-value>
             <param-value>com.myorg.myproj.api,org.codehaus.jackson.jaxrs</param-value>
         </init-param>
 
@@ -26,12 +22,6 @@
             <param-name>jersey.config.server.provider.classnames</param-name>
             <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
         </init-param>
-
-        <!--UNCOMMENT TO ENABLE APACHE SHIRO-->
-        <!--<init-param>-->
-            <!--<param-name>com.sun.jersey.spi.container.ResourceFilters</param-name>-->
-            <!--<param-value>org.secnod.shiro.jersey.ShiroResourceFilterFactory</param-value>-->
-        <!--</init-param>-->
 
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
@@ -50,8 +40,8 @@
 
     <!--UNCOMMENT TO ENABLE APACHE SHIRO-->
     <!--<context-param>-->
-        <!--<param-name>shiroConfigLocations</param-name>-->
-        <!--<param-value>classpath:shiro.ini</param-value>-->
+    <!--<param-name>shiroConfigLocations</param-name>-->
+    <!--<param-value>classpath:shiro.ini</param-value>-->
     <!--</context-param>-->
 
     <servlet-mapping>
@@ -62,21 +52,5 @@
     <listener>
         <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
     </listener>
-
-    <!--UNCOMMENT TO ENABLE APACHE SHIRO-->
-    <!--<filter>-->
-    <!--<filter-name>ShiroFilter</filter-name>-->
-    <!--<filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>-->
-    <!--</filter>-->
-
-    <!--UNCOMMENT TO ENABLE APACHE SHIRO-->
-    <!--<filter-mapping>-->
-    <!--<filter-name>ShiroFilter</filter-name>-->
-    <!--<url-pattern>/*</url-pattern>-->
-    <!--<dispatcher>REQUEST</dispatcher>-->
-    <!--<dispatcher>FORWARD</dispatcher>-->
-    <!--<dispatcher>INCLUDE</dispatcher>-->
-    <!--<dispatcher>ERROR</dispatcher>-->
-    <!--</filter-mapping>-->
 
 </web-app>
